@@ -1,0 +1,10 @@
+id,profile_id,name,points,external_id
+IH_WR_BANNER_SHIELD,IH_WR,Banner and shield,26,OPT0721
+IH_WR_BANNER,IH_WR,Banner,25,OPT0722
+IH_WR_SHIELD_SPEAR,IH_WR,Shield and spear,2,OPT0723
+IH_WR_CROSSBOW,IH_WR,Crossbow,2,OPT0724
+IH_WR_MATTOCK,IH_WR,Mattock,1,OPT0725
+IH_DAIN_WAR_BOAR,IH_DAIN,War Boar,25,OPT0718
+IH_CAP_CHARIOT,IH_CAP,Iron Hills Chariot,170,OPT0719
+IH_CAP_MATTOCK,IH_CAP,Exchange shield and spear for Mattock,0,OPT0720
+IH_GR_MATTOCK,IH_GR,Exchange war spear for Mattock,0,OPT0726

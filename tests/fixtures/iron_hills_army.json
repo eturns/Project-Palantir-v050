@@ -1,0 +1,189 @@
+{
+ "metadata": {
+  "leader": "52d3bf7f-2ae7-422b-9e50-d92a7683d23b",
+  "leaderCompulsory": true,
+  "siegeRoster": false
+ },
+ "warbands": [
+  {
+   "id": "52d3bf7f-2ae7-422b-9e50-d92a7683d23b",
+   "hero": {
+    "model_id": "[the-iron-hills] dain-ironfoot-lord-of-the-iron-hills",
+    "MWFW": [
+     [
+      "",
+      "3:3:3:3"
+     ]
+    ],
+    "options": [
+     {
+      "id": "OPT0718",
+      "name": "War Boar",
+      "quantity": 1
+     }
+    ],
+    "compulsory": true
+   },
+   "units": [
+    {
+     "model_id": "[the-iron-hills] iron-hills-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0721",
+       "name": "Banner and shield",
+       "quantity": 1
+      }
+     ],
+     "quantity": 1
+    },
+    {
+     "model_id": "[the-iron-hills] iron-hills-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0722",
+       "name": "Banner",
+       "quantity": 1
+      }
+     ],
+     "quantity": 1
+    },
+    {
+     "model_id": "[the-iron-hills] iron-hills-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0723",
+       "name": "Shield and spear",
+       "quantity": 1
+      }
+     ],
+     "quantity": 1
+    },
+    {
+     "model_id": "[the-iron-hills] iron-hills-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0724",
+       "name": "Crossbow",
+       "quantity": 1
+      }
+     ],
+     "quantity": 2
+    },
+    {
+     "model_id": "[the-iron-hills] iron-hills-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0725",
+       "name": "Mattock",
+       "quantity": 1
+      }
+     ],
+     "quantity": 1
+    }
+   ],
+   "meta": {
+    "num": 1,
+    "points": 303,
+    "units": 6,
+    "heroes": 1,
+    "bows": 2,
+    "throwingWeapons": 0,
+    "bowLimit": 6,
+    "throwLimit": 6,
+    "maxUnits": 18
+   }
+  },
+  {
+   "id": "f1db2fe6-9870-4bbe-8385-ebb9ef929a0f",
+   "hero": {
+    "model_id": "[the-iron-hills] iron-hills-captain",
+    "MWFW": [
+     [
+      "",
+      "2:1:1:2"
+     ]
+    ],
+    "options": [
+     {
+      "id": "OPT0720",
+      "name": "Exchange shield and spear for Mattock",
+      "quantity": 1
+     }
+    ]
+   },
+   "units": [
+    {
+     "model_id": "[the-iron-hills] iron-hills-goat-rider",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0726",
+       "name": "Exchange war spear for Mattock",
+       "quantity": 1
+      }
+     ],
+     "quantity": 1
+    }
+   ],
+   "meta": {
+    "num": 2,
+    "points": 100,
+    "units": 1,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 1,
+    "throwLimit": 1,
+    "maxUnits": 12
+   }
+  },
+  {
+   "id": "7c717960-4f78-488f-9c6a-836f289f71b3",
+   "hero": {
+    "model_id": "[the-iron-hills] iron-hills-captain",
+    "MWFW": [
+     [
+      "",
+      "2:1:1:2"
+     ]
+    ],
+    "options": [
+     {
+      "id": "OPT0719",
+      "name": "Iron Hills Chariot",
+      "quantity": 1
+     }
+    ]
+   },
+   "units": [
+    {
+     "model_id": "[the-iron-hills] iron-hills-chariot",
+     "MWFW": [],
+     "options": [],
+     "quantity": 1
+    }
+   ],
+   "meta": {
+    "num": 3,
+    "points": 420,
+    "units": 1,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 1,
+    "throwLimit": 1,
+    "maxUnits": 12
+   }
+  }
+ ],
+ "id": "palantir-export-ffcmtkub",
+ "version": "1.42.4",
+ "name": "Palantir Export",
+ "armyList": "The Iron Hills",
+ "edition": "v2024"
+}

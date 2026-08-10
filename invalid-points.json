@@ -1,0 +1,175 @@
+{
+ "metadata": {
+  "leader": "a0356470-55f5-486d-8351-c0382cab537a",
+  "leaderCompulsory": false,
+  "siegeRoster": false,
+  "maxPoints": 0,
+  "tags": [],
+  "addUnits": 0,
+  "addPoints": 0
+ },
+ "warbands": [
+  {
+   "id": "a0356470-55f5-486d-8351-c0382cab537a",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] sauron-the-necromancer",
+    "MWFW": [
+     [
+      "",
+      "3:25:0:1"
+     ]
+    ],
+    "options": []
+   },
+   "units": [
+    {
+     "model_id": "[rise-of-the-necromancer] mirkwood-giant-spider",
+     "MWFW": [],
+     "options": [],
+     "quantity": 5
+    }
+   ],
+   "meta": {
+    "num": 1,
+    "points": 300,
+    "units": 5,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 5,
+    "throwLimit": 5,
+    "maxUnits": 18
+   }
+  },
+  {
+   "id": "a60cca92-2423-4586-9955-c2e9ebb08986",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] the-abyssal-knight-1",
+    "MWFW": [
+     [
+      "",
+      "1:1:0:1"
+     ]
+    ],
+    "options": []
+   },
+   "units": [],
+   "meta": {
+    "num": 2,
+    "points": 80,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 15
+   }
+  },
+  {
+   "id": "4a3ec706-4c83-46f9-80d2-5d3931126f0e",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] the-abyssal-knight-2",
+    "MWFW": [
+     [
+      "",
+      "1:1:0:1"
+     ]
+    ],
+    "options": []
+   },
+   "units": [],
+   "meta": {
+    "num": 3,
+    "points": 80,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 15
+   }
+  },
+  {
+   "id": "cf09dbd3-99bc-4d59-957c-1e206560bf99",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] the-lingering-shadow",
+    "MWFW": [
+     [
+      "",
+      "1:1:0:1"
+     ]
+    ],
+    "options": []
+   },
+   "units": [],
+   "meta": {
+    "num": 4,
+    "points": 80,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 15
+   }
+  },
+  {
+   "id": "87a0a354-5d73-48ad-bd91-c7f571ea8a27",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] the-witch-king-of-angmar",
+    "MWFW": [
+     [
+      "",
+      "3:1:0:1"
+     ]
+    ],
+    "options": []
+   },
+   "units": [],
+   "meta": {
+    "num": 5,
+    "points": 80,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 15
+   }
+  },
+  {
+   "id": "0b5d5be3-b4e3-4041-a172-3fbe829114b1",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] khamul-the-easterling",
+    "MWFW": [
+     [
+      "",
+      "1:1:0:1"
+     ]
+    ],
+    "options": []
+   },
+   "units": [],
+   "meta": {
+    "num": 6,
+    "points": 80,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 15
+   }
+  }
+ ],
+ "id": "rise-of-the-necromancer-1-3dey6pwx",
+ "version": "1.41.12",
+ "name": "Rise of the Necromancer",
+ "armyList": "Rise of the Necromancer",
+ "edition": "v2024"
+}

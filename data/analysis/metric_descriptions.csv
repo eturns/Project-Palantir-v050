@@ -1,0 +1,11 @@
+metric_id,strength_description,weakness_description
+OFFENCE,Strong Offensive Capability,Limited Offensive Capability
+DEFENCE,Excellent Battlefield Resilience,Poor Battlefield Resilience
+MOBILITY,Excellent Mobility,Limited Mobility
+MAGIC,Powerful Magical Presence,Limited Magical Capability
+SHOOTING,Effective Ranged Threat,Limited Ranged Threat
+COURAGE,Excellent Courage and Resolve,Poor Courage and Resolve
+CONTROL,Excellent Battlefield Control,Limited Battlefield Control
+COMMAND,Strong Heroic Command,Limited Heroic Command
+OBJECTIVE,Excellent Objective Control,Limited Objective Capability
+HERO_HUNTING,Excellent Hero Hunting Capability,Limited Hero Hunting Capability
