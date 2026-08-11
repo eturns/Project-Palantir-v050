@@ -744,3 +744,97 @@ The following battlefield behaviour remains assigned to later tickets:
 Final regression result:
 
 328 tests passed.
+
+## DEV-051 — Optimiser Foundation ✅ COMPLETE
+
+**Date:** 11 August 2026
+
+### Objective
+
+Establish the generic optimiser architecture required to evaluate,
+validate and deterministically rank candidate armies without embedding
+Dol Guldur-specific composition rules or hidden scoring assumptions.
+
+### Completed
+
+- Added `OptimiserCandidate` as the representation of an army being
+  evaluated by the optimiser.
+- Reused the existing `Army` domain object rather than creating a
+  duplicate army-composition model.
+- Added the `OptimiserObjective` interface for explicit candidate scoring.
+- Added the `OptimiserConstraint` interface using Palantír's existing
+  validation-error convention.
+- Added immutable `OptimiserEvaluation` results containing:
+  - candidate
+  - score
+  - validation errors
+- Added `evaluate_candidate()` to combine:
+  - candidate
+  - objective
+  - constraints
+  - evaluation result
+- Added deterministic ranking through `rank_evaluations()`.
+- Rankings sort highest score first.
+- Equal scores preserve their original input order.
+- Added an end-to-end optimiser-foundation regression.
+- Preserved all existing combat, probability, magic and resource APIs.
+
+### Engineering Decisions
+
+- Optimiser candidates contain factual army composition only.
+- Scoring assumptions remain external to the candidate through explicit
+  objective objects.
+- Constraint validation remains separate from objective scoring.
+- Rejected candidates may still retain an objective score together with
+  explicit validation errors.
+- No hidden secondary tie-break rule is introduced.
+- Stable input order resolves equal scores deterministically.
+- DEV-051 provides the generic constraint mechanism only.
+- Actual Dol Guldur legal-composition rules and candidate enumeration
+  remain DEV-052 work.
+- Battle horizons and resource strategies will remain explicit optimiser
+  assumptions rather than hidden candidate state.
+
+### Files Added
+
+Source:
+
+- `src/optimiser_candidate.py`
+- `src/optimiser_objective.py`
+- `src/optimiser_constraint.py`
+- `src/optimiser_evaluation.py`
+- `src/optimiser_evaluator.py`
+- `src/optimiser_ranking.py`
+
+Tests:
+
+- `tests/test_optimiser_candidate.py`
+- `tests/test_optimiser_objective.py`
+- `tests/test_optimiser_constraint.py`
+- `tests/test_optimiser_evaluation.py`
+- `tests/test_optimiser_evaluator.py`
+- `tests/test_optimiser_ranking.py`
+- `tests/test_optimiser_foundation_regression.py`
+
+### Validation
+
+Full automated regression suite:
+
+`733 passed`
+
+### Outcome
+
+Project Palantír now has a generic, deterministic and test-covered
+optimiser foundation.
+
+Candidate representation, objective scoring, constraint validation,
+evaluation results and ranking are explicitly separated, providing the
+architecture required for legal composition generation and later
+explainable optimisation.
+
+### Next Ticket
+
+**DEV-052 — Legal Composition Enumeration**
+
+Enumerate legal Dol Guldur compositions through the optimiser foundation
+while keeping legality rules separate from generic optimiser machinery.

@@ -1,77 +1,114 @@
-# Current Project Status
+# Project Palantír — Current Roadmap
 
-## Overall Status
+## Current Standing
 
-**Project Version:** 0.1.0-alpha
-
-Current Phase: **Foundation**
-
----
-
-## Completed Milestones
-
-### Milestone 1 – Repository Initialisation
-- ✅ Project folder structure created
-- ✅ Python installed and configured
-- ✅ Visual Studio Code configured
-- ✅ Initial project documentation created
+**Released Version:** 0.5.0  
+**Automated Regression Suite:** 733 passing tests  
+**Current Phase:** Optimiser  
+**Last Completed Ticket:** DEV-051 — Optimiser Foundation  
+**Next Ticket:** DEV-052 — Legal Composition Enumeration  
+**Next Release:** REL-0.6 / 0.6.0 Optimiser
 
 ---
 
-### Milestone 2 – Core Architecture
-- ✅ Created `main.py`
-- ✅ Created `models.py`
-- ✅ Introduced the `Model` dataclass
-- ✅ Implemented project module imports
-- ✅ Successfully created the first MESBG model
-- ✅ Established standard Python module structure
+## Completed Engine Releases
+
+### REL-0.4 — Combat Engine
+
+Completed combat probability architecture including:
+
+- Duel probability
+- Rerolls and banners
+- Might
+- Heroic Strike
+- Multi-model combats
+- Strike and wound probability
+- Defensive resolution
+- Casualty and survival probability
+
+### REL-0.5 — Probability Engine
+
+Completed multi-turn probability and resource architecture including:
+
+- Might, Will and Fate resource states
+- Resource spending and recovery
+- Spell casting and resistance
+- Heroic Channelling
+- Probabilistic Resist Will refunds
+- Battle-horizon assumptions
+- Conservative, balanced and aggressive strategies
+- Cross-domain resource competition
+- Weighted multi-turn resource-state propagation
 
 ---
 
-## Current Milestone
+## Optimiser — REL-0.6
 
-### Milestone 3 – Data Layer
+### DEV-051 — Optimiser Foundation ✅ COMPLETE
 
-**Status:** Planned
+- Candidate representation
+- Objective interface
+- Constraint interface
+- Evaluation results
+- Candidate evaluation
+- Deterministic ranking
+- End-to-end regression
 
-Objectives:
+### DEV-052 — Legal Composition Enumeration ← NEXT
 
-- Create the first profile database.
-- Separate game data from engine code.
-- Introduce profile loading.
-- Prepare the engine for multiple factions.
+- Enumerate legal Dol Guldur compositions
+- Enforce composition and copy constraints
+- Preserve generic optimiser interfaces
+- Prepare shared architecture for later book-wide enumeration
+
+### DEV-053 — Objective Functions and Weighting
+
+- Blend battlefield metrics
+- Integrate combat probabilities
+- Integrate resource endurance
+- Support explicit weighting
+- Avoid hidden assumptions
+
+### DEV-054 — Explainable Recommendations
+
+- Ranked recommendations
+- Strengths and weaknesses
+- Marginal swaps
+- Sensitivity analysis
+- Transparent evidence and assumptions
+
+### REL-0.6 — 0.6.0 Optimiser
+
+Release gate:
+
+Produce the first reproducible answer to the
+**best-six-Nazgûl** question under explicit assumptions, with:
+
+- legal constraints visible
+- objective weighting visible
+- evidence visible
+- sensitivity visible
+- deterministic reproducibility
 
 ---
 
-## Future Milestones
+## Post-REL-0.6 Scenario Architecture
 
-### Milestone 4 – Combat Engine
-- Duel calculations
-- Strike probabilities
-- Wound calculations
-- Fate simulation
+Scenario-aware analysis remains later work.
 
-### Milestone 5 – Probability Engine
-- Monte Carlo simulations
-- Statistical validation
-- Confidence intervals
+Current dependency sequence:
 
-### Milestone 6 – Army Optimisation
-- Army evaluation
-- Hero ranking
-- Nazgûl optimisation
-- Synergy analysis
+`DEV-055 → DEV-057 → DEV-056 → DEV-058`
 
-### Milestone 7 – Report Generation
-- Excel exports
-- Word reports
-- Graph generation
-- Tournament summaries
+DEV-050 battle horizons remain modelling assumptions until scenario
+termination and scoring are implemented.
 
 ---
 
 ## Long-Term Goal
 
-Project Palantír Version 1.0
+Project Palantír Version 1.0:
 
-A transparent, reproducible and statistically validated MESBG analysis engine built using professional software engineering practices.
+A transparent, reproducible and statistically validated MESBG analysis,
+probability and optimisation engine covering the complete
+**Armies of The Hobbit (2024)** data boundary.
