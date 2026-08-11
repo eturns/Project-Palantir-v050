@@ -838,3 +838,125 @@ explainable optimisation.
 
 Enumerate legal Dol Guldur compositions through the optimiser foundation
 while keeping legality rules separate from generic optimiser machinery.
+
+## DEV-052 — Legal Composition Enumeration ✅ COMPLETE
+
+**Date:** 11 August 2026
+
+### Objective
+
+Introduce reusable legal-composition enumeration for optimiser candidate
+generation, supporting both constrained composition experiments and open
+army-list optimisation.
+
+### Completed
+
+- Added generic fixed-size combination enumeration.
+- Added repeated-selection enumeration for profiles that may appear more
+  than once.
+- Added optimiser candidate construction from generated Profile selections.
+- Grouped repeated Profiles into quantity-aware ArmyEntry objects.
+- Reused Army.validate() as the authoritative legality boundary.
+- Added points-limit and max-in-army candidate filtering.
+- Added Dol Guldur-specific Nazgûl and spider profile pools.
+- Added CompositionSpec for explicit analysis composition assumptions.
+- Added CompositionSelectionGroup for selectable profile pools.
+- Added OptimisationRequest as the public optimiser request boundary.
+- Added explicit optimisation goals including:
+  - Balanced
+  - Board Presence
+  - Magic
+- Added optional CompositionSpec support to OptimisationRequest.
+- Added canonical Profile resolution for fixed and selectable composition
+  inputs.
+- Added single-group and multi-group candidate generation.
+- Added constrained legal candidate generation.
+- Added Dol Guldur Family A:
+  - Sauron the Necromancer ×1
+  - Nazgûl ×6
+  - Spider ×1
+- Added Dol Guldur Family B:
+  - Sauron the Necromancer ×1
+  - Nazgûl ×5
+  - Spiders ×5
+- Added OptimisationRequest-driven constrained candidate generation.
+- Added army-name-to-profile-pool resolution.
+- Added unrestricted profile quantity enumeration.
+- Added unrestricted legal candidate generation from a complete army pool.
+- Added open OptimisationRequest generation for Dol Guldur.
+- Added branch pruning during unrestricted generation to avoid constructing
+  candidate branches already exceeding the points limit.
+- Preserved deterministic candidate ordering during the performance refactor.
+- Added duplicate and determinism regression coverage.
+
+### Real Dol Guldur Validation
+
+Family A:
+
+- Necromancer ×1
+- Nazgûl ×6
+- Spider ×1
+- 94 legal 700-point candidates
+
+Family B:
+
+- Necromancer ×1
+- Nazgûl ×5
+- Spiders ×5
+- 396 legal 700-point candidates
+
+Combined constrained research population:
+
+- 490 legal 700-point candidates
+
+Open Dol Guldur optimisation:
+
+- Complete canonical Dol Guldur profile pool
+- 71,346 unique non-empty legal candidates at or below 700 points
+- Deterministic candidate ordering
+- No duplicate composition signatures
+
+### Performance
+
+Initial unrestricted enumeration increased the full regression suite from
+approximately 2 seconds to more than 10 seconds.
+
+The enumeration algorithm was refactored to prune branches once their running
+points total exceeded the requested limit.
+
+Final regression:
+
+765 tests passed in 4.85s.
+
+### Architectural Decisions
+
+- Army.validate() remains the authoritative legality boundary.
+- CompositionSpec describes analysis constraints, not rulebook-mandated army
+  requirements.
+- OptimisationRequest is the public optimiser input boundary.
+- Optimisation goals describe requested intent only; mathematical weighting
+  remains DEV-053 responsibility.
+- Constrained and open optimisation share the same OptimiserCandidate and Army
+  architecture.
+- Army-specific profile pools remain separate from generic composition
+  enumeration.
+- Candidate enumeration does not perform scoring.
+- Enumeration order is deterministic.
+- Performance pruning may discard impossible search branches but must not
+  replace final Army validation.
+
+### Outcome
+
+Project Palantír can now accept either a constrained composition experiment or
+an open army optimisation request and generate the corresponding deterministic,
+unique and legal optimiser candidate population.
+
+The optimiser is now ready for DEV-053 objective functions and weighting.
+
+### Build Status
+
+🟢 PASSING — 765 tests
+
+### Next
+
+DEV-053 — Objective Functions and Weighting

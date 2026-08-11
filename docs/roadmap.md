@@ -3,10 +3,10 @@
 ## Current Standing
 
 **Released Version:** 0.5.0  
-**Automated Regression Suite:** 733 passing tests  
+**Automated Regression Suite:** 765 passing tests  
 **Current Phase:** Optimiser  
-**Last Completed Ticket:** DEV-051 — Optimiser Foundation  
-**Next Ticket:** DEV-052 — Legal Composition Enumeration  
+**Last Completed Ticket:** DEV-052 Legal composition Enumeration
+**Next Ticket:** DEV-053 - Objective Functions / Weighting
 **Next Release:** REL-0.6 / 0.6.0 Optimiser
 
 ---
@@ -112,3 +112,4 @@ Project Palantír Version 1.0:
 A transparent, reproducible and statistically validated MESBG analysis,
 probability and optimisation engine covering the complete
 **Armies of The Hobbit (2024)** data boundary.
+
