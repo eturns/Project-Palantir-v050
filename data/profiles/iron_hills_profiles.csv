@@ -1,6 +1,6 @@
-id,name,points,movement,fight,shooting,strength,defence,attacks,wounds,courage,intelligence,might,will,fate,max_in_army
-IH_WR,Iron Hills Warrior,10,5",4,4+,4,6,1,1,6+,6+,0,0,0,0
-IH_DAIN,Dáin Ironfoot Lord of the Iron Hills,160,5",7,4+,5,8,3,3,3+,5+,3,3,3,1
-IH_CAP,Iron Hills Captain,80,5",5,4+,4,8,2,2,5+,5+,2,1,1,0
-IH_GR,Iron Hills Goat Rider,20,5",4,4+,4,6,1,1,6+,6+,0,0,0,0
-IH_CHARIOT,Iron Hills Chariot,170,8",4,4+,4,8,2,4,6+,6+,0,0,0,0
+id,name,points,movement,base_size_mm,fight,shooting,strength,defence,attacks,wounds,courage,intelligence,might,will,fate,max_in_army
+IH_WR,Iron Hills Warrior,10,5",25,4,4+,4,6,1,1,6+,6+,0,0,0,0
+IH_DAIN,Dáin Ironfoot Lord of the Iron Hills,160,5",25,7,4+,5,8,3,3,3+,5+,3,3,3,1
+IH_CAP,Iron Hills Captain,80,5",25,5,4+,4,8,2,2,5+,5+,2,1,1,0
+IH_GR,Iron Hills Goat Rider,20,5",25,4,4+,4,6,1,1,6+,6+,0,0,0,0
+IH_CHARIOT,Iron Hills Chariot,170,8",170,4,4+,4,8,2,4,6+,6+,0,0,0,0

@@ -3,10 +3,10 @@
 ## Current Standing
 
 **Released Version:** 0.5.0  
-**Automated Regression Suite:** 765 passing tests  
+**Automated Regression Suite:** 862 passing tests  
 **Current Phase:** Optimiser  
-**Last Completed Ticket:** DEV-052 Legal composition Enumeration
-**Next Ticket:** DEV-053 - Objective Functions / Weighting
+**Last Completed Ticket:** DEV-053 Objective Functions / Weighting  
+**Next Ticket:** DEV-054 Explainable Recommendations  
 **Next Release:** REL-0.6 / 0.6.0 Optimiser
 
 ---
@@ -54,20 +54,93 @@ Completed multi-turn probability and resource architecture including:
 - Deterministic ranking
 - End-to-end regression
 
-### DEV-052 — Legal Composition Enumeration ← NEXT
+### DEV-052 — Legal Composition Enumeration ✅ COMPLETE
 
 - Enumerate legal Dol Guldur compositions
 - Enforce composition and copy constraints
 - Preserve generic optimiser interfaces
 - Prepare shared architecture for later book-wide enumeration
 
-### DEV-053 — Objective Functions and Weighting
+### DEV-053 — Objective Functions and Weighting ✅ COMPLETE
 
-- Blend battlefield metrics
-- Integrate combat probabilities
-- Integrate resource endurance
-- Support explicit weighting
-- Avoid hidden assumptions
+Implemented a transparent optimiser scoring architecture built from
+normalised, reusable objective components.
+
+Completed:
+
+- Canonical objective-level normalisation architecture.
+- Board Presence objective:
+  - 40% Model Presence
+  - 40% Manoeuvrability
+  - 20% Control
+- Footprint-adjusted manoeuvrability using effective base size.
+- Battlefield Effects objective using:
+  - Offence
+  - Defence
+  - Shooting
+  - Courage
+  - Command
+  - Hero Hunting
+- Battlefield Effects calibration rule:
+  - existing Exceptional threshold maps to 0.8
+  - remaining 0.2 provides headroom for extreme armies
+- Magic objective with provisional v1 normalisation.
+- Combat Capability objective using:
+  - Duel probability
+  - wound probability
+  - offensive capability
+  - defensive capability
+  - quantity-aware army aggregation
+- Explicit provisional combat benchmark:
+  - Fight 4
+  - Strength 4
+  - Defence 6
+  - Attacks 1
+  - Wounds 1
+- Resource Endurance objective using:
+  - explicit battle horizon
+  - explicit resource strategy
+  - army-wide Might, Will and Fate pools
+  - resource pacing across the battle
+  - final utilisation
+  - zero-starting resource pools excluded from the average
+- Explicit named objective weights and presets.
+- Balanced preset with five equal-weight pillars:
+  - Board Presence
+  - Battlefield Effects
+  - Combat Capability
+  - Magic
+  - Resource Endurance
+- Balanced scoring rule:
+  - 75% weighted overall capability
+  - 25% weakest capability
+- Goal resolution for:
+  - Balanced
+  - Board Presence
+  - Magic
+- Behavioural tests proving:
+  - balanced capability is preferred over severe specialisation
+  - explicit weighting can predictably reverse rankings
+  - objective results remain bounded and deterministic
+
+### DEV-053 Calibration Assumptions
+
+Current optimiser normalisation values are explicit analysis assumptions
+rather than claims of universal MESBG averages.
+
+Provisional values include:
+
+- Model Presence maximum: 10 models per 100 points
+- Manoeuvrability maximum: 10
+- Control density maximum: 5.0
+- Magic density maximum: 3.0
+- Battlefield Effects use the existing Exceptional threshold as 0.8
+- Combat benchmark: F4 / S4 / D6 / A1 / W1
+- Balanced pillar weights: 20% each
+- Balanced overall/minimum weighting: 75% / 25%
+- Resource pacing/final-utilisation weighting: 70% / 30%
+
+These values must remain visible and recalibratable.
 
 ### DEV-054 — Explainable Recommendations
 
@@ -102,6 +175,34 @@ Current dependency sequence:
 
 DEV-050 battle horizons remain modelling assumptions until scenario
 termination and scoring are implemented.
+
+---
+
+## REL-0.9 Calibration Checkpoint
+
+Before the later pre-1.0 release boundary, perform a dedicated
+cross-faction optimiser calibration run.
+
+Review:
+
+- objective normalisation ceilings
+- Battlefield Effects maxima
+- Magic density maximum
+- Combat benchmark assumptions
+- Balanced preset weights
+- weakest-capability weighting
+- Resource Endurance pacing and utilisation weights
+
+Calibration should include:
+
+- representative armies from multiple factions
+- deliberately extreme builds
+- specialist armies
+- balanced armies
+- sensitivity testing around each provisional constant
+
+The purpose is to confirm that mathematically valid scoring also
+produces strategically credible recommendation behaviour.
 
 ---
 

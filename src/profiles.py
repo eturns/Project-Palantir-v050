@@ -74,6 +74,8 @@ class Profile:
 
     max_in_army: int
 
+    base_size_mm: int = 25
+
     keywords: set[str] = field(
         default_factory=set,
     )

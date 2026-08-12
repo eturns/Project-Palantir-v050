@@ -34,6 +34,7 @@ class Mount:
 
     id: str
     name: str
+    base_size_mm: int = 40
 
     def __post_init__(self) -> None:
         if not self.id.strip():

@@ -44,6 +44,7 @@ def load_mounts(
             mount = Mount(
                 id=row["id"],
                 name=row["name"],
+                base_size_mm=int(row["base_size_mm"]),
             )
 
             if mount.id in mounts:

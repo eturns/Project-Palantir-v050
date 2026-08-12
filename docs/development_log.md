@@ -957,6 +957,189 @@ The optimiser is now ready for DEV-053 objective functions and weighting.
 
 🟢 PASSING — 765 tests
 
+## DEV-053 — Objective Functions and Weighting
+
+**Date:** 12 August 2026
+
+### Objective
+
+Build the mathematical scoring layer required for Project Palantír to
+rank legal army compositions using explicit, reproducible and
+inspectable optimisation assumptions.
+
+### Completed
+
+- Introduced reusable objective score and weighting foundations.
+- Introduced canonical 0–1 objective normalisation.
+- Implemented Board Presence scoring.
+- Added profile and mount base-size architecture required for practical
+  manoeuvrability.
+- Implemented footprint-adjusted manoeuvrability.
+- Implemented army-level Board Presence input construction.
+- Implemented BoardPresenceObjective.
+- Implemented MagicObjective.
+- Refactored normalisation into objective_normalisation.py as the
+  canonical source of truth.
+- Reclassified legacy battlefield capability metrics as Battlefield
+  Effects after diagnostics demonstrated that they measure tagged
+  ability effects rather than fundamental profile combat strength.
+- Implemented Battlefield Effects inputs, normalisation, aggregation and
+  optimiser objective.
+- Implemented explicit CombatBenchmark architecture.
+- Implemented offensive and defensive profile combat capability using
+  the existing Duel and wound probability engines.
+- Ensured offensive combat scores remain bounded between 0 and 1.
+- Implemented quantity-weighted army Combat Capability.
+- Implemented CombatCapabilityObjective.
+- Implemented army-level Resource Endurance.
+- Modelled Resource Endurance as both:
+  - sustained pacing across the battle
+  - efficient final utilisation
+- Excluded resource types with zero starting value from Resource
+  Endurance averaging.
+- Implemented ResourceEnduranceObjective.
+- Introduced named ObjectiveWeight and ObjectivePreset architecture.
+- Implemented the canonical Balanced preset.
+- Implemented BalancedObjective.
+- Integrated Balanced objective resolution alongside Board Presence and
+  Magic optimisation goals.
+- Added behavioural tests proving that explicit weighting changes
+  recommendations predictably.
+- Removed temporary calibration diagnostics after their findings were
+  incorporated into permanent architecture and tests.
+
+### Balanced Objective
+
+The v1 Balanced objective consists of five equal-weight pillars:
+
+- Board Presence — 20%
+- Battlefield Effects — 20%
+- Combat Capability — 20%
+- Magic — 20%
+- Resource Endurance — 20%
+
+The final Balanced score is:
+
+75% × weighted overall capability
++
+25% × weakest capability
+
+This deliberately rewards broad competence while penalising armies with
+severe capability gaps.
+
+### Board Presence
+
+Board Presence is defined as the army's ability to occupy, reach,
+contest and control meaningful areas of the battlefield with enough
+independent pieces to matter.
+
+Weighting:
+
+- 40% Model Presence
+- 40% Manoeuvrability
+- 20% Control
+
+Objective/scenario scoring is deliberately excluded because its
+importance depends on scenario context.
+
+### Battlefield Effects
+
+Battlefield Effects represent tagged rules and abilities that alter what
+an army can do beyond its raw profile characteristics.
+
+Included dimensions:
+
+- Offence
+- Defence
+- Shooting
+- Courage
+- Command
+- Hero Hunting
+
+Mobility, Control, Magic and Objective are excluded to avoid
+double-counting or scenario-specific assumptions.
+
+For v1 normalisation, the existing Exceptional metric threshold maps to
+0.8, leaving the final 20% of the optimiser scale for unusually extreme
+armies.
+
+### Combat Capability
+
+Combat Capability is derived from the probability engine rather than
+legacy battlefield-effect metrics.
+
+The provisional v1 benchmark is:
+
+- Fight 4
+- Strength 4
+- Defence 6
+- Attacks 1
+- Wounds 1
+
+Profile capability combines offensive and defensive combat performance.
+Army capability is quantity-weighted across the models present.
+
+The benchmark is an explicit analysis assumption and is scheduled for
+REL-0.9 calibration.
+
+### Resource Endurance
+
+Resource Endurance is modelled at army level.
+
+It measures whether Might, Will and Fate can be paced across an explicit
+battle horizon while still being efficiently spent by the end of the
+game.
+
+The score combines:
+
+- 70% pacing quality
+- 30% final utilisation
+
+A resource pool beginning at zero is excluded from the resource-type
+average rather than receiving a perfect score.
+
+Battle horizon and resource strategy remain explicit inputs.
+
+### Calibration Decisions
+
+Provisional v1 constants include:
+
+- Model Presence maximum: 10 models / 100 points
+- Manoeuvrability maximum: 10
+- Control density maximum: 5.0
+- Magic density maximum: 3.0
+- Combat benchmark: F4 / S4 / D6 / A1 / W1
+- Balanced pillar weighting: 20% each
+- Balanced overall / weakest weighting: 75% / 25%
+- Resource pacing / utilisation weighting: 70% / 30%
+
+A dedicated calibration checkpoint will be performed around REL-0.9
+using representative factions, specialist lists and extreme builds.
+
+### Known Limitations
+
+- ArmyEntry currently carries Profile rather than a fully selected
+  ConfiguredProfile.
+- Default mounts can therefore contribute their effective footprint, but
+  optimiser candidates do not yet preserve arbitrary selected optional
+  mount configurations.
+- Platform footprint is not yet included in practical manoeuvrability.
+- Scenario-specific Objective suitability is deliberately deferred to
+  the scenario-analysis architecture.
+- Combat benchmark values are provisional rather than empirically
+  calibrated across the full Armies of The Hobbit data set.
+
+### Validation
+
+Final permanent regression suite:
+
+862 passing tests.
+
+### Status
+
+✅ DEV-053 COMPLETE
+
 ### Next
 
-DEV-053 — Objective Functions and Weighting
+DEV-054 — Explainable Recommendations
+

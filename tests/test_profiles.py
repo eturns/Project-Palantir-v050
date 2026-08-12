@@ -120,3 +120,26 @@ def test_default_wargear_is_owned_independently_per_profile():
 
     assert first_profile.default_wargear == [shield]
     assert second_profile.default_wargear == []
+
+def test_profile_stores_base_size_mm():
+    profile = Profile(
+        id="TEST_BASE",
+        name="Test Base",
+        points=10,
+        movement=6,
+        fight=4,
+        shooting="4+",
+        strength=4,
+        defence=5,
+        attacks=1,
+        wounds=1,
+        courage="6+",
+        intelligence="6+",
+        might=0,
+        will=0,
+        fate=0,
+        max_in_army=1,
+        base_size_mm=25,
+    )
+
+    assert profile.base_size_mm == 25

@@ -63,6 +63,7 @@ def _load_profiles_from_file(
                     movement=int(
                         row["movement"].replace('"', "")
                     ),
+                    base_size_mm=int(row["base_size_mm"]),
                     fight=int(row["fight"]),
                     shooting=row["shooting"],
                     strength=int(row["strength"]),

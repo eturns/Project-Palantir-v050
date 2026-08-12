@@ -165,6 +165,18 @@ class ConfiguredProfile:
 
         return None
 
+    @property
+    def effective_base_size_mm(self) -> int:
+        """
+        Returns the physical base size used by this configured Profile.
+        """
+
+        if self.effective_mount is not None:
+            return self.effective_mount.base_size_mm
+
+        return self.profile.base_size_mm
+
+
 def create_configured_profile_from_external_options(
     profile: Profile,
     external_option_ids: tuple[str, ...],

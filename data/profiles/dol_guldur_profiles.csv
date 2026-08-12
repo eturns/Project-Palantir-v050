@@ -1,11 +1,11 @@
-id,name,points,movement,fight,shooting,strength,defence,attacks,wounds,courage,intelligence,might,will,fate,max_in_army
-DG_NEC,Sauron The Necromancer,200,6",7,4+,6,8,2,1,4+,3+,3,25,0,1
-DG_WK,The Witch-king of Angmar (Dol Guldur),80,6",6,4+,4,6,2,1,4+,5+,3,1,0,1
-DG_KHM,Khamûl (Dol Guldur),80,6",5,4+,4,6,3,1,4+,5+,1,1,0,1
-DG_DH,The Dark Headsman,80,6",5,4+,4,6,2,1,4+,5+,1,1,0,1
-DG_FS,The Forsaken,80,6",5,4+,4,6,2,1,4+,5+,1,1,0,1
-DG_LS,The Lingering Shadow,80,6",5,4+,4,6,2,1,4+,5+,1,1,0,1
-DG_AK,The Abyssal Knight,80,6",5,4+,4,6,2,1,4+,5+,1,1,0,2
-DG_SM,The Slayer of Men,80,6",5,4+,4,6,2,1,4+,5+,1,1,0,2
-DG_MGS,Mirkwood Giant Spider,20,10",2,5+,5,3,2,2,7+,8+,0,0,0,0
-DG_MHS,Mirkwood Hunting Spider,20,10",3,6+,5,3,2,2,8+,8+,0,0,0,0
+id,name,points,movement,base_size_mm,fight,shooting,strength,defence,attacks,wounds,courage,intelligence,might,will,fate,max_in_army
+DG_NEC,Sauron The Necromancer,200,6",40,7,4+,6,8,2,1,4+,3+,3,25,0,1
+DG_WK,The Witch-king of Angmar (Dol Guldur),80,6",25,6,4+,4,6,2,1,4+,5+,3,1,0,1
+DG_KHM,Khamûl (Dol Guldur),80,6",25,5,4+,4,6,3,1,4+,5+,1,1,0,1
+DG_DH,The Dark Headsman,80,6",25,5,4+,4,6,2,1,4+,5+,1,1,0,1
+DG_FS,The Forsaken,80,6",25,5,4+,4,6,2,1,4+,5+,1,1,0,1
+DG_LS,The Lingering Shadow,80,6",25,5,4+,4,6,2,1,4+,5+,1,1,0,1
+DG_AK,The Abyssal Knight,80,6",25,5,4+,4,6,2,1,4+,5+,1,1,0,2
+DG_SM,The Slayer of Men,80,6",25,5,4+,4,6,2,1,4+,5+,1,1,0,2
+DG_MGS,Mirkwood Giant Spider,20,10",60,2,5+,5,3,2,2,7+,8+,0,0,0,0
+DG_MHS,Mirkwood Hunting Spider,20,10",40,3,6+,5,3,2,2,8+,8+,0,0,0,0

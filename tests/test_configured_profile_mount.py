@@ -9,6 +9,7 @@ from profiles import Profile
 
 def create_profile(
     default_mount: Mount | None = None,
+    base_size_mm: int = 25,
 ) -> Profile:
     return Profile(
         id="TEST_PROFILE",
@@ -28,6 +29,7 @@ def create_profile(
         fate=0,
         max_in_army=0,
         default_mount=default_mount,
+        base_size_mm=base_size_mm,
     )
 
 
@@ -173,3 +175,69 @@ def test_rejects_multiple_option_mounts():
         raise AssertionError(
             "Expected ValueError for multiple Mounts."
         )
+
+def test_mount_stores_base_size_mm():
+    mount = Mount(
+        id="MOUNT_GOAT",
+        name="War Goat",
+        base_size_mm=40,
+    )
+
+    assert mount.base_size_mm == 40
+
+def test_effective_base_size_uses_profile_base_when_unmounted():
+    configured_profile = ConfiguredProfile(
+        profile=create_profile(
+            base_size_mm=25,
+        ),
+    )
+
+    assert configured_profile.effective_base_size_mm == 25
+
+
+def test_effective_base_size_uses_default_mount_base():
+    mount = Mount(
+        id="MOUNT_GOAT",
+        name="War Goat",
+        base_size_mm=40,
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=create_profile(
+            default_mount=mount,
+            base_size_mm=25,
+        ),
+    )
+
+    assert configured_profile.effective_base_size_mm == 40
+
+
+def test_effective_base_size_uses_selected_option_mount_base():
+    mount = Mount(
+        id="MOUNT_BOAR",
+        name="War Boar",
+        base_size_mm=40,
+    )
+
+    option = ProfileOption(
+        id="OPTION_BOAR",
+        name="War Boar",
+        points=25,
+        mount_assignments=(
+            ProfileOptionMountAssignment(
+                mount=mount,
+            ),
+        ),
+    )
+
+    profile = create_profile(
+        base_size_mm=25,
+    )
+    profile.profile_options.append(option)
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(option,),
+    )
+
+    assert configured_profile.effective_base_size_mm == 40
