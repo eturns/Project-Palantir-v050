@@ -1139,7 +1139,52 @@ Final permanent regression suite:
 
 ✅ DEV-053 COMPLETE
 
+## DEV-054 — Explainable Recommendations
+
+Status: COMPLETE
+Completed: 12 August 2026
+
+DEV-054 added the explainability layer for optimiser recommendations.
+
+Implemented:
+
+- RecommendationResult data model
+- Transparent BalancedObjective ObjectiveScore output
+- Objective contribution strengths and weaknesses
+- Five-band capability classification:
+  - Very Weak
+  - Weak
+  - Average
+  - Strong
+  - Exceptional
+- Constraint-error preservation from optimiser evaluation into recommendations
+- Deterministic optimiser candidate composition keys
+- One-model profile swap detection
+- Marginal capability and total-score deltas
+- Legal marginal swap analysis
+- Stable marginal swap ranking
+- Candidate-level marginal swap lookup
+- Controlled objective weight variation
+- Standard sensitivity variant generation
+- Baseline versus variant reranking
+- Full sensitivity sweeps
+- Candidate stability summaries
+- Rank-one fraction and worst-rank reporting
+- End-to-end explainable recommendation service
+- main.py production dependency cleanup
+
+Balanced sensitivity currently uses controlled ±0.05 absolute
+weight perturbations by default, with remaining objective weights
+rescaled proportionally so total weight remains 1.0.
+
+Capability classification thresholds and optimisation calibration
+constants remain provisional pending the REL-0.9 calibration
+checkpoint.
+
+DEV-054 closed with:
+985 passing automated tests.
+
 ### Next
 
-DEV-054 — Explainable Recommendations
+DEV-055 - Board Presence and model Density
 

@@ -14,6 +14,10 @@ from combat_capability_objective import (
     CombatCapabilityObjective,
 )
 from magic_objective import MagicObjective
+from objective_score import (
+    ObjectiveContribution,
+    ObjectiveScore,
+)
 from optimiser_candidate import OptimiserCandidate
 from optimiser_objective import OptimiserObjective
 from objective_preset import ObjectivePreset
@@ -54,10 +58,10 @@ class BalancedObjective(OptimiserObjective):
     combat_benchmark: object
     resource_assumption: object
 
-    def evaluate(
+    def score(
         self,
         candidate: OptimiserCandidate,
-    ) -> float:
+    ) -> ObjectiveScore:
         objectives = build_balanced_objectives(
             army_list=self.army_list,
             combat_benchmark=self.combat_benchmark,
@@ -80,9 +84,30 @@ class BalancedObjective(OptimiserObjective):
             for weight in self.preset.weights
         )
 
-        return (
+        total = (
             weighted_overall
             * BALANCED_MEAN_WEIGHT
             + weakest_capability
             * BALANCED_MINIMUM_WEIGHT
         )
+
+        contributions = tuple(
+            ObjectiveContribution(
+                name=weight.name,
+                value=scores_by_name[weight.name],
+            )
+            for weight in self.preset.weights
+        )
+
+        return ObjectiveScore(
+            total=total,
+            contributions=contributions,
+        )
+
+    def evaluate(
+        self,
+        candidate: OptimiserCandidate,
+    ) -> float:
+        return self.score(
+            candidate,
+        ).total

@@ -41,13 +41,6 @@ from army_loader import (
     load_army_rules
 )
 
-from army_builder import (
-    build_army_from_definition,
-)
-
-from tests.test_army_definitions import (
-    build_test_army_definitions,
-)
 
 from services import (
     analyse_mesbg_list_builder_file,

@@ -3,10 +3,10 @@
 ## Current Standing
 
 **Released Version:** 0.5.0  
-**Automated Regression Suite:** 862 passing tests  
+**Automated Regression Suite:** 985 passing tests  
 **Current Phase:** Optimiser  
-**Last Completed Ticket:** DEV-053 Objective Functions / Weighting  
-**Next Ticket:** DEV-054 Explainable Recommendations  
+**Last Completed Ticket:** DEV-054 — Explainable Recommendations 
+**Next Ticket:** DEV-055
 **Next Release:** REL-0.6 / 0.6.0 Optimiser
 
 ---
@@ -141,6 +141,31 @@ Provisional values include:
 - Resource pacing/final-utilisation weighting: 70% / 30%
 
 These values must remain visible and recalibratable.
+
+### DEV-054 — Explainable Recommendations ✅ COMPLETE
+
+Implemented:
+- Structured recommendation results
+- Transparent objective score contributions
+- Relative strongest and weakest capabilities
+- Normalised capability classification
+- Constraint evidence preservation
+- Deterministic candidate composition keys
+- Legal one-model marginal swap detection
+- Ranked marginal swap analysis with capability deltas
+- Controlled objective-weight sensitivity variants
+- Full sensitivity sweeps
+- Candidate rank movement tracking
+- Recommendation stability summaries
+- End-to-end explainable recommendation service
+
+Result:
+Palantír can now explain why a candidate ranks where it does,
+show legal nearby alternatives, and quantify how robust the
+recommendation is to changes in objective weighting.
+
+Regression suite:
+985 passing tests.
 
 ### DEV-054 — Explainable Recommendations
 
