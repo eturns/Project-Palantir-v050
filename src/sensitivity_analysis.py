@@ -103,3 +103,68 @@ def analyse_sensitivity_variant(
             start=1,
         )
     )
+
+def analyse_sensitivity_variant(
+    *,
+    candidates,
+    baseline_objective,
+    variant_objective,
+    variant: SensitivityVariant,
+    baseline_ranking=None,
+    variant_ranking=None,
+) -> tuple[SensitivityResult, ...]:
+    """
+    Compares candidate ranks under a baseline objective and one
+    sensitivity-variant objective.
+
+    Results follow baseline ranking order.
+
+    Precomputed rankings may be supplied to avoid repeated objective
+    evaluation.
+    """
+
+    if not candidates:
+        return ()
+
+    if baseline_ranking is None:
+        baseline_ranking = _rank_candidates(
+            candidates=candidates,
+            objective=baseline_objective,
+        )
+
+    if variant_ranking is None:
+        variant_ranking = _rank_candidates(
+            candidates=candidates,
+            objective=variant_objective,
+        )
+
+    variant_rank_by_key = {
+        build_candidate_key(
+            evaluation.candidate,
+        ): rank
+        for rank, evaluation in enumerate(
+            variant_ranking,
+            start=1,
+        )
+    }
+
+    return tuple(
+        SensitivityResult(
+            candidate_key=build_candidate_key(
+                evaluation.candidate,
+            ),
+            baseline_rank=baseline_rank,
+            variant_rank=variant_rank_by_key[
+                build_candidate_key(
+                    evaluation.candidate,
+                )
+            ],
+            varied_capability=variant.varied_capability,
+            baseline_weight=variant.baseline_weight,
+            variant_weight=variant.variant_weight,
+        )
+        for baseline_rank, evaluation in enumerate(
+            baseline_ranking,
+            start=1,
+        )
+    )

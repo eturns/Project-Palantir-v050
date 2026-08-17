@@ -75,7 +75,26 @@ class TransparentObjective:
             profile_ids
         ]
 
+class CountingObjective(TransparentObjective):
+        def __init__(
+            self,
+            scores_by_profiles,
+        ):
+            super().__init__(
+                scores_by_profiles,
+            )
+            self.score_calls = 0
 
+        def score(
+            self,
+            candidate,
+        ):
+            self.score_calls += 1
+
+            return super().score(
+                candidate,
+            )
+        
 def test_analyse_marginal_swaps_builds_scored_swap_result():
     profile_a = make_profile("nazgul_a")
     profile_b = make_profile("nazgul_b")
@@ -311,7 +330,7 @@ def test_analyse_marginal_swaps_excludes_alternatives_that_fail_constraints():
             (profile_d, 1),
         )
     )
-
+           
     objective = TransparentObjective(
         {
             ("nazgul_a", "nazgul_b"): ObjectiveScore(
@@ -342,3 +361,68 @@ def test_analyse_marginal_swaps_excludes_alternatives_that_fail_constraints():
 
     assert len(results) == 1
     assert results[0].swap.added_profile_id == "nazgul_c"
+
+def test_analyse_marginal_swaps_reuses_precalculated_scores():
+    profile_a = make_profile("nazgul_a")
+    profile_b = make_profile("nazgul_b")
+    profile_c = make_profile("nazgul_c")
+
+    original = make_candidate(
+        (
+            (profile_a, 1),
+            (profile_b, 1),
+        )
+    )
+
+    alternative = make_candidate(
+        (
+            (profile_a, 1),
+            (profile_c, 1),
+        )
+    )
+
+    original_score = ObjectiveScore(
+        total=0.60,
+        contributions=(
+            ObjectiveContribution(
+                name="combat_capability",
+                value=0.60,
+            ),
+        ),
+    )
+
+    alternative_score = ObjectiveScore(
+        total=0.68,
+        contributions=(
+            ObjectiveContribution(
+                name="combat_capability",
+                value=0.72,
+            ),
+        ),
+    )
+
+    objective = CountingObjective(
+        {
+            ("nazgul_a", "nazgul_b"): original_score,
+            ("nazgul_a", "nazgul_c"): alternative_score,
+        }
+    )
+
+    score_lookup = {
+        id(original): original_score,
+        id(alternative): alternative_score,
+    }
+
+    results = analyse_marginal_swaps(
+        original=original,
+        candidates=(
+            alternative,
+        ),
+        objective=objective,
+        score_lookup=score_lookup,
+    )
+
+    assert objective.score_calls == 0
+
+    assert results[0].original_score == 0.60
+    assert results[0].alternative_score == 0.68

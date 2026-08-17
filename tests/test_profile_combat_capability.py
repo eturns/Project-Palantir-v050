@@ -81,3 +81,61 @@ def test_profile_combat_capability_preserves_uniform_components(
     )
 
     assert score == pytest.approx(0.6)
+
+def test_profile_combat_capability_reuses_identical_statline_calculation(
+    monkeypatch,
+):
+    profile = create_profile()
+
+    offensive_calls = 0
+    defensive_calls = 0
+
+    def fake_offensive_score(
+        profile,
+        benchmark,
+    ):
+        nonlocal offensive_calls
+        offensive_calls += 1
+        return 0.60
+
+    def fake_defensive_score(
+        profile,
+        benchmark,
+    ):
+        nonlocal defensive_calls
+        defensive_calls += 1
+        return 0.40
+
+    monkeypatch.setattr(
+        profile_combat_capability,
+        "calculate_profile_offensive_combat_score",
+        fake_offensive_score,
+    )
+
+    monkeypatch.setattr(
+        profile_combat_capability,
+        "calculate_profile_defensive_combat_score",
+        fake_defensive_score,
+    )
+
+    first_score = (
+        profile_combat_capability
+        .calculate_profile_combat_capability(
+            profile,
+            DEFAULT_COMBAT_BENCHMARK,
+        )
+    )
+
+    second_score = (
+        profile_combat_capability
+        .calculate_profile_combat_capability(
+            profile,
+            DEFAULT_COMBAT_BENCHMARK,
+        )
+    )
+
+    assert first_score == pytest.approx(0.50)
+    assert second_score == pytest.approx(0.50)
+
+    assert offensive_calls == 1
+    assert defensive_calls == 1

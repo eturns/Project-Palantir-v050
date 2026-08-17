@@ -31,17 +31,26 @@ def analyse_marginal_swaps(
     candidates: tuple[OptimiserCandidate, ...],
     objective,
     constraints=(),
+    score_lookup=None,
 ):
     """
     Scores every candidate that differs from the original by exactly
     one profile swap and satisfies all supplied optimiser constraints.
 
     Candidate pool order is preserved.
+
+    When score_lookup is supplied, pre-calculated ObjectiveScore values
+    are reused instead of recalculating the objective.
     """
 
-    original_score = objective.score(
-        original,
-    )
+    if score_lookup is None:
+        original_score = objective.score(
+            original,
+        )
+    else:
+        original_score = score_lookup[
+            id(original)
+        ]
 
     alternatives = find_marginal_alternatives(
         original,
@@ -68,9 +77,14 @@ def analyse_marginal_swaps(
             alternative,
         )
 
-        alternative_score = objective.score(
-            alternative,
-        )
+        if score_lookup is None:
+            alternative_score = objective.score(
+                alternative,
+            )
+        else:
+            alternative_score = score_lookup[
+                id(alternative)
+            ]
 
         results.append(
             build_marginal_swap_result(

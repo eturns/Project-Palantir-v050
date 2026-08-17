@@ -3,6 +3,7 @@ from objective_preset import ObjectivePreset
 from objective_weight import ObjectiveWeight
 from optimiser_candidate import OptimiserCandidate
 from sensitivity_analysis import (
+    _rank_candidates,
     analyse_sensitivity_variant,
 )
 from sensitivity_result import SensitivityResult
@@ -53,6 +54,26 @@ class Profile:
     ):
         self.id = profile_id
 
+
+class CountingObjective:
+    def __init__(
+        self,
+        scores,
+    ):
+        self.scores = scores
+        self.evaluate_calls = 0
+
+    def evaluate(
+        self,
+        candidate,
+    ):
+        self.evaluate_calls += 1
+
+        profile_id = candidate.army.entries[0].profile.id
+
+        return self.scores[
+            profile_id
+        ]
 
 def make_candidate(
     profile_id,
@@ -236,3 +257,65 @@ def test_analyse_sensitivity_variant_returns_empty_tuple_for_no_candidates():
         ),
         variant=variant,
     ) == ()
+
+def test_analyse_sensitivity_variant_reuses_precalculated_rankings():
+    candidate_a = make_candidate("a")
+    candidate_b = make_candidate("b")
+
+    baseline_objective = CountingObjective(
+        {
+            "a": 0.70,
+            "b": 0.60,
+        }
+    )
+
+    variant_objective = CountingObjective(
+        {
+            "a": 0.55,
+            "b": 0.75,
+        }
+    )
+
+    baseline_ranking = _rank_candidates(
+        candidates=(
+            candidate_a,
+            candidate_b,
+        ),
+        objective=baseline_objective,
+    )
+
+    variant_ranking = _rank_candidates(
+        candidates=(
+            candidate_a,
+            candidate_b,
+        ),
+        objective=variant_objective,
+    )
+
+    baseline_objective.evaluate_calls = 0
+    variant_objective.evaluate_calls = 0
+
+    variant = SensitivityVariant(
+        preset=None,
+        varied_capability="combat_capability",
+        baseline_weight=0.20,
+        variant_weight=0.25,
+    )
+
+    results = analyse_sensitivity_variant(
+        candidates=(
+            candidate_a,
+            candidate_b,
+        ),
+        baseline_objective=baseline_objective,
+        variant_objective=variant_objective,
+        variant=variant,
+        baseline_ranking=baseline_ranking,
+        variant_ranking=variant_ranking,
+    )
+
+    assert baseline_objective.evaluate_calls == 0
+    assert variant_objective.evaluate_calls == 0
+
+    assert results[0].baseline_rank == 1
+    assert results[0].variant_rank == 2

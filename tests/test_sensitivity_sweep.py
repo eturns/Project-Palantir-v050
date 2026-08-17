@@ -102,6 +102,28 @@ class PresetDrivenObjective:
             f"Unexpected candidate: {candidate_key}"
         )
 
+class CountingPresetDrivenObjective(
+    PresetDrivenObjective
+):
+    def __init__(
+        self,
+        *,
+        preset,
+    ):
+        super().__init__(
+            preset=preset,
+        )
+        self.evaluate_calls = 0
+
+    def evaluate(
+        self,
+        candidate,
+    ):
+        self.evaluate_calls += 1
+
+        return super().evaluate(
+            candidate,
+        )
 
 def build_objective(
     preset,
@@ -276,3 +298,54 @@ def test_analyse_sensitivity_sweep_returns_empty_tuple_for_no_variants():
         variants=(),
         objective_factory=build_objective,
     ) == ()
+
+def test_analyse_sensitivity_sweep_reuses_baseline_ranking():
+    candidate_a = make_candidate(
+        "candidate_a",
+    )
+    candidate_b = make_candidate(
+        "candidate_b",
+    )
+
+    candidates = (
+        candidate_a,
+        candidate_b,
+    )
+
+    baseline_preset = make_preset(
+        0.20,
+    )
+
+    baseline_objective = CountingPresetDrivenObjective(
+        preset=baseline_preset,
+    )
+
+    variants = (
+        SensitivityVariant(
+            varied_capability="magic",
+            baseline_weight=0.20,
+            variant_weight=0.15,
+            preset=make_preset(
+                0.15,
+            ),
+        ),
+        SensitivityVariant(
+            varied_capability="magic",
+            baseline_weight=0.20,
+            variant_weight=0.30,
+            preset=make_preset(
+                0.30,
+            ),
+        ),
+    )
+
+    analyse_sensitivity_sweep(
+        candidates=candidates,
+        baseline_objective=baseline_objective,
+        variants=variants,
+        objective_factory=build_objective,
+    )
+
+    assert baseline_objective.evaluate_calls == len(
+        candidates,
+    )

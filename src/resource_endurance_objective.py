@@ -11,9 +11,16 @@ from army_resource_trajectory import (
 )
 from optimiser_candidate import OptimiserCandidate
 from optimiser_objective import OptimiserObjective
+from resource_capacity_score import (
+    calculate_resource_capacity_score,
+)
 from resource_endurance_assumption import (
     ResourceEnduranceAssumption,
 )
+
+
+CAPACITY_WEIGHT = 0.55
+MANAGEMENT_WEIGHT = 0.45
 
 
 @dataclass(frozen=True)
@@ -33,7 +40,22 @@ class ResourceEnduranceObjective(OptimiserObjective):
             self.assumption,
         )
 
-        return calculate_army_resource_endurance(
+        management_score = calculate_army_resource_endurance(
             resources,
             trajectory,
+        )
+
+        capacity_score = calculate_resource_capacity_score(
+            might=resources.might,
+            will=resources.will,
+            fate=resources.fate,
+            army_points=candidate.army.total_points(),
+        )
+
+        return (
+            capacity_score
+            * CAPACITY_WEIGHT
+            +
+            management_score
+            * MANAGEMENT_WEIGHT
         )

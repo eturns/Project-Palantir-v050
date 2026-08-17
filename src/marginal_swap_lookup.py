@@ -33,7 +33,17 @@ def build_marginal_swap_lookup(
     recommendation_builder.build_recommendations().
 
     Each candidate's marginal swaps are ranked by total score delta.
+
+    Objective scores are calculated once per candidate and reused across
+    all marginal-swap analysis.
     """
+
+    score_lookup = {
+        id(candidate): objective.score(
+            candidate,
+        )
+        for candidate in candidates
+    }
 
     lookup = {}
 
@@ -43,6 +53,7 @@ def build_marginal_swap_lookup(
             candidates=candidates,
             objective=objective,
             constraints=constraints,
+            score_lookup=score_lookup,
         )
 
         lookup[

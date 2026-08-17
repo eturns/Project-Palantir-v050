@@ -3,10 +3,10 @@
 ## Current Standing
 
 **Released Version:** 0.5.0  
-**Automated Regression Suite:** 985 passing tests  
-**Current Phase:** Optimiser  
-**Last Completed Ticket:** DEV-054 — Explainable Recommendations 
-**Next Ticket:** DEV-055
+**Automated Regression Suite:** 1028 passing tests  
+**Current Phase:** Optimiser release closeout  
+**Last Completed Ticket:** DEV-055A — Layered Resource Capacity & Management  
+**Next Ticket:** REL-0.6 — 0.6.0 Optimiser release closeout  
 **Next Release:** REL-0.6 / 0.6.0 Optimiser
 
 ---
@@ -81,29 +81,8 @@ Completed:
   - Courage
   - Command
   - Hero Hunting
-- Battlefield Effects calibration rule:
-  - existing Exceptional threshold maps to 0.8
-  - remaining 0.2 provides headroom for extreme armies
 - Magic objective with provisional v1 normalisation.
-- Combat Capability objective using:
-  - Duel probability
-  - wound probability
-  - offensive capability
-  - defensive capability
-  - quantity-aware army aggregation
-- Explicit provisional combat benchmark:
-  - Fight 4
-  - Strength 4
-  - Defence 6
-  - Attacks 1
-  - Wounds 1
-- Resource Endurance objective using:
-  - explicit battle horizon
-  - explicit resource strategy
-  - army-wide Might, Will and Fate pools
-  - resource pacing across the battle
-  - final utilisation
-  - zero-starting resource pools excluded from the average
+- Combat Capability objective using Duel, wound, offensive and defensive capability.
 - Explicit named objective weights and presets.
 - Balanced preset with five equal-weight pillars:
   - Board Presence
@@ -114,14 +93,7 @@ Completed:
 - Balanced scoring rule:
   - 75% weighted overall capability
   - 25% weakest capability
-- Goal resolution for:
-  - Balanced
-  - Board Presence
-  - Magic
-- Behavioural tests proving:
-  - balanced capability is preferred over severe specialisation
-  - explicit weighting can predictably reverse rankings
-  - objective results remain bounded and deterministic
+- Behavioural tests proving deterministic, bounded and weighting-sensitive results.
 
 ### DEV-053 Calibration Assumptions
 
@@ -134,17 +106,23 @@ Provisional values include:
 - Manoeuvrability maximum: 10
 - Control density maximum: 5.0
 - Magic density maximum: 3.0
-- Battlefield Effects use the existing Exceptional threshold as 0.8
-- Combat benchmark: F4 / S4 / D6 / A1 / W1
+- Battlefield Effects maxima remain provisional and recalibratable
 - Balanced pillar weights: 20% each
 - Balanced overall/minimum weighting: 75% / 25%
-- Resource pacing/final-utilisation weighting: 70% / 30%
 
-These values must remain visible and recalibratable.
+The original single F4 / S4 / D6 / A1 / W1 combat benchmark has now been
+superseded for REL-0.6 by **Balanced All-Comers v1**, a weighted portfolio
+of representative warrior and Hero profiles.
+
+Resource Endurance has also been superseded by the DEV-055A layered model:
+**55% raw Resource Capacity + 45% Resource Management**.
+
+These values and assumptions must remain visible and recalibratable.
 
 ### DEV-054 — Explainable Recommendations ✅ COMPLETE
 
 Implemented:
+
 - Structured recommendation results
 - Transparent objective score contributions
 - Relative strongest and weakest capabilities
@@ -160,43 +138,181 @@ Implemented:
 - End-to-end explainable recommendation service
 
 Result:
-Palantír can now explain why a candidate ranks where it does,
-show legal nearby alternatives, and quantify how robust the
-recommendation is to changes in objective weighting.
 
-Regression suite:
-985 passing tests.
+Palantír can explain why a candidate ranks where it does, show legal nearby
+alternatives, and quantify how robust the recommendation is to changes in
+objective weighting.
 
-### DEV-054 — Explainable Recommendations
+DEV-054 regression suite: 985 passing tests.
 
-- Ranked recommendations
-- Strengths and weaknesses
-- Marginal swaps
-- Sensitivity analysis
-- Transparent evidence and assumptions
+### DEV-055 — Board Presence, Combat Portfolio & Semantic Validation ✅ COMPLETE
 
-### REL-0.6 — 0.6.0 Optimiser
+Completed:
 
-Release gate:
+- Board Presence acceptance audit.
+- Literal model count and points-normalised model presence confirmed.
+- Effective-base-size-aware manoeuvrability confirmed.
+- MOBILITY-tagged special rules integrated into manoeuvrability.
+- Spiritual Displacement modelled as a composition-aware shared effect.
+- Slayer of Men pairing represented as a combat benefit with a positioning cost.
+- Control / spatial influence audit completed:
+  - Terror retained as a conditional spatial-denial abstraction.
+  - Spider Webs retained as repeated Control with diminishing returns.
+- Board Presence path audited end-to-end for double counting.
+- **Balanced All-Comers v1** weighted combat benchmark portfolio added.
+- Performance improvements:
+  - marginal-swap score reuse
+  - sensitivity baseline-ranking reuse
+  - repeated profile-vs-benchmark combat memoisation
+- Battlefield Effects rule semantics audited against exact tabletop wording.
+- Corrected rule taxonomy:
+  - Bane of Kings → Offence + Shooting; no generic Hero Hunting
+  - Executioner → Offence; no generic Hero Hunting
+  - Drain Soul → Offence; no generic Hero Hunting
+  - Slayer of Men retains Hero Hunting because the rule explicitly targets Heroes
+  - Master of the Nazgûl → Defence abstraction; no generic Command
+  - Unholy Resurrection → Defence abstraction; no Objective value
+- Final permanent regression suite: **1028 passing tests**.
 
-Produce the first reproducible answer to the
-**best-six-Nazgûl** question under explicit assumptions, with:
+Final 490-candidate Family A/B validation:
 
-- legal constraints visible
-- objective weighting visible
-- evidence visible
-- sensitivity visible
+- Winner score: **0.5769**
+- Winner is #1 in **9/10** sensitivity variants
+- Worst observed winner rank: **#2**
+- Eddie's Choice: **#54 / 0.5732**
+- All Unique: **#86 / 0.5724**
+- Best Family A: **#226 / 0.5673**
+
+Current winner:
+
+- Sauron The Necromancer
+- Witch-king of Angmar (Dol Guldur)
+- Khamûl (Dol Guldur)
+- The Forsaken
+- 2 × Slayer of Men
+- 1 × Mirkwood Giant Spider
+- 4 × Mirkwood Hunting Spider
+
+The top of the archetype remains tightly clustered; ordinal rank should not be
+interpreted as a large tabletop power gap when score differences are tiny.
+
+### DEV-055A — Layered Resource Capacity & Management ✅ COMPLETE
+
+Completed the pre-0.6 resource correction exposed by live optimiser validation.
+
+- Raw Might, Will and Fate Capacity is represented separately from management.
+- Capacity is monotonic: adding a resource cannot reduce raw Capacity.
+- Resource Management preserves pacing/utilisation behaviour.
+- Resource Endurance combines:
+  - 55% Resource Capacity
+  - 45% Resource Management
+- Representative regression cases include the Witch-king 8→10 Might comparison.
+- Raw resource pools remain distinct.
+
+Full owner-aware legal allocation, conversion and shared-pool opportunity cost
+are deliberately deferred to DEV-055B.
+
+### REL-0.6 — 0.6.0 Optimiser ⏭ NEXT
+
+Release gate is ready for packaging.
+
+Release evidence must include:
+
+- legal candidate constraints
+- explicit objective weighting
+- Balanced All-Comers v1 combat portfolio
+- layered Resource Capacity / Management assumptions
+- final 490-candidate recommendation
+- five capability scores
+- marginal swaps
+- sensitivity / stability
 - deterministic reproducibility
+- known modelling abstractions and explicit deferrals
+
+---
+
+## Explicit Post-0.6 Modelling Deferrals
+
+### DEV-055B — Owner-Aware Resource Allocation / Conversion
+
+Model:
+
+- resource ownership
+- legal Might / Will / Fate uses
+- Will → Fate conversion
+- conditional resource conversions
+- shared-pool opportunity cost
+- no double counting when one pool can serve multiple effects
+- Master of the Nazgûl dependence on the Necromancer's remaining Will
+- Necromancer Will expenditure on Unholy Resurrection
+
+`He Cannot Yet Take Physical Form` remains a provisional Defence abstraction
+until Will → Fate conversion and its opportunity cost are represented explicitly.
+
+### DEV-057 — Army Model State / Broken / 25%
+
+Implement:
+
+- remaining-model state
+- Broken threshold
+- quarter-strength / 25% threshold
+- model-count edge cases
+
+Important Dol Guldur exception:
+
+**An Unholy Resurrection Marker counts as on the board for Broken and 25%
+calculations, but cannot hold Objectives.**
+
+### Future Target-Aware Combat Refinement
+
+Replace static approximations where appropriate:
+
+- Bane of Kings:
+  - calculate failed-To-Wound reroll value from actual wound probability
+- Executioner:
+  - natural-6 Duel trigger probability
+  - Mighty Blow value from target remaining Wounds
+- Drain Soul:
+  - target-Wounds-aware instant-kill value
+- Slayer of Men:
+  - actual Hero-target wound-reroll value
+- Poisoned Attacks:
+  - actual natural-1 reroll value
+  - weapon-specific scope
+
+**Hero Hunting is reserved for effects explicitly conditioned on the target
+being a Hero.**
+
+### Future Spatial / Opponent-Aware Refinement
+
+Terror:
+
+- current Control value represents conditional spatial denial
+- future value should depend on enemy Courage
+- future value should depend on positional/path-blocking relevance
+
+Harbinger of Evil:
+
+- should feed the enemy Courage state used by future Terror modelling
+- enemy Harbinger immunity must be respected
+
+Spider Webs:
+
+- future modelling should include range, hit/success probability, target relevance
+  and opportunity cost
+
+Unholy Resurrection:
+
+- future spatial modelling may include Marker blocking and 3" resurrection repositioning
+- battle-length logic should recognise unresolved Markers at game end
 
 ---
 
 ## Post-REL-0.6 Scenario Architecture
 
-Scenario-aware analysis remains later work.
-
 Current dependency sequence:
 
-`DEV-055 → DEV-057 → DEV-056 → DEV-058`
+`REL-0.6 → DEV-055B → DEV-057 → DEV-056 → DEV-058`
 
 DEV-050 battle horizons remain modelling assumptions until scenario
 termination and scoring are implemented.
@@ -213,10 +329,10 @@ Review:
 - objective normalisation ceilings
 - Battlefield Effects maxima
 - Magic density maximum
-- Combat benchmark assumptions
+- Balanced All-Comers v1 portfolio composition and weights
 - Balanced preset weights
 - weakest-capability weighting
-- Resource Endurance pacing and utilisation weights
+- Resource Capacity / Management calibration
 
 Calibration should include:
 
@@ -238,4 +354,3 @@ Project Palantír Version 1.0:
 A transparent, reproducible and statistically validated MESBG analysis,
 probability and optimisation engine covering the complete
 **Armies of The Hobbit (2024)** data boundary.
-

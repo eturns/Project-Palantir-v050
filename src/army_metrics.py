@@ -118,6 +118,14 @@ def _add_repeated_ability_metrics(
         * spider_webs_multiplier
     )
 
+    slayer_of_men_count = count_models_with_special_rule(
+        army,
+        "ANGMAR_ARISE_SOM",
+    )
+
+    if slayer_of_men_count >= 2:
+        army_metrics.offence += 0.5
+
 def calculate_army_metrics(
     army: Army,
     army_list: ArmyList,

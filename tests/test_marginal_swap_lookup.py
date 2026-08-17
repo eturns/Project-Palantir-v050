@@ -13,6 +13,30 @@ class Profile:
     ):
         self.id = profile_id
 
+class CountingObjective:
+    def __init__(self):
+        self.score_calls = 0
+
+    def score(self, candidate):
+        self.score_calls += 1
+
+        profile_ids = tuple(
+            sorted(
+                entry.profile.id
+                for entry in candidate.army.entries
+                for _ in range(entry.quantity)
+            )
+        )
+
+        value = {
+            ("a", "b"): 0.60,
+            ("a", "c"): 0.68,
+            ("b", "c"): 0.64,
+        }[profile_ids]
+
+        return ObjectiveScore(
+            total=value,
+        )
 
 def make_candidate(
     profile_ids,
@@ -146,3 +170,42 @@ def test_build_marginal_swap_lookup_returns_empty_dict_for_no_candidates():
         candidates=(),
         objective=SimpleObjective(),
     ) == {}
+
+def test_build_marginal_swap_lookup_scores_each_candidate_once():
+    candidate_ab = make_candidate(
+        (
+            "a",
+            "b",
+        )
+    )
+
+    candidate_ac = make_candidate(
+        (
+            "a",
+            "c",
+        )
+    )
+
+    candidate_bc = make_candidate(
+        (
+            "b",
+            "c",
+        )
+    )
+
+    candidates = (
+        candidate_ab,
+        candidate_ac,
+        candidate_bc,
+    )
+
+    objective = CountingObjective()
+
+    build_marginal_swap_lookup(
+        candidates=candidates,
+        objective=objective,
+    )
+
+    assert objective.score_calls == len(
+        candidates,
+    )
