@@ -37,6 +37,8 @@ from profile_option import ProfileOption
 
 from wargear import Wargear
 from mount import Mount
+from resource_use import ResourceUse
+from resource_use_permission import ResourceType
 # ============================================================================
 # Constants
 # ============================================================================
@@ -99,6 +101,10 @@ class Profile:
         default_factory=list,
     )
 
+    special_resource_permissions: tuple[
+        tuple[ResourceType, ResourceUse],
+        ...,
+    ] = ()
 # ============================================================================
 # Functions
 # ============================================================================
