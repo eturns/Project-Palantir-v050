@@ -39,6 +39,7 @@ from wargear import Wargear
 from mount import Mount
 from resource_use import ResourceUse
 from resource_use_permission import ResourceType
+from resource_conversion import ResourceConversion
 # ============================================================================
 # Constants
 # ============================================================================
@@ -103,6 +104,11 @@ class Profile:
 
     special_resource_permissions: tuple[
         tuple[ResourceType, ResourceUse],
+        ...,
+    ] = ()
+
+    special_resource_conversions: tuple[
+        ResourceConversion,
         ...,
     ] = ()
 # ============================================================================
