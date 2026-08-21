@@ -330,3 +330,272 @@ Next step:
 
 **REL-0.6 — release packaging, release notes and final release checklist.**
 
+# Session DEV-055B Closeout
+**Date:** 21 August 2026
+
+## Summary
+
+DEV-055B is complete.
+
+This development cycle replaced Project Palantír's pooled Heroic Resource
+assumptions with an owner-aware resource architecture capable of representing
+which physical model owns a resource, what that resource may legally be spent
+on, how special rules create alternative uses, and how competing uses draw from
+the same finite source pool.
+
+The completed architecture was integrated into Resource Endurance and validated
+against the complete 490-candidate Rise of the Necromancer optimisation space.
+
+---
+
+## Resource Ownership
+
+Introduced stable physical ownership through `ResourceOwner`.
+
+Repeated copies of the same Profile are expanded into independent owners using:
+
+- Profile ID
+- physical instance index
+
+Each owner receives an independent `HeroResourceState`.
+
+This prevents resources belonging to different Heroes from behaving as one
+interchangeable army-level pool.
+
+---
+
+## Legal Resource Uses
+
+Introduced explicit resource-use semantics.
+
+Default uses include:
+
+- Might → Duel modification
+- Might → Wound modification
+- Will → Cast Spell
+- Will → Resist Magic
+- Fate → Take Fate
+
+Special rules may add additional owner-specific permissions.
+
+Permissions are attached to physical resource owners rather than globally to
+the army.
+
+---
+
+## Resource Conversions
+
+Introduced conversion semantics expressed as:
+
+**source resource → target use**
+
+rather than:
+
+**source resource → artificial second resource pool**
+
+For example:
+
+`He Cannot Yet Take Physical Form`
+
+is represented as:
+
+**Will → Take Fate**
+
+The Necromancer therefore spends actual Will when using Will in place of Fate.
+No Fate resource is manufactured.
+
+---
+
+## Opportunity Cost
+
+Owner-aware allocations are totalled by:
+
+- ResourceOwner
+- source ResourceType
+
+This means several legal uses of one resource pool compete for the same finite
+resource.
+
+A point of Will cannot simultaneously be counted as:
+
+- spellcasting Will
+- resistance Will
+- Fate-equivalent Will
+- resurrection-boosting Will
+
+The permanent regression suite now explicitly proves that additional legal uses
+do not duplicate Resource Endurance value.
+
+---
+
+## Dol Guldur Special Rules
+
+### He Cannot Yet Take Physical Form
+
+The Necromancer's Will may legally fund Fate use.
+
+The expenditure reduces the Necromancer's actual remaining Will.
+
+### Unholy Resurrection
+
+Added `BOOST_RESURRECTION` as an explicit resource use.
+
+The Necromancer may legally spend his Will on this use.
+
+### Master of the Nazgûl
+
+Aura range now derives from the Necromancer's remaining Will:
+
+- 20+ Will → 18"
+- 10–19 Will → 12"
+- 0–9 Will → 6"
+
+Multi-turn tests confirm the aura responds correctly as Will is spent.
+
+---
+
+## Multi-Turn Integration
+
+Implemented owner-aware resource turn transitions and trajectories.
+
+Supported battle horizons remain:
+
+- Short — 6 turns
+- Medium — 8 turns
+- Long — 10 turns
+
+Each trajectory retains the independent state of every resource owner.
+
+---
+
+## Optimiser Integration
+
+Resource Endurance continues to use:
+
+- 55% Resource Capacity
+- 45% Resource Management
+
+Resource Capacity remains army-level and monotonic.
+
+Resource Management now evaluates owner-specific resource streams rather than
+treating all Might, Will and Fate as pooled army resources.
+
+Actual profile special rules initialise:
+
+- owner-aware permissions
+- owner-aware conversions
+
+These semantics are passed into the Resource Endurance management boundary.
+
+They do not receive arbitrary extra score simply for existing.
+
+---
+
+## Final Regression
+
+Permanent regression suite:
+
+**1146 passing tests**
+
+---
+
+## Final Dol Guldur Validation
+
+Candidate pool:
+
+- Family A: 94
+- Family B: 396
+- Total: 490
+
+Final recommendation:
+
+- Sauron The Necromancer
+- Witch-king of Angmar (Dol Guldur)
+- Khamûl (Dol Guldur)
+- The Forsaken
+- 2 × Slayer of Men
+- 1 × Mirkwood Giant Spider
+- 4 × Mirkwood Hunting Spider
+
+Result:
+
+- Balanced Score: **0.5455**
+- Points: **700**
+- Models: **11**
+- #1 in **9/10** sensitivity variants
+- Worst observed rank: **#2**
+
+Capabilities:
+
+- Board Presence: **0.5273**
+- Battlefield Effects: **0.5928**
+- Combat Capability: **0.5185**
+- Magic: **0.5666**
+- Resource Endurance: **0.5675**
+
+Best Family A:
+
+- Overall rank: **#191**
+- Balanced Score: **0.5351**
+- Resource Endurance: **0.5712**
+
+---
+
+## Comparison With 0.6.0 Baseline
+
+The 0.6.0 winner used the identical composition.
+
+Previous:
+
+- Balanced Score: **0.5769**
+- Resource Endurance: **0.7764**
+- #1 in 9/10 sensitivity variants
+- Worst rank #2
+- Best Family A #226
+
+DEV-055B:
+
+- Balanced Score: **0.5455**
+- Resource Endurance: **0.5675**
+- #1 in 9/10 sensitivity variants
+- Worst rank #2
+- Best Family A #191
+
+The owner-aware correction therefore materially reduced the absolute Resource
+Endurance score without changing Palantír's preferred army.
+
+This is accepted as credible evidence that pooled Heroic Resources previously
+overstated resource-management quality.
+
+---
+
+## Provisional Defence Abstractions
+
+The static Defence abstractions for:
+
+- He Cannot Yet Take Physical Form
+- Master of the Nazgûl
+- Unholy Resurrection
+
+remain in place.
+
+DEV-055B models the resource mechanics behind those rules, but does not yet
+model their complete survival/resurrection consequences.
+
+Removing the abstractions now would remove genuine tabletop value.
+
+They should be revisited once model-state and resurrection outcomes are
+represented directly.
+
+---
+
+## Outcome
+
+DEV-055B accepted.
+
+Project Palantír now has an owner-aware Heroic Resource architecture from
+profile rules through multi-turn management and optimiser integration.
+
+Next ticket:
+
+**DEV-057 — Army Model State / Broken / 25%**

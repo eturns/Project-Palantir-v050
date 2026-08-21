@@ -47,3 +47,16 @@ def test_resource_uses_map_to_existing_spend_domains():
         ResourceUse.TAKE_FATE.domain
         == ResourceSpendDomain.DEFENCE
     )
+
+def test_resource_use_exposes_boost_resurrection():
+    assert (
+        ResourceUse.BOOST_RESURRECTION.value
+        == "boost_resurrection"
+    )
+
+
+def test_boost_resurrection_maps_to_defence_domain():
+    assert (
+        ResourceUse.BOOST_RESURRECTION.domain
+        == ResourceSpendDomain.DEFENCE
+    )

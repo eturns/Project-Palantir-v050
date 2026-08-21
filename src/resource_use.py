@@ -24,6 +24,10 @@ class ResourceUse(Enum):
         "take_fate",
         ResourceSpendDomain.DEFENCE,
     )
+    BOOST_RESURRECTION = (
+        "boost_resurrection",
+        ResourceSpendDomain.DEFENCE,
+    )
 
     def __new__(
         cls,

@@ -2,12 +2,12 @@
 
 ## Current Standing
 
-**Released Version:** 0.5.0  
-**Automated Regression Suite:** 1028 passing tests  
-**Current Phase:** Optimiser release closeout  
-**Last Completed Ticket:** DEV-055A — Layered Resource Capacity & Management  
-**Next Ticket:** REL-0.6 — 0.6.0 Optimiser release closeout  
-**Next Release:** REL-0.6 / 0.6.0 Optimiser
+**Released Version:** 0.6.0  
+**Automated Regression Suite:** 1146 passing tests  
+**Current Phase:** Post-0.6 modelling  
+**Last Completed Ticket:** DEV-055B — Owner-Aware Resource Allocation / Conversion  
+**Next Ticket:** DEV-057 — Army Model State / Broken / 25%  
+**Next Release:** To be defined
 
 ---
 
@@ -231,23 +231,120 @@ Release evidence must include:
 
 ---
 
+### DEV-055B — Owner-Aware Resource Allocation / Conversion ✅ COMPLETE
+
+Completed:
+
+- Physical resource ownership through stable `ResourceOwner` identities.
+- Per-model Might, Will and Fate state.
+- Expansion of repeated profiles into independent physical resource owners.
+- Legal resource-use architecture.
+- Default Might, Will and Fate use permissions.
+- Special-rule-derived resource permissions.
+- Resource conversions expressed as source resource → legal use rather than
+  artificial resource → resource transformations.
+- Owner-specific conversion legality.
+- Owner-specific resource spending.
+- Shared-source opportunity-cost validation.
+- Prevention of overspending when one source pool can support several uses.
+- Immutable owner-aware allocation application.
+- Strategy-aware owner-specific resource budgets.
+- Multi-turn owner-aware resource trajectories.
+- Battle-horizon integration for Short, Medium and Long assumptions.
+- `He Cannot Yet Take Physical Form`:
+  - Necromancer Will may legally fund Fate use.
+  - Will remains a single physical source pool.
+- `Unholy Resurrection`:
+  - Necromancer Will may legally fund resurrection boosting.
+- `Master of the Nazgûl`:
+  - aura range derives from the Necromancer's remaining Will:
+    - 20+ Will → 18"
+    - 10–19 Will → 12"
+    - 0–9 Will → 6"
+- Resource-use permissions and conversions are derived from the actual
+  special rules assigned to profiles.
+- Owner-aware Resource Management integrated into the Resource Endurance
+  optimiser objective.
+- Resource semantics are propagated into the optimiser management boundary.
+- Explicit regression proving additional legal uses do not duplicate the
+  underlying resource pool.
+
+Resource Endurance remains:
+
+- 55% Resource Capacity
+- 45% Resource Management
+
+Raw Capacity remains army-level and monotonic.
+
+Resource Management is now owner-aware.
+
+Special permissions and conversions do not themselves create additional
+Capacity or Resource Endurance score. Their value must arise from the
+tabletop consequences of legal expenditure rather than from counting the
+same resource pool more than once.
+
+#### DEV-055B Dol Guldur validation
+
+Full regression suite:
+
+**1146 passing tests**
+
+490-candidate optimiser validation:
+
+- Family A candidates: 94
+- Family B candidates: 396
+- Total candidates: 490
+- Winner score: **0.5455**
+- Winner remains #1 in **9/10** sensitivity variants
+- Worst observed winner rank: **#2**
+- Best Family A: **#191 / 0.5351**
+
+Winner:
+
+- Sauron The Necromancer
+- Witch-king of Angmar (Dol Guldur)
+- Khamûl (Dol Guldur)
+- The Forsaken
+- 2 × Slayer of Men
+- 1 × Mirkwood Giant Spider
+- 4 × Mirkwood Hunting Spider
+
+Capability scores:
+
+- Board Presence: **0.5273**
+- Battlefield Effects: **0.5928**
+- Combat Capability: **0.5185**
+- Magic: **0.5666**
+- Resource Endurance: **0.5675**
+
+Compared with the 0.6.0 baseline, owner-aware management reduced the winner's
+Resource Endurance from **0.7764 to 0.5675**, but did not change the recommended
+army or its 9/10 sensitivity stability.
+
+This is accepted as strategically credible: the previous pooled model
+overstated the interchangeability of Heroic Resources, while owner-aware
+resource management changes the absolute assessment without destabilising the
+overall recommendation.
+
+#### Remaining provisional Dol Guldur abstractions
+
+The following Battlefield Effects Defence tags remain intentionally provisional:
+
+- `HE_CANNOT_YET_TAKE_PHYSICAL_FORM`
+- `MASTER_OF_THE_NAZGUL`
+- `UNHOLY_RESURRECTION`
+
+DEV-055B now models their resource semantics, but does not yet convert the
+resulting choices into expected survival, casualties or resurrection outcomes.
+
+Removing those Defence abstractions now would therefore discard real tabletop
+value rather than eliminate double counting.
+
+Their eventual replacement depends on later model-state and outcome modelling,
+beginning with DEV-057.
+
+
 ## Explicit Post-0.6 Modelling Deferrals
-
-### DEV-055B — Owner-Aware Resource Allocation / Conversion
-
-Model:
-
-- resource ownership
-- legal Might / Will / Fate uses
-- Will → Fate conversion
-- conditional resource conversions
-- shared-pool opportunity cost
-- no double counting when one pool can serve multiple effects
-- Master of the Nazgûl dependence on the Necromancer's remaining Will
-- Necromancer Will expenditure on Unholy Resurrection
-
-`He Cannot Yet Take Physical Form` remains a provisional Defence abstraction
-until Will → Fate conversion and its opportunity cost are represented explicitly.
 
 ### DEV-057 — Army Model State / Broken / 25%
 

@@ -1188,3 +1188,61 @@ DEV-054 closed with:
 
 DEV-055 - Board Presence and model Density
 
+## DEV-055B — Owner-Aware Resource Allocation / Conversion
+**Date:** 21 August 2026
+
+### Objective
+
+Replace pooled Heroic Resource assumptions with an owner-aware architecture
+capable of representing legal uses, conversions, competing expenditure and
+multi-turn resource state.
+
+### Completed
+
+- Added stable physical ResourceOwner identity.
+- Added owner-specific HeroResourceState initialization.
+- Added aggregation compatibility with existing army-level totals.
+- Added explicit ResourceUse and ResourceType semantics.
+- Added default and special-rule-derived owner permissions.
+- Added source-resource-to-target-use conversion architecture.
+- Added owner-specific conversion legality and spending.
+- Added owner-aware allocations and overspend validation.
+- Added shared-source opportunity-cost accounting.
+- Added strategy-aware owner-specific budgets.
+- Added multi-turn owner-aware resource transitions and trajectories.
+- Added Will → Fate semantics for He Cannot Yet Take Physical Form.
+- Added BOOST_RESURRECTION semantics for Unholy Resurrection.
+- Added remaining-Will-dependent Master of the Nazgûl aura ranges.
+- Derived permissions and conversions from actual assigned special rules.
+- Integrated owner-aware management into Resource Endurance.
+- Propagated permissions and conversions into the optimiser resource boundary.
+- Added explicit no-double-counting regression for multiple uses of one pool.
+- Validated the complete system against all 490 legal Dol Guldur candidates.
+
+### Final Validation
+
+Regression suite:
+
+**1146 passing tests**
+
+Optimiser winner:
+
+- Balanced Score: 0.5455
+- Resource Endurance: 0.5675
+- #1 in 9/10 sensitivity variants
+- Worst rank: #2
+
+The winning composition remains unchanged from the 0.6.0 baseline.
+
+### Decision
+
+DEV-055B accepted.
+
+Static Defence abstractions for He Cannot Yet Take Physical Form, Master of the
+Nazgûl and Unholy Resurrection remain provisional until later model-state and
+survival/resurrection modelling can replace them without discarding tabletop
+value.
+
+### Next
+
+DEV-057 — Army Model State / Broken / 25%.
