@@ -3,10 +3,10 @@
 ## Current Standing
 
 **Released Version:** 0.6.0  
-**Automated Regression Suite:** 1146 passing tests  
+**Automated Regression Suite:** 1203 passing tests  
 **Current Phase:** Post-0.6 modelling  
-**Last Completed Ticket:** DEV-055B — Owner-Aware Resource Allocation / Conversion  
-**Next Ticket:** DEV-057 — Army Model State / Broken / 25%  
+**Last Completed Ticket:** DEV-057 — Army Model State / Broken / 25%  
+**Next Ticket:** DEV-056 — Scenario Scoring / Termination Architecture  
 **Next Release:** To be defined
 
 ---
@@ -344,21 +344,49 @@ Their eventual replacement depends on later model-state and outcome modelling,
 beginning with DEV-057.
 
 
-## Explicit Post-0.6 Modelling Deferrals
+### DEV-057 — Army Model State / Broken / 25% ✅ COMPLETE
 
-### DEV-057 — Army Model State / Broken / 25%
+Implemented:
 
-Implement:
+- canonical immutable `ArmyModelState`
+- starting-model count
+- remaining-model count
+- army-state initialisation from `Army.model_count()`
+- casualty-driven immutable state transitions
+- exact Break Point calculation:
+  - half the starting model count
+  - fractional Break Points preserved
+- exact Broken-state semantics:
+  - casualties must exceed the Break Point
+- exact quarter-strength / 25% calculation
+- fractional 25% thresholds preserved without premature rounding
+- generic effective-model-count architecture
+- counted-model sources for rules that retain army-strength value
+- explicit `UnholyResurrectionMarkerState`
+- Unholy Resurrection Markers:
+  - count for Broken calculations
+  - count for 25% calculations
+  - contribute zero models for Objective control
+- integration tests covering:
+  - healthy → Broken transition
+  - Broken → 25% transition
+  - Unholy Resurrection Marker exceptions
 
-- remaining-model state
-- Broken threshold
-- quarter-strength / 25% threshold
-- model-count edge cases
+Final permanent regression suite:
 
-Important Dol Guldur exception:
+**1203 passing tests**
 
-**An Unholy Resurrection Marker counts as on the board for Broken and 25%
-calculations, but cannot hold Objectives.**
+The model-state layer deliberately does not yet implement:
+
+- Courage Tests caused by being Broken
+- Stand Fast
+- resurrection success probabilities
+- scenario scoring
+- scenario termination rolls
+- objective-control calculations
+- scenario-specific escaped / reinforcement model behaviour
+
+Those belong to later behavioural and scenario layers.
 
 ### Future Target-Aware Combat Refinement
 

@@ -599,3 +599,168 @@ profile rules through multi-turn management and optimiser integration.
 Next ticket:
 
 **DEV-057 — Army Model State / Broken / 25%**
+
+# Session DEV-057 Closeout
+**Date:** 24 August 2026
+
+## Summary
+
+DEV-057 is complete.
+
+This development cycle introduced Project Palantír's canonical in-game army
+model-state architecture and implemented the MESBG rules required to determine
+whether an Army is Broken or has been reduced to 25% of its starting models.
+
+The architecture deliberately separates Army composition from mutable game
+state so future scenario logic can consume state without embedding scenario
+behaviour inside the `Army` class.
+
+---
+
+## Army Model State
+
+Introduced immutable `ArmyModelState` containing:
+
+- starting model count
+- remaining model count
+
+Initial state is derived from `Army.model_count()`.
+
+State validation prevents:
+
+- negative starting models
+- negative remaining models
+- remaining models exceeding starting models
+
+---
+
+## State Transitions
+
+Introduced immutable casualty transitions.
+
+Applying casualties:
+
+- preserves starting model count
+- reduces remaining model count
+- does not mutate the previous state
+- rejects negative casualty counts
+- rejects casualties greater than remaining models
+
+---
+
+## Broken State
+
+Implemented the exact MESBG Break Point rule.
+
+Break Point is:
+
+**starting models ÷ 2**
+
+Fractional values are preserved.
+
+An Army becomes Broken only when casualties are **greater than** its Break
+Point.
+
+Examples:
+
+- 12 starting models → Break Point 6 → 6 casualties is not Broken
+- 12 starting models → 7 casualties is Broken
+- 13 starting models → Break Point 6.5 → 7 casualties is Broken
+
+---
+
+## Quarter Strength / 25%
+
+Implemented exact quarter-strength state.
+
+Quarter strength is:
+
+**starting models ÷ 4**
+
+Fractional values are preserved rather than rounded before comparison.
+
+Examples:
+
+- 12 starting models → 3 remaining qualifies
+- 11 starting models → threshold 2.75 → 2 qualifies, 3 does not
+- 13 starting models → threshold 3.25 → 3 qualifies, 4 does not
+
+---
+
+## Effective Model Count
+
+Introduced a generic effective-model-count layer.
+
+This separates:
+
+- physically remaining models
+- additional models or markers that rules state should still count for
+  Broken / 25% purposes
+
+This architecture is reusable by future scenario-specific state such as escaped
+models or models yet to enter the battlefield.
+
+---
+
+## Unholy Resurrection Markers
+
+Introduced `UnholyResurrectionMarkerState`.
+
+A Marker:
+
+- counts as a model for Broken calculations
+- counts as a model for 25% calculations
+- contributes zero models for Objective control
+
+This implements the Dol Guldur exception without coupling the generic Broken or
+25% engines directly to Dol Guldur.
+
+---
+
+## Integration Validation
+
+Permanent integration tests prove:
+
+- healthy Army → Broken Army
+- Broken Army → quarter strength
+- Unholy Resurrection Marker delaying Broken
+- Unholy Resurrection Marker delaying 25%
+- Marker contributing no Objective models
+
+---
+
+## Final Regression
+
+**1203 passing tests**
+
+---
+
+## Architectural Boundary
+
+DEV-057 provides model-state facts only.
+
+It does not yet model:
+
+- Broken Courage Tests
+- Stand Fast
+- resurrection probability
+- objective control
+- scenario Victory Points
+- scenario termination
+- random end-of-game rolls
+
+These behaviours should consume the state layer rather than be embedded within
+it.
+
+---
+
+## Outcome
+
+DEV-057 accepted.
+
+Project Palantír now has a reusable in-game army-state layer capable of
+supporting Broken, 25% and rule-specific effective-model-count calculations.
+
+Next ticket:
+
+**DEV-056 — Scenario Scoring / Termination Architecture**

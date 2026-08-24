@@ -1246,3 +1246,47 @@ value.
 ### Next
 
 DEV-057 — Army Model State / Broken / 25%.
+
+## DEV-057 — Army Model State / Broken / 25%
+**Date:** 24 August 2026
+
+### Objective
+
+Introduce canonical in-game model state and implement exact MESBG Broken and
+25% calculations.
+
+### Completed
+
+- Added immutable ArmyModelState.
+- Added Army → initial model-state construction.
+- Added immutable casualty transitions.
+- Added exact Break Point calculation.
+- Added exact Broken-state determination.
+- Added exact quarter-strength calculation.
+- Added generic effective-model-count architecture.
+- Added counted-model-source abstraction.
+- Added explicit Unholy Resurrection Marker state.
+- Confirmed Unholy Resurrection Markers count for Broken and 25% but not Objectives.
+- Added full state-transition integration tests.
+
+### Validation
+
+Permanent regression suite:
+
+**1203 passing tests**
+
+### Engineering Decisions
+
+- Army composition remains separate from in-game Army state.
+- Fractional Break Point and 25% thresholds are retained exactly.
+- Scenario-specific exceptions should feed generic counted-model interfaces
+  rather than modify core Broken / 25% mathematics.
+- Objective eligibility remains distinct from army-strength counting.
+
+### Status
+
+✅ COMPLETE
+
+### Next
+
+DEV-056 — Scenario Scoring / Termination Architecture.
