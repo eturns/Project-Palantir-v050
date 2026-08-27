@@ -222,3 +222,80 @@ def test_scenario_capability_profile_converts_to_complete_mapping():
         )
         for dimension in StrategicDemand
     }
+
+def test_capability_profile_reports_present_dimension_as_available():
+    profile = ScenarioCapabilityProfile(
+        capabilities=(
+            ScenarioCapability(
+                dimension=StrategicDemand.MOBILITY,
+                value=0.7,
+            ),
+        ),
+    )
+
+    assert profile.has_capability(
+        StrategicDemand.MOBILITY,
+    ) is True
+
+
+def test_capability_profile_reports_absent_dimension_as_unavailable():
+    profile = ScenarioCapabilityProfile(
+        capabilities=(
+            ScenarioCapability(
+                dimension=StrategicDemand.MOBILITY,
+                value=0.7,
+            ),
+        ),
+    )
+
+    assert profile.has_capability(
+        StrategicDemand.OBJECT_INTERACTION,
+    ) is False
+
+
+def test_get_capability_returns_present_capability():
+    capability = ScenarioCapability(
+        dimension=StrategicDemand.MOBILITY,
+        value=0.7,
+    )
+
+    profile = ScenarioCapabilityProfile(
+        capabilities=(capability,),
+    )
+
+    assert profile.get_capability(
+        StrategicDemand.MOBILITY,
+    ) == capability
+
+
+def test_get_capability_returns_none_when_dimension_is_unavailable():
+    profile = ScenarioCapabilityProfile()
+
+    assert profile.get_capability(
+        StrategicDemand.OBJECT_INTERACTION,
+    ) is None
+
+
+def test_available_mapping_contains_only_available_capabilities():
+    profile = ScenarioCapabilityProfile(
+        capabilities=(
+            ScenarioCapability(
+                dimension=StrategicDemand.MOBILITY,
+                value=0.7,
+            ),
+            ScenarioCapability(
+                dimension=StrategicDemand.PROJECTION,
+                value=0.4,
+            ),
+        ),
+    )
+
+    assert profile.to_available_mapping() == {
+        StrategicDemand.MOBILITY: 0.7,
+        StrategicDemand.PROJECTION: 0.4,
+    }
+
+    assert (
+        StrategicDemand.OBJECT_INTERACTION
+        not in profile.to_available_mapping()
+    )

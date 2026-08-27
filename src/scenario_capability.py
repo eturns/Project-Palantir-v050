@@ -73,6 +73,49 @@ class ScenarioCapabilityProfile:
 
         return 0.0
 
+    def has_capability(
+        self,
+        dimension: StrategicDemand,
+    ) -> bool:
+        if not isinstance(
+            dimension,
+            StrategicDemand,
+        ):
+            raise TypeError(
+                "dimension must be a StrategicDemand."
+            )
+
+        return any(
+            capability.dimension is dimension
+            for capability in self.capabilities
+        )
+
+    def get_capability(
+        self,
+        dimension: StrategicDemand,
+    ) -> ScenarioCapability | None:
+        if not isinstance(
+            dimension,
+            StrategicDemand,
+        ):
+            raise TypeError(
+                "dimension must be a StrategicDemand."
+            )
+
+        for capability in self.capabilities:
+            if capability.dimension is dimension:
+                return capability
+
+        return None
+
+    def to_available_mapping(
+        self,
+    ) -> dict[StrategicDemand, float]:
+        return {
+            capability.dimension: capability.value
+            for capability in self.capabilities
+        }
+    
     def to_mapping(
         self,
     ) -> dict[StrategicDemand, float]:
