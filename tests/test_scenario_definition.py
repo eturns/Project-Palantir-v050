@@ -7,7 +7,10 @@ from scenario_definition import (
     ScenarioRule,
     TerminationType,
 )
-
+from scenario_demand import (
+    ScenarioDemand,
+    StrategicDemand,
+)
 
 def test_scenario_pool_contains_all_six_official_pools():
     assert ScenarioPool.HOLD_OBJECTIVE.value == "hold_objective"
@@ -212,4 +215,91 @@ def test_scenario_definition_rejects_invalid_special_rule_type():
             deployment_type=DeploymentType.MAELSTROM,
             termination_type=TerminationType.BROKEN_RANDOM,
             special_rules=("maelstrom_of_battle",),
+        )
+
+def test_scenario_definition_defaults_to_no_strategic_demands():
+    scenario = ScenarioDefinition(
+        id="DOMINATION",
+        name="Domination",
+        pool=ScenarioPool.HOLD_OBJECTIVE,
+        deployment_type=DeploymentType.STANDARD,
+        termination_type=TerminationType.QUARTER_STRENGTH,
+    )
+
+    assert scenario.strategic_demands == ()
+
+
+def test_scenario_definition_stores_multiple_strategic_demands():
+    scenario = ScenarioDefinition(
+        id="DOMINATION",
+        name="Domination",
+        pool=ScenarioPool.HOLD_OBJECTIVE,
+        deployment_type=DeploymentType.STANDARD,
+        termination_type=TerminationType.QUARTER_STRENGTH,
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.DISTRIBUTED_CONTROL,
+                intensity=1.0,
+            ),
+            ScenarioDemand(
+                dimension=StrategicDemand.MOBILITY,
+                intensity=0.5,
+            ),
+        ),
+    )
+
+    assert scenario.strategic_demands == (
+        ScenarioDemand(
+            dimension=StrategicDemand.DISTRIBUTED_CONTROL,
+            intensity=1.0,
+        ),
+        ScenarioDemand(
+            dimension=StrategicDemand.MOBILITY,
+            intensity=0.5,
+        ),
+    )
+
+
+def test_scenario_definition_rejects_invalid_strategic_demand_type():
+    with pytest.raises(
+        TypeError,
+        match=(
+            "strategic_demands must contain only "
+            "ScenarioDemand values."
+        ),
+    ):
+        ScenarioDefinition(
+            id="DOMINATION",
+            name="Domination",
+            pool=ScenarioPool.HOLD_OBJECTIVE,
+            deployment_type=DeploymentType.STANDARD,
+            termination_type=TerminationType.QUARTER_STRENGTH,
+            strategic_demands=("distributed_control",),
+        )
+
+
+def test_scenario_definition_rejects_duplicate_strategic_dimensions():
+    with pytest.raises(
+        ValueError,
+        match=(
+            "ScenarioDefinition cannot contain duplicate "
+            "strategic demand dimensions."
+        ),
+    ):
+        ScenarioDefinition(
+            id="DOMINATION",
+            name="Domination",
+            pool=ScenarioPool.HOLD_OBJECTIVE,
+            deployment_type=DeploymentType.STANDARD,
+            termination_type=TerminationType.QUARTER_STRENGTH,
+            strategic_demands=(
+                ScenarioDemand(
+                    dimension=StrategicDemand.DISTRIBUTED_CONTROL,
+                    intensity=1.0,
+                ),
+                ScenarioDemand(
+                    dimension=StrategicDemand.DISTRIBUTED_CONTROL,
+                    intensity=0.5,
+                ),
+            ),
         )

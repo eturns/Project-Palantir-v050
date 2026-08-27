@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-
+from scenario_demand import ScenarioDemand
 
 class ScenarioPool(Enum):
     HOLD_OBJECTIVE = "hold_objective"
@@ -38,6 +38,7 @@ class ScenarioDefinition:
     deployment_type: DeploymentType
     termination_type: TerminationType
     special_rules: tuple[ScenarioRule, ...] = ()
+    strategic_demands: tuple[ScenarioDemand, ...] = ()
 
     def __post_init__(self) -> None:
         if not self.id.strip():
@@ -80,4 +81,24 @@ class ScenarioDefinition:
         ):
             raise TypeError(
                 "special_rules must contain only ScenarioRule values."
+            )
+
+        if not all(
+            isinstance(demand, ScenarioDemand)
+            for demand in self.strategic_demands
+        ):
+            raise TypeError(
+                "strategic_demands must contain only "
+                "ScenarioDemand values."
+            )
+
+        dimensions = [
+            demand.dimension
+            for demand in self.strategic_demands
+        ]
+
+        if len(dimensions) != len(set(dimensions)):
+            raise ValueError(
+                "ScenarioDefinition cannot contain duplicate "
+                "strategic demand dimensions."
             )
