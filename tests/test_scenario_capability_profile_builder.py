@@ -1,3 +1,4 @@
+import pytest
 from army import Army
 from army_list import ArmyList
 from combat_benchmark import CombatBenchmark
@@ -148,14 +149,13 @@ def test_builder_returns_all_supported_capabilities_and_omits_object_interaction
     )
 
     monkeypatch.setattr(
-        scenario_capability_profile_builder,
-        "calculate_deployment_recovery_from_army",
-        lambda army, benchmark,
-        benchmark_manoeuvrability: ScenarioCapability(
-            dimension=StrategicDemand.DEPLOYMENT_RECOVERY,
-            value=0.5,
-        ),
-    )
+    scenario_capability_profile_builder,
+    "calculate_deployment_recovery_capability",
+    lambda mobility, state_resilience: ScenarioCapability(
+        dimension=StrategicDemand.DEPLOYMENT_RECOVERY,
+        value=0.5,
+    ),
+)
 
     profile = build_scenario_capability_profile(
         army=army,
@@ -243,3 +243,185 @@ def test_builder_runs_real_capability_pipeline():
     assert result.has_capability(
         StrategicDemand.OBJECT_INTERACTION,
     ) is False
+
+def test_builder_can_apply_resurrection_to_state_resilience(
+    monkeypatch,
+):
+    import scenario_capability_profile_builder
+
+    army = Army()
+
+    key_profile = Profile(
+        id="RESURRECTION_TEST",
+        name="Resurrection Test Model",
+        points=100,
+        movement=6,
+        fight=4,
+        shooting="4+",
+        strength=4,
+        defence=6,
+        attacks=1,
+        wounds=2,
+        courage="4+",
+        intelligence="4+",
+        might=2,
+        will=2,
+        fate=2,
+        max_in_army=1,
+    )
+
+    army.add_profile(
+        key_profile,
+        quantity=1,
+    )
+
+    faction = Faction(
+        id="TEST_FACTION",
+        name="Test Faction",
+    )
+
+    army_list = ArmyList(
+        id="TEST_LIST",
+        name="Test List",
+        faction=faction,
+        profiles=[key_profile],
+    )
+
+    benchmark = CombatBenchmark(
+        fight=4,
+        strength=4,
+        defence=6,
+        attacks=1,
+        wounds=1,
+    )
+
+    monkeypatch.setattr(
+        scenario_capability_profile_builder,
+        "calculate_state_resilience_from_army",
+        lambda army, benchmark: ScenarioCapability(
+            dimension=StrategicDemand.STATE_RESILIENCE,
+            value=0.6,
+        ),
+    )
+
+    profile = build_scenario_capability_profile(
+        army=army,
+        army_list=army_list,
+        key_profile=key_profile,
+        combat_benchmark=benchmark,
+        benchmark_presence=10.0,
+        benchmark_manoeuvrability=1.0,
+        benchmark_combat_capability=0.5,
+        benchmark_fate=4.0,
+        resurrection_config={
+            "resurrection_capable_models": 1,
+            "starting_models": 2,
+            "resilience_weight": 0.5,
+        },
+    )
+
+    assert profile.get_value(
+        StrategicDemand.STATE_RESILIENCE,
+    ) == pytest.approx(
+        0.6 + (1 / 6),
+    )
+
+def test_builder_uses_modified_state_resilience_for_deployment_recovery(
+    monkeypatch,
+):
+    import scenario_capability_profile_builder
+
+    army = Army()
+
+    key_profile = Profile(
+        id="DEPLOYMENT_RES_TEST",
+        name="Deployment Resilience Test Model",
+        points=100,
+        movement=6,
+        fight=4,
+        shooting="4+",
+        strength=4,
+        defence=6,
+        attacks=1,
+        wounds=2,
+        courage="4+",
+        intelligence="4+",
+        might=2,
+        will=2,
+        fate=2,
+        max_in_army=1,
+    )
+
+    army.add_profile(
+        key_profile,
+        quantity=1,
+    )
+
+    faction = Faction(
+        id="TEST_FACTION",
+        name="Test Faction",
+    )
+
+    army_list = ArmyList(
+        id="TEST_LIST",
+        name="Test List",
+        faction=faction,
+        profiles=[key_profile],
+    )
+
+    benchmark = CombatBenchmark(
+        fight=4,
+        strength=4,
+        defence=6,
+        attacks=1,
+        wounds=1,
+    )
+
+    monkeypatch.setattr(
+        scenario_capability_profile_builder,
+        "calculate_state_resilience_from_army",
+        lambda army, benchmark: ScenarioCapability(
+            dimension=StrategicDemand.STATE_RESILIENCE,
+            value=0.6,
+        ),
+    )
+
+    monkeypatch.setattr(
+        scenario_capability_profile_builder,
+        "calculate_mobility_capability_from_army",
+        lambda army, benchmark_manoeuvrability: ScenarioCapability(
+            dimension=StrategicDemand.MOBILITY,
+            value=0.4,
+        ),
+    )
+
+    profile = build_scenario_capability_profile(
+        army=army,
+        army_list=army_list,
+        key_profile=key_profile,
+        combat_benchmark=benchmark,
+        benchmark_presence=10.0,
+        benchmark_manoeuvrability=1.0,
+        benchmark_combat_capability=0.5,
+        benchmark_fate=4.0,
+        resurrection_config={
+            "resurrection_capable_models": 1,
+            "starting_models": 2,
+            "resilience_weight": 0.5,
+        },
+    )
+
+    modified_resilience = (
+        0.6 + (1 / 6)
+    )
+
+    expected_deployment_recovery = (
+        0.5 * 0.4
+        + 0.5 * modified_resilience
+    )
+
+    assert profile.get_value(
+        StrategicDemand.DEPLOYMENT_RECOVERY,
+    ) == pytest.approx(
+        expected_deployment_recovery,
+    )

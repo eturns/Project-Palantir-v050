@@ -54,3 +54,20 @@ def test_resurrection_modifier_changes_outcome_distribution():
         result[ResurrectionState.CASUALTY]
         == Fraction(1, 2)
     )
+
+def test_resurrected_model_can_trigger_unholy_resurrection_again():
+    first_slain_state = get_state_after_model_is_slain(
+        has_unholy_resurrection=True,
+    )
+
+    assert first_slain_state == ResurrectionState.MARKER
+
+    resurrected_state = ResurrectionState.ALIVE
+
+    assert resurrected_state == ResurrectionState.ALIVE
+
+    second_slain_state = get_state_after_model_is_slain(
+        has_unholy_resurrection=True,
+    )
+
+    assert second_slain_state == ResurrectionState.MARKER

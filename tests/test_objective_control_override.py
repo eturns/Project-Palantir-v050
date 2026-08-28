@@ -4,6 +4,9 @@ from objective_control_override import (
     ObjectiveControlOverride,
     resolve_objective_control_override,
 )
+from dominant_presence import (
+    get_dominant_presence_override,
+)
 
 
 def test_no_overrides_returns_none():
@@ -61,4 +64,35 @@ def test_invalid_second_override_rejected():
         resolve_objective_control_override(
             first_army_override=ObjectiveControlOverride.NONE,
             second_army_override="automatic_control",
+        )
+
+def test_dominant_presence_grants_automatic_control_when_active():
+    result = get_dominant_presence_override(
+        dominant_presence_active=True,
+    )
+
+    assert (
+        result
+        == ObjectiveControlOverride.AUTOMATIC_CONTROL
+    )
+
+
+def test_dominant_presence_grants_no_override_when_inactive():
+    result = get_dominant_presence_override(
+        dominant_presence_active=False,
+    )
+
+    assert (
+        result
+        == ObjectiveControlOverride.NONE
+    )
+
+
+def test_dominant_presence_active_state_must_be_boolean():
+    with pytest.raises(
+        TypeError,
+        match="dominant_presence_active must be a bool.",
+    ):
+        get_dominant_presence_override(
+            dominant_presence_active=1,
         )

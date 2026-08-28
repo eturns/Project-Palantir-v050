@@ -8,7 +8,7 @@ from concentrated_control_capability import (
     calculate_concentrated_control_from_army,
 )
 from deployment_recovery_capability import (
-    calculate_deployment_recovery_from_army,
+    calculate_deployment_recovery_capability,
 )
 from distributed_control_capability import (
     calculate_distributed_control_from_profiles,
@@ -32,7 +32,9 @@ from scenario_capability import (
 from state_resilience_capability import (
     calculate_state_resilience_from_army,
 )
-
+from resurrection_resilience_calculator import (
+    calculate_resurrection_modified_state_resilience,
+)
 
 def build_scenario_capability_profile(
     army: Army,
@@ -43,6 +45,7 @@ def build_scenario_capability_profile(
     benchmark_manoeuvrability: int | float,
     benchmark_combat_capability: int | float,
     benchmark_fate: int | float,
+    resurrection_config: dict | None = None,
 ) -> ScenarioCapabilityProfile:
     profiles = tuple(
         entry.profile
@@ -114,13 +117,48 @@ def build_scenario_capability_profile(
         benchmark=combat_benchmark,
     )
 
+    if resurrection_config is not None:
+        state_resilience = (
+            calculate_resurrection_modified_state_resilience(
+                state_resilience=state_resilience,
+                resurrection_capable_models=(
+                    resurrection_config[
+                        "resurrection_capable_models"
+                    ]
+                ),
+                starting_models=(
+                    resurrection_config[
+                        "starting_models"
+                    ]
+                ),
+                resilience_weight=(
+                    resurrection_config[
+                        "resilience_weight"
+                    ]
+                ),
+                necromancer_remaining_will=(
+                    resurrection_config.get(
+                        "necromancer_remaining_will"
+                    )
+                ),
+                distance_inches=(
+                    resurrection_config.get(
+                        "distance_inches"
+                    )
+                ),
+                will_points_available_to_spend=(
+                    resurrection_config.get(
+                        "will_points_available_to_spend",
+                        0,
+                    )
+                ),
+            )
+        )
+
     deployment_recovery = (
-        calculate_deployment_recovery_from_army(
-            army=army,
-            benchmark=combat_benchmark,
-            benchmark_manoeuvrability=(
-                benchmark_manoeuvrability
-            ),
+        calculate_deployment_recovery_capability(
+            mobility=mobility.value,
+            state_resilience=state_resilience.value,
         )
     )
 
