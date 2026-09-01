@@ -10,7 +10,10 @@ from scenario_definition import (
     ScenarioRule,
     TerminationType,
 )
-
+from scenario_demand import (
+    ScenarioDemand,
+    StrategicDemand,
+)
 
 def test_official_scenario_catalogue_contains_24_scenarios():
     assert len(OFFICIAL_SCENARIOS) == 24
@@ -635,3 +638,272 @@ def test_every_official_scenario_has_non_blank_identity():
     for scenario in OFFICIAL_SCENARIOS:
         assert scenario.id.strip()
         assert scenario.name.strip()
+
+def test_all_official_scenarios_have_strategic_demands():
+    scenarios = get_official_scenarios()
+
+    assert all(
+        scenario.strategic_demands
+        for scenario in scenarios
+    )
+
+def test_domination_has_canonical_strategic_demands():
+    scenario = get_official_scenario(
+        "DOMINATION",
+    )
+
+    assert scenario.strategic_demands == (
+        ScenarioDemand(
+            dimension=StrategicDemand.DISTRIBUTED_CONTROL,
+            intensity=1.0,
+        ),
+    )
+def test_to_the_death_has_canonical_strategic_demands():
+    scenario = get_official_scenario(
+        "TO_THE_DEATH",
+    )
+
+    assert scenario.strategic_demands == (
+        ScenarioDemand(
+            dimension=StrategicDemand.ATTRITION_OUTPUT,
+            intensity=1.0,
+        ),
+        ScenarioDemand(
+            dimension=StrategicDemand.STATE_RESILIENCE,
+            intensity=1.0,
+        ),
+    )
+
+def test_manoeuvring_scenarios_have_canonical_mobility_demand():
+    scenario_ids = (
+        "RECONNOITRE",
+        "STORM_THE_CAMP",
+        "DIVIDE_AND_CONQUER",
+        "ESCORT_THE_WOUNDED",
+    )
+
+    for scenario_id in scenario_ids:
+        scenario = get_official_scenario(
+            scenario_id,
+        )
+
+        assert ScenarioDemand(
+            dimension=StrategicDemand.MOBILITY,
+            intensity=1.0,
+        ) in scenario.strategic_demands
+
+def test_maelstrom_scenarios_have_canonical_deployment_recovery_demand():
+    scenario_ids = (
+        "HOLD_GROUND",
+        "HEIRLOOM_OF_AGES_PAST",
+        "SITES_OF_POWER",
+        "COMMAND_THE_BATTLEFIELD",
+    )
+
+    for scenario_id in scenario_ids:
+        scenario = get_official_scenario(
+            scenario_id,
+        )
+
+        assert ScenarioDemand(
+            dimension=StrategicDemand.DEPLOYMENT_RECOVERY,
+            intensity=1.0,
+        ) in scenario.strategic_demands
+
+def test_hold_objective_scenarios_have_canonical_distributed_control_demand():
+    scenario_ids = (
+        "DOMINATION",
+        "CAPTURE_AND_CONTROL",
+        "BREAKTHROUGH",
+        "STAKE_A_CLAIM",
+    )
+
+    for scenario_id in scenario_ids:
+        scenario = get_official_scenario(
+            scenario_id,
+        )
+
+        assert ScenarioDemand(
+            dimension=StrategicDemand.DISTRIBUTED_CONTROL,
+            intensity=1.0,
+        ) in scenario.strategic_demands
+
+def test_lords_of_battle_has_canonical_attrition_output_demand():
+    scenario = get_official_scenario(
+        "LORDS_OF_BATTLE",
+    )
+
+    assert ScenarioDemand(
+        dimension=StrategicDemand.ATTRITION_OUTPUT,
+        intensity=1.0,
+    ) in scenario.strategic_demands
+
+def test_key_model_pressure_scenarios_have_canonical_demand():
+    scenario_ids = (
+        "ASSASSINATION",
+        "CONTEST_OF_CHAMPIONS",
+    )
+
+    for scenario_id in scenario_ids:
+        scenario = get_official_scenario(
+            scenario_id,
+        )
+
+        assert ScenarioDemand(
+            dimension=StrategicDemand.KEY_MODEL_PRESSURE,
+            intensity=1.0,
+        ) in scenario.strategic_demands
+
+def test_object_scenarios_have_canonical_mobility_demand():
+    scenario_ids = (
+        "DESTROY_THE_SUPPLIES",
+        "RETRIEVAL",
+        "SEIZE_THE_PRIZES",
+        "TREASURE_HOARD",
+    )
+
+    for scenario_id in scenario_ids:
+        scenario = get_official_scenario(
+            scenario_id,
+        )
+
+        assert ScenarioDemand(
+            dimension=StrategicDemand.MOBILITY,
+            intensity=1.0,
+        ) in scenario.strategic_demands
+
+def test_lead_from_the_front_has_canonical_key_model_preservation_demand():
+    scenario = get_official_scenario(
+        "LEAD_FROM_THE_FRONT",
+    )
+
+    assert ScenarioDemand(
+        dimension=StrategicDemand.KEY_MODEL_PRESERVATION,
+        intensity=1.0,
+    ) in scenario.strategic_demands
+
+def test_convergence_has_canonical_deployment_recovery_demand():
+    scenario = get_official_scenario(
+        "CONVERGENCE",
+    )
+
+    assert ScenarioDemand(
+        dimension=StrategicDemand.DEPLOYMENT_RECOVERY,
+        intensity=1.0,
+    ) in scenario.strategic_demands
+
+def test_clash_by_moonlight_has_canonical_projection_demand():
+    scenario = get_official_scenario(
+        "CLASH_BY_MOONLIGHT",
+    )
+
+    assert ScenarioDemand(
+        dimension=StrategicDemand.PROJECTION,
+        intensity=1.0,
+    ) in scenario.strategic_demands
+
+def test_fog_of_war_has_canonical_strategic_demands():
+    scenario = get_official_scenario(
+        "FOG_OF_WAR",
+    )
+
+    assert ScenarioDemand(
+        dimension=StrategicDemand.CONCENTRATED_CONTROL,
+        intensity=1.0,
+    ) in scenario.strategic_demands
+
+    assert ScenarioDemand(
+        dimension=StrategicDemand.KEY_MODEL_PRESERVATION,
+        intensity=1.0,
+    ) in scenario.strategic_demands
+
+    assert ScenarioDemand(
+        dimension=StrategicDemand.KEY_MODEL_PRESSURE,
+        intensity=1.0,
+    ) in scenario.strategic_demands
+
+def test_inspect_strategic_demand_coverage_across_official_scenarios():
+    scenarios = get_official_scenarios()
+
+    coverage = {
+        demand: 0
+        for demand in StrategicDemand
+    }
+
+    for scenario in scenarios:
+        for demand in scenario.strategic_demands:
+            coverage[
+                demand.dimension
+            ] += 1
+
+    print()
+    print(
+        "========== STRATEGIC DEMAND COVERAGE =========="
+    )
+
+    for demand in StrategicDemand:
+        print(
+            f"{demand.value}: "
+            f"{coverage[demand]} scenarios"
+        )
+
+    assert len(scenarios) == 24
+
+def test_attrition_scenarios_have_canonical_state_resilience_demand():
+    scenario_ids = (
+        "TO_THE_DEATH",
+        "LORDS_OF_BATTLE",
+    )
+
+    for scenario_id in scenario_ids:
+        scenario = get_official_scenario(
+            scenario_id,
+        )
+
+        assert ScenarioDemand(
+            dimension=StrategicDemand.STATE_RESILIENCE,
+            intensity=1.0,
+        ) in scenario.strategic_demands
+
+def test_manoeuvring_scenarios_have_secondary_canonical_demands():
+    storm_the_camp = get_official_scenario(
+        "STORM_THE_CAMP",
+    )
+
+    divide_and_conquer = get_official_scenario(
+        "DIVIDE_AND_CONQUER",
+    )
+
+    assert ScenarioDemand(
+        dimension=StrategicDemand.CONCENTRATED_CONTROL,
+        intensity=1.0,
+    ) in storm_the_camp.strategic_demands
+
+    assert ScenarioDemand(
+        dimension=StrategicDemand.DEPLOYMENT_RECOVERY,
+        intensity=1.0,
+    ) in divide_and_conquer.strategic_demands
+
+    assert ScenarioDemand(
+        dimension=StrategicDemand.DISTRIBUTED_CONTROL,
+        intensity=1.0,
+    ) in divide_and_conquer.strategic_demands
+
+def test_object_scenarios_have_secondary_canonical_demands():
+    destroy_the_supplies = get_official_scenario(
+        "DESTROY_THE_SUPPLIES",
+    )
+
+    retrieval = get_official_scenario(
+        "RETRIEVAL",
+    )
+
+    assert ScenarioDemand(
+        dimension=StrategicDemand.CONCENTRATED_CONTROL,
+        intensity=1.0,
+    ) in destroy_the_supplies.strategic_demands
+
+    assert ScenarioDemand(
+        dimension=StrategicDemand.STATE_RESILIENCE,
+        intensity=1.0,
+    ) in retrieval.strategic_demands

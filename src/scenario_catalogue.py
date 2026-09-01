@@ -5,7 +5,10 @@ from scenario_definition import (
     ScenarioRule,
     TerminationType,
 )
-
+from scenario_demand import (
+    ScenarioDemand,
+    StrategicDemand,
+)
 
 OFFICIAL_SCENARIOS = (
     ScenarioDefinition(
@@ -14,6 +17,12 @@ OFFICIAL_SCENARIOS = (
         pool=ScenarioPool.HOLD_OBJECTIVE,
         deployment_type=DeploymentType.STANDARD,
         termination_type=TerminationType.QUARTER_STRENGTH,
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.DISTRIBUTED_CONTROL,
+                intensity=1.0,
+            ),
+        ),
     ),
     ScenarioDefinition(
         id="CAPTURE_AND_CONTROL",
@@ -21,6 +30,12 @@ OFFICIAL_SCENARIOS = (
         pool=ScenarioPool.HOLD_OBJECTIVE,
         deployment_type=DeploymentType.STANDARD,
         termination_type=TerminationType.BROKEN_RANDOM,
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.DISTRIBUTED_CONTROL,
+                intensity=1.0,
+            ),
+        ),
     ),
     ScenarioDefinition(
         id="BREAKTHROUGH",
@@ -28,6 +43,12 @@ OFFICIAL_SCENARIOS = (
         pool=ScenarioPool.HOLD_OBJECTIVE,
         deployment_type=DeploymentType.STANDARD,
         termination_type=TerminationType.QUARTER_STRENGTH,
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.DISTRIBUTED_CONTROL,
+                intensity=1.0,
+            ),
+        ),
     ),
     ScenarioDefinition(
         id="STAKE_A_CLAIM",
@@ -35,6 +56,12 @@ OFFICIAL_SCENARIOS = (
         pool=ScenarioPool.HOLD_OBJECTIVE,
         deployment_type=DeploymentType.STANDARD,
         termination_type=TerminationType.QUARTER_STRENGTH,
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.DISTRIBUTED_CONTROL,
+                intensity=1.0,
+            ),
+        ),
     ),
 
     ScenarioDefinition(
@@ -43,6 +70,16 @@ OFFICIAL_SCENARIOS = (
         pool=ScenarioPool.KILL_THE_ENEMY,
         deployment_type=DeploymentType.STANDARD,
         termination_type=TerminationType.QUARTER_STRENGTH,
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.ATTRITION_OUTPUT,
+                intensity=1.0,
+            ),
+            ScenarioDemand(
+                dimension=StrategicDemand.STATE_RESILIENCE,
+                intensity=1.0,
+            ),
+        ),
     ),
     ScenarioDefinition(
         id="LORDS_OF_BATTLE",
@@ -52,6 +89,16 @@ OFFICIAL_SCENARIOS = (
         termination_type=TerminationType.BROKEN_RANDOM,
         special_rules=(
             ScenarioRule.A_TIME_OF_HEROES,
+        ),
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.ATTRITION_OUTPUT,
+                intensity=1.0,
+            ),
+            ScenarioDemand(
+                dimension=StrategicDemand.STATE_RESILIENCE,
+                intensity=1.0,
+            ),
         ),
     ),
     ScenarioDefinition(
@@ -63,6 +110,12 @@ OFFICIAL_SCENARIOS = (
         special_rules=(
             ScenarioRule.DARK_OF_NIGHT,
         ),
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.KEY_MODEL_PRESSURE,
+                intensity=1.0,
+            ),
+        ),
     ),
     ScenarioDefinition(
         id="CONTEST_OF_CHAMPIONS",
@@ -72,6 +125,12 @@ OFFICIAL_SCENARIOS = (
         termination_type=TerminationType.QUARTER_STRENGTH,
         special_rules=(
             ScenarioRule.A_TIME_OF_HEROES,
+        ),
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.KEY_MODEL_PRESSURE,
+                intensity=1.0,
+            ),
         ),
     ),
 
@@ -84,6 +143,12 @@ OFFICIAL_SCENARIOS = (
         special_rules=(
             ScenarioRule.MAELSTROM_OF_BATTLE,
         ),
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.DEPLOYMENT_RECOVERY,
+                intensity=1.0,
+            ),
+        ),
     ),
     ScenarioDefinition(
         id="HEIRLOOM_OF_AGES_PAST",
@@ -93,6 +158,12 @@ OFFICIAL_SCENARIOS = (
         termination_type=TerminationType.QUARTER_STRENGTH,
         special_rules=(
             ScenarioRule.MAELSTROM_OF_BATTLE,
+        ),
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.DEPLOYMENT_RECOVERY,
+                intensity=1.0,
+            ),
         ),
     ),
     ScenarioDefinition(
@@ -105,6 +176,12 @@ OFFICIAL_SCENARIOS = (
             ScenarioRule.DARK_OF_NIGHT,
             ScenarioRule.MAELSTROM_OF_BATTLE,
         ),
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.DEPLOYMENT_RECOVERY,
+                intensity=1.0,
+            ),
+        ),
     ),
     ScenarioDefinition(
         id="COMMAND_THE_BATTLEFIELD",
@@ -115,6 +192,12 @@ OFFICIAL_SCENARIOS = (
         special_rules=(
             ScenarioRule.MAELSTROM_OF_BATTLE,
         ),
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.DEPLOYMENT_RECOVERY,
+                intensity=1.0,
+            ),
+        ),
     ),
 
     ScenarioDefinition(
@@ -123,6 +206,16 @@ OFFICIAL_SCENARIOS = (
         pool=ScenarioPool.OBJECT,
         deployment_type=DeploymentType.STANDARD,
         termination_type=TerminationType.QUARTER_STRENGTH,
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.MOBILITY,
+                intensity=1.0,
+            ),
+            ScenarioDemand(
+                dimension=StrategicDemand.CONCENTRATED_CONTROL,
+                intensity=1.0,
+            ),
+        ),
     ),
     ScenarioDefinition(
         id="RETRIEVAL",
@@ -130,6 +223,16 @@ OFFICIAL_SCENARIOS = (
         pool=ScenarioPool.OBJECT,
         deployment_type=DeploymentType.STANDARD,
         termination_type=TerminationType.BROKEN_RANDOM,
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.MOBILITY,
+                intensity=1.0,
+            ),
+            ScenarioDemand(
+                dimension=StrategicDemand.STATE_RESILIENCE,
+                intensity=1.0,
+            ),
+        ),
     ),
     ScenarioDefinition(
         id="SEIZE_THE_PRIZES",
@@ -137,6 +240,12 @@ OFFICIAL_SCENARIOS = (
         pool=ScenarioPool.OBJECT,
         deployment_type=DeploymentType.STANDARD,
         termination_type=TerminationType.SCENARIO_SPECIFIC,
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.MOBILITY,
+                intensity=1.0,
+            ),
+        ),
     ),
     ScenarioDefinition(
         id="TREASURE_HOARD",
@@ -144,6 +253,12 @@ OFFICIAL_SCENARIOS = (
         pool=ScenarioPool.OBJECT,
         deployment_type=DeploymentType.STANDARD,
         termination_type=TerminationType.QUARTER_STRENGTH,
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.MOBILITY,
+                intensity=1.0,
+            ),
+        ),
     ),
 
     ScenarioDefinition(
@@ -152,6 +267,12 @@ OFFICIAL_SCENARIOS = (
         pool=ScenarioPool.MANOEUVRING,
         deployment_type=DeploymentType.REINFORCEMENTS,
         termination_type=TerminationType.QUARTER_STRENGTH,
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.MOBILITY,
+                intensity=1.0,
+            ),
+        ),
     ),
     ScenarioDefinition(
         id="STORM_THE_CAMP",
@@ -159,6 +280,16 @@ OFFICIAL_SCENARIOS = (
         pool=ScenarioPool.MANOEUVRING,
         deployment_type=DeploymentType.STANDARD,
         termination_type=TerminationType.QUARTER_STRENGTH,
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.MOBILITY,
+                intensity=1.0,
+            ),
+            ScenarioDemand(
+                dimension=StrategicDemand.CONCENTRATED_CONTROL,
+                intensity=1.0,
+            ),
+        ),
     ),
     ScenarioDefinition(
         id="DIVIDE_AND_CONQUER",
@@ -166,6 +297,20 @@ OFFICIAL_SCENARIOS = (
         pool=ScenarioPool.MANOEUVRING,
         deployment_type=DeploymentType.SPLIT,
         termination_type=TerminationType.BROKEN_RANDOM,
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.MOBILITY,
+                intensity=1.0,
+            ),
+            ScenarioDemand(
+                dimension=StrategicDemand.DEPLOYMENT_RECOVERY,
+                intensity=1.0,
+            ),
+            ScenarioDemand(
+                dimension=StrategicDemand.DISTRIBUTED_CONTROL,
+                intensity=1.0,
+            ),
+        ),
     ),
     ScenarioDefinition(
         id="ESCORT_THE_WOUNDED",
@@ -173,6 +318,12 @@ OFFICIAL_SCENARIOS = (
         pool=ScenarioPool.MANOEUVRING,
         deployment_type=DeploymentType.STANDARD,
         termination_type=TerminationType.QUARTER_STRENGTH,
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.MOBILITY,
+                intensity=1.0,
+            ),
+        ),
     ),
 
     ScenarioDefinition(
@@ -181,6 +332,20 @@ OFFICIAL_SCENARIOS = (
         pool=ScenarioPool.UNIQUE,
         deployment_type=DeploymentType.STANDARD,
         termination_type=TerminationType.BROKEN_RANDOM,
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.CONCENTRATED_CONTROL,
+                intensity=1.0,
+            ),
+            ScenarioDemand(
+                dimension=StrategicDemand.KEY_MODEL_PRESERVATION,
+                intensity=1.0,
+            ),
+            ScenarioDemand(
+                dimension=StrategicDemand.KEY_MODEL_PRESSURE,
+                intensity=1.0,
+            ),
+        ),
     ),
     ScenarioDefinition(
         id="CLASH_BY_MOONLIGHT",
@@ -190,6 +355,12 @@ OFFICIAL_SCENARIOS = (
         termination_type=TerminationType.QUARTER_STRENGTH,
         special_rules=(
             ScenarioRule.DARK_OF_NIGHT,
+        ),
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.PROJECTION,
+                intensity=1.0,
+            ),
         ),
     ),
     ScenarioDefinition(
@@ -201,6 +372,12 @@ OFFICIAL_SCENARIOS = (
         special_rules=(
             ScenarioRule.A_TIME_OF_HEROES,
         ),
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.KEY_MODEL_PRESERVATION,
+                intensity=1.0,
+            ),
+        ),
     ),
     ScenarioDefinition(
         id="CONVERGENCE",
@@ -208,6 +385,12 @@ OFFICIAL_SCENARIOS = (
         pool=ScenarioPool.UNIQUE,
         deployment_type=DeploymentType.SPLIT,
         termination_type=TerminationType.BROKEN_RANDOM,
+        strategic_demands=(
+            ScenarioDemand(
+                dimension=StrategicDemand.DEPLOYMENT_RECOVERY,
+                intensity=1.0,
+            ),
+        ),
     ),
 )
 

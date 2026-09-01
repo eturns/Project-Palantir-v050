@@ -1,6 +1,10 @@
 from optimiser_candidate import OptimiserCandidate
 from scenario_definition import ScenarioPool
-from scenario_objective import ScenarioObjective
+from scenario_objective import (
+    SCENARIO_MEAN_WEIGHT,
+    SCENARIO_MINIMUM_WEIGHT,
+    ScenarioObjective,
+)
 from scenario_pool_fit import (
     ScenarioPoolFitResult,
     ScenarioPoolFitSummary,
@@ -667,3 +671,12 @@ def test_scenario_objective_scores_drive_optimiser_ranking():
 
     assert ranked[0].score == 0.8
     assert ranked[1].score == 0.4
+
+def test_scenario_objective_uses_calibrated_75_25_weighting():
+    assert SCENARIO_MEAN_WEIGHT == 0.75
+    assert SCENARIO_MINIMUM_WEIGHT == 0.25
+    assert (
+        SCENARIO_MEAN_WEIGHT
+        + SCENARIO_MINIMUM_WEIGHT
+        == 1.0
+    )
