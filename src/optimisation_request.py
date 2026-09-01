@@ -27,6 +27,7 @@ class OptimisationGoal(Enum):
     BALANCED = "balanced"
     BOARD_PRESENCE = "board_presence"
     MAGIC = "magic"
+    SCENARIO = "scenario"
 
 
 @dataclass(frozen=True)

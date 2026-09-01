@@ -52,3 +52,6 @@ def test_optimisation_request_stores_optional_composition_spec():
     )
 
     assert request.composition_spec is spec
+
+def test_optimisation_goal_includes_scenario():
+    assert OptimisationGoal.SCENARIO.value == "scenario"

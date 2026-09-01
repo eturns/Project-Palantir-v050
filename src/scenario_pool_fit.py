@@ -195,3 +195,10 @@ def build_official_scenario_pool_fit_summary(
             pool_results=pool_results,
         ),
     )
+
+def build_official_scenario_pool_fit_summary_from_profile(
+    capability_profile: ScenarioCapabilityProfile,
+) -> ScenarioPoolFitSummary:
+    return build_official_scenario_pool_fit_summary(
+        capabilities=capability_profile.to_mapping(),
+    )
