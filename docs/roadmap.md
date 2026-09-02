@@ -3,10 +3,10 @@
 ## Current Standing
 
 **Released Version:** 0.6.0  
-**Automated Regression Suite:** 1203 passing tests  
+**Automated Regression Suite:** 1722 passing tests
 **Current Phase:** Post-0.6 modelling  
-**Last Completed Ticket:** DEV-057 — Army Model State / Broken / 25%  
-**Next Ticket:** DEV-056 — Scenario Scoring / Termination Architecture  
+**Last Completed Ticket:** DEV-056 — Scenario Scoring / Termination Architecture
+**Next Ticket:** DEV-058
 **Next Release:** To be defined
 
 ---
@@ -388,6 +388,92 @@ The model-state layer deliberately does not yet implement:
 
 Those belong to later behavioural and scenario layers.
 
+### DEV-056 — Scenario Scoring / Termination Architecture ✅ COMPLETE
+
+Implemented:
+
+- canonical catalogue of 24 official matched-play scenarios;
+- six official scenario pools:
+  - Hold Objective
+  - Kill the Enemy
+  - Maelstrom of Battle
+  - Object
+  - Manoeuvring
+  - Unique
+- strategic scenario-demand architecture;
+- candidate scenario-capability profiles;
+- per-scenario fit scoring;
+- per-pool scenario aggregation;
+- scenario-aware optimiser objective;
+- public `OptimisationGoal.SCENARIO`;
+- optimiser goal resolution into the Scenario objective;
+- candidate → capability → scenario → pool → objective end-to-end integration;
+- scenario-level player-facing analysis;
+- deterministic best-to-worst scenario ranking;
+- Top 5 / Bottom 5 scenario reporting;
+- demand-level explanation data for each scenario result.
+
+Strategic dimensions currently represented:
+
+- Distributed Control
+- Concentrated Control
+- Mobility
+- Projection
+- Attrition Output
+- Key Model Pressure
+- Key Model Preservation
+- State Resilience
+- Deployment Recovery
+
+`OBJECT_INTERACTION` remains deliberately unavailable rather than being
+represented as a false zero-value capability.
+
+Scenario-objective scoring is:
+
+- 75% mean score across all six scenario pools;
+- 25% weakest scenario-pool score.
+
+This weighting was calibrated against the established 490-candidate
+Dol Guldur population.
+
+Alternative weightings tested:
+
+- 100% mean / 0% weakest;
+- 75% mean / 25% weakest;
+- 67% mean / 33% weakest;
+- 50% mean / 50% weakest.
+
+All four produced the identical complete 1–490 candidate ordering.
+
+The 75/25 weighting is therefore retained as the canonical Scenario objective
+without evidence of ranking distortion in the current validation population.
+
+DEV-056 calibration population:
+
+- Family A candidates: 94
+- Family B candidates: 396
+- Total candidates: 490
+
+Validation confirmed:
+
+- all 490 candidates evaluate successfully;
+- all scenario and pool scores remain bounded between 0.0 and 1.0;
+- all six scenario pools discriminate between candidates;
+- ranking is deterministic;
+- composition differences remain detectable within equal-model-count groups;
+- scenario-objective rankings remain stable under the tested weighting variants.
+
+The completed player-facing scenario-analysis path is:
+
+`Structured candidate → Scenario Capability Profile → 24 scenario fits → ranking → Top 5 / Bottom 5 → demand-level explanation → report`
+
+Scenario explanations are derived from the same canonical scenario demands and
+candidate capability values used by the scoring engine rather than from
+separately authored descriptive text.
+
+Final DEV-056 regression suite:
+
+**1722 passing tests**
 ### Future Target-Aware Combat Refinement
 
 Replace static approximations where appropriate:
