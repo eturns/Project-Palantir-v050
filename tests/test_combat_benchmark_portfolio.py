@@ -6,7 +6,9 @@ from combat_benchmark_portfolio import (
     CombatBenchmarkPortfolio,
     WeightedCombatBenchmark,
 )
-
+from combat_benchmark_profile_loader import (
+    load_combat_benchmark_profiles,
+)
 
 def test_combat_benchmark_portfolio_accepts_weights_totalling_one():
     portfolio = CombatBenchmarkPortfolio(
@@ -180,3 +182,38 @@ def test_balanced_all_comers_v1_contains_elrond_f7_major_hero_benchmark():
         attacks=3,
         wounds=3,
     )
+
+def test_balanced_all_comers_v1_benchmarks_reference_full_profiles():
+    profiles_by_id = {
+        profile.id: profile
+        for profile in load_combat_benchmark_profiles()
+    }
+
+    expected_profile_ids = {
+        "BENCH_ROHAN_WARRIOR",
+        "BENCH_MORANNON_ORC",
+        "BENCH_EREBOR_DWARF_WARRIOR",
+        "BENCH_RIVENDELL_WARRIOR",
+        "BENCH_ROHAN_CAPTAIN",
+        "BENCH_MINAS_TIRITH_CAPTAIN",
+        "BENCH_RIVENDELL_CAPTAIN",
+        "BENCH_MORANNON_ORC_CAPTAIN",
+        "BENCH_IRON_HILLS_CAPTAIN",
+        "BENCH_ELROND",
+    }
+
+    assert {
+        entry.profile_id
+        for entry in BALANCED_ALL_COMERS_V1.benchmarks
+    } == expected_profile_ids
+
+    for entry in BALANCED_ALL_COMERS_V1.benchmarks:
+        profile = profiles_by_id[entry.profile_id]
+
+        assert entry.benchmark == CombatBenchmark(
+            fight=profile.fight,
+            strength=profile.strength,
+            defence=profile.defence,
+            attacks=profile.attacks,
+            wounds=profile.wounds,
+        )

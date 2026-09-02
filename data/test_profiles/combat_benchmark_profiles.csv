@@ -1,0 +1,11 @@
+id,name,points,movement,base_size_mm,fight,shooting,strength,defence,attacks,wounds,courage,intelligence,might,will,fate,max_in_army
+BENCH_ROHAN_WARRIOR,Warrior of Rohan,6,"6""",25,3,4+,3,4,1,1,7+,6+,0,0,0,0
+BENCH_MORANNON_ORC,Morannon Orc Warrior,8,"6""",25,3,4+,4,5,1,1,8+,7+,0,0,0,0
+BENCH_EREBOR_DWARF_WARRIOR,Erebor Dwarf Warrior,9,"5""",25,4,4+,3,6,1,1,6+,7+,0,0,0,0
+BENCH_RIVENDELL_WARRIOR,Rivendell Warrior,9,"6""",25,5,3+,3,5,1,1,5+,5+,0,0,0,0
+BENCH_ROHAN_CAPTAIN,Captain of Rohan,45,"6""",25,4,4+,4,5,2,2,6+,6+,2,1,1,0
+BENCH_MINAS_TIRITH_CAPTAIN,Captain of Minas Tirith,60,"6""",25,5,4+,4,7,2,2,6+,6+,2,1,1,0
+BENCH_RIVENDELL_CAPTAIN,Rivendell Captain,70,"6""",25,6,3+,4,6,2,2,4+,4+,2,1,1,0
+BENCH_MORANNON_ORC_CAPTAIN,Morannon Orc Captain,55,"6""",25,4,5+,5,6,2,2,7+,7+,2,1,1,0
+BENCH_IRON_HILLS_CAPTAIN,Iron Hills Captain,80,"5""",25,5,4+,4,8,2,2,5+,5+,2,1,1,0
+BENCH_ELROND,"Elrond, Master of Rivendell",170,"6""",25,7,3+,4,7,3,3,3+,3+,3,3,3,1
