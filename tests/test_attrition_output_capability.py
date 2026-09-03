@@ -50,7 +50,7 @@ def test_attrition_output_matches_benchmark_score():
 
     assert result == ScenarioCapability(
         dimension=StrategicDemand.ATTRITION_OUTPUT,
-        value=1.0,
+        value=0.5,
     )
 
 
@@ -62,11 +62,11 @@ def test_attrition_output_scales_below_benchmark():
 
     assert result == ScenarioCapability(
         dimension=StrategicDemand.ATTRITION_OUTPUT,
-        value=0.5,
+        value=0.5 / 1.5,
     )
 
 
-def test_attrition_output_caps_above_benchmark():
+def test_attrition_output_preserves_above_benchmark_difference():
     result = calculate_attrition_output_capability(
         combat_capability=1.5,
         benchmark_combat_capability=1.0,
@@ -74,7 +74,7 @@ def test_attrition_output_caps_above_benchmark():
 
     assert result == ScenarioCapability(
         dimension=StrategicDemand.ATTRITION_OUTPUT,
-        value=1.0,
+        value=1.5 / 2.5,
     )
 
 
@@ -137,5 +137,5 @@ def test_attrition_output_from_army_uses_existing_combat_capability():
 
     assert result == ScenarioCapability(
         dimension=StrategicDemand.ATTRITION_OUTPUT,
-        value=1.0,
+        value=0.5,
     )

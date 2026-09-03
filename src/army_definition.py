@@ -26,6 +26,8 @@ class ArmyDefinition:
     name: str
     army_list_id: str
     points_limit: int | None
+    leader_warband_id: str | None = None
+    leader_profile_id: str | None = None
 
     entries: list[ArmyEntryDefinition] = field(
         default_factory=list,

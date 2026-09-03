@@ -42,10 +42,12 @@ def calculate_mobility_capability(
             "benchmark_manoeuvrability must be greater than zero."
         )
 
-    value = min(
+    value = (
         manoeuvrability
-        / benchmark_manoeuvrability,
-        1.0,
+        / (
+            manoeuvrability
+            + benchmark_manoeuvrability
+        )
     )
 
     return ScenarioCapability(

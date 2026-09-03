@@ -328,6 +328,51 @@ def get_imported_army_id(
 
     return army_id
 
+def get_imported_leader_profile_id(
+    data: dict,
+) -> str | None:
+    """
+    Resolves the imported Leader warband to its
+    Palantír Profile ID.
+    """
+
+    leader_warband_id = data.get(
+        "metadata",
+        {},
+    ).get(
+        "leader",
+    )
+
+    if leader_warband_id is None:
+        return None
+
+    for warband in data.get(
+        "warbands",
+        [],
+    ):
+        if warband.get("id") != leader_warband_id:
+            continue
+
+        hero = warband.get(
+            "hero",
+        )
+
+        if hero is None:
+            return None
+
+        external_model_id = hero.get(
+            "model_id",
+        )
+
+        if external_model_id is None:
+            return None
+
+        return EXTERNAL_PROFILE_IDS[
+            external_model_id
+        ]
+
+    return None
+
 def build_army_definition_from_data(
     data: dict,
 ) -> ArmyDefinition:
@@ -355,8 +400,17 @@ def build_army_definition_from_data(
         points_limit=get_imported_points_limit(
             data,
         ),
+        leader_warband_id=data.get(
+            "metadata",
+            {},
+        ).get(
+            "leader",
+        ),
+        leader_profile_id=get_imported_leader_profile_id(
+            data,
+        ),
         entries=entries,
-    )
+            )
 
 def import_army_definition_from_json(
     file_path: str,

@@ -10,7 +10,7 @@ from scenario_capability import ScenarioCapability
 from scenario_demand import StrategicDemand
 
 
-def test_distributed_control_returns_capability():
+def test_distributed_control_benchmark_scores_half():
     result = calculate_distributed_control_capability(
         scenario_presence=10,
         benchmark_presence=10,
@@ -18,7 +18,7 @@ def test_distributed_control_returns_capability():
 
     assert result == ScenarioCapability(
         dimension=StrategicDemand.DISTRIBUTED_CONTROL,
-        value=1.0,
+        value=0.5,
     )
 
 
@@ -30,11 +30,11 @@ def test_distributed_control_scales_below_benchmark():
 
     assert result == ScenarioCapability(
         dimension=StrategicDemand.DISTRIBUTED_CONTROL,
-        value=0.5,
+        value=5 / 15,
     )
 
 
-def test_distributed_control_caps_above_benchmark():
+def test_distributed_control_preserves_above_benchmark_difference():
     result = calculate_distributed_control_capability(
         scenario_presence=15,
         benchmark_presence=10,
@@ -42,7 +42,7 @@ def test_distributed_control_caps_above_benchmark():
 
     assert result == ScenarioCapability(
         dimension=StrategicDemand.DISTRIBUTED_CONTROL,
-        value=1.0,
+        value=15 / 25,
     )
 
 
@@ -112,6 +112,7 @@ def test_distributed_control_rejects_boolean_presence():
             benchmark_presence=10,
         )
 
+
 def _load_profiles_with_special_rules():
     profiles = load_all_profiles()
 
@@ -130,7 +131,7 @@ def _load_profiles_with_special_rules():
     return profiles_by_id
 
 
-def test_distributed_control_from_real_dol_guldur_profiles_uses_dominant():
+def test_distributed_control_from_real_dol_guldur_profiles_uses_physical_model_count():
     profiles = _load_profiles_with_special_rules()
 
     army_profiles = (
@@ -150,11 +151,11 @@ def test_distributed_control_from_real_dol_guldur_profiles_uses_dominant():
 
     assert result == ScenarioCapability(
         dimension=StrategicDemand.DISTRIBUTED_CONTROL,
-        value=0.85,
+        value=7 / 27,
     )
 
 
-def test_distributed_control_from_profiles_caps_at_one():
+def test_distributed_control_from_profiles_preserves_above_benchmark_headroom():
     profiles = _load_profiles_with_special_rules()
 
     army_profiles = (
@@ -174,5 +175,5 @@ def test_distributed_control_from_profiles_caps_at_one():
 
     assert result == ScenarioCapability(
         dimension=StrategicDemand.DISTRIBUTED_CONTROL,
-        value=1.0,
+        value=7 / 17,
     )

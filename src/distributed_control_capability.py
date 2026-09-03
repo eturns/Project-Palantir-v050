@@ -1,9 +1,7 @@
 from scenario_capability import ScenarioCapability
 from scenario_demand import StrategicDemand
 from profiles import Profile
-from scenario_presence import (
-    calculate_army_scenario_presence,
-)
+
 
 def calculate_distributed_control_capability(
     scenario_presence: int | float,
@@ -35,9 +33,12 @@ def calculate_distributed_control_capability(
             "benchmark_presence must be greater than zero."
         )
 
-    value = min(
-        scenario_presence / benchmark_presence,
-        1.0,
+    value = (
+        scenario_presence
+        / (
+            scenario_presence
+            + benchmark_presence
+        )
     )
 
     return ScenarioCapability(
@@ -45,15 +46,22 @@ def calculate_distributed_control_capability(
         value=value,
     )
 
+
 def calculate_distributed_control_from_profiles(
     profiles: tuple[Profile, ...],
     benchmark_presence: int | float,
 ) -> ScenarioCapability:
-    scenario_presence = calculate_army_scenario_presence(
-        profiles=profiles,
+    for profile in profiles:
+        if not isinstance(profile, Profile):
+            raise TypeError(
+                "profiles must contain only Profile values."
+            )
+
+    physical_model_count = len(
+        profiles,
     )
 
     return calculate_distributed_control_capability(
-        scenario_presence=scenario_presence,
+        scenario_presence=physical_model_count,
         benchmark_presence=benchmark_presence,
     )

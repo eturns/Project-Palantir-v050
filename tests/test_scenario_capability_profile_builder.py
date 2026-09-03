@@ -133,7 +133,7 @@ def test_builder_returns_all_supported_capabilities_and_omits_object_interaction
     monkeypatch.setattr(
         scenario_capability_profile_builder,
         "calculate_key_model_preservation_from_profile",
-        lambda profile, benchmark, benchmark_fate: ScenarioCapability(
+        lambda profile, benchmark, benchmark_fate, army=None, army_list=None: ScenarioCapability(
             dimension=StrategicDemand.KEY_MODEL_PRESERVATION,
             value=0.5,
         ),
@@ -425,3 +425,123 @@ def test_builder_uses_modified_state_resilience_for_deployment_recovery(
     ) == pytest.approx(
         expected_deployment_recovery,
     )
+
+def test_builder_uses_separate_preservation_profile(
+    monkeypatch,
+):
+    import scenario_capability_profile_builder
+
+    army = Army()
+
+    leader_profile = Profile(
+        id="LEADER",
+        name="Leader",
+        points=100,
+        movement=6,
+        fight=5,
+        shooting="4+",
+        strength=4,
+        defence=6,
+        attacks=2,
+        wounds=2,
+        courage="4+",
+        intelligence="4+",
+        might=2,
+        will=2,
+        fate=2,
+        max_in_army=1,
+    )
+
+    preservation_profile = Profile(
+        id="PRESERVATION",
+        name="Preservation Hero",
+        points=80,
+        movement=6,
+        fight=4,
+        shooting="4+",
+        strength=4,
+        defence=5,
+        attacks=2,
+        wounds=2,
+        courage="4+",
+        intelligence="4+",
+        might=1,
+        will=1,
+        fate=1,
+        max_in_army=1,
+    )
+
+    army.add_profile(
+        leader_profile,
+        quantity=1,
+    )
+
+    army.add_profile(
+        preservation_profile,
+        quantity=1,
+    )
+
+    faction = Faction(
+        id="TEST_FACTION",
+        name="Test Faction",
+    )
+
+    army_list = ArmyList(
+        id="TEST_LIST",
+        name="Test List",
+        faction=faction,
+        profiles=[
+            leader_profile,
+            preservation_profile,
+        ],
+    )
+
+    benchmark = CombatBenchmark(
+        fight=4,
+        strength=4,
+        defence=6,
+        attacks=1,
+        wounds=1,
+    )
+
+    captured = {}
+
+    def fake_preservation(
+        profile,
+        benchmark,
+        benchmark_fate,
+        army=None,
+        army_list=None,
+    ):
+        captured["profile"] = profile
+        captured["army"] = army
+        captured["army_list"] = army_list
+
+        return ScenarioCapability(
+            dimension=(
+                StrategicDemand.KEY_MODEL_PRESERVATION
+            ),
+            value=0.5,
+        )
+
+    monkeypatch.setattr(
+        scenario_capability_profile_builder,
+        "calculate_key_model_preservation_from_profile",
+        fake_preservation,
+    )
+
+    build_scenario_capability_profile(
+        army=army,
+        army_list=army_list,
+        key_profile=leader_profile,
+        preservation_profile=preservation_profile,
+        combat_benchmark=benchmark,
+        benchmark_presence=10.0,
+        benchmark_manoeuvrability=1.0,
+        benchmark_combat_capability=0.5,
+        benchmark_fate=4.0,
+    )
+
+    assert captured["profile"] is preservation_profile
+    assert captured["army"] is army
+    assert captured["army_list"] is army_list

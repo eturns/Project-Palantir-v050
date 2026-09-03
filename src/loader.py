@@ -26,7 +26,10 @@ Created:
 import csv
 
 from profiles import Profile
-
+from profile_classification import (
+    HeroicStatus,
+    ModelType,
+)
 
 # ============================================================================
 # Constants
@@ -76,6 +79,30 @@ def _load_profiles_from_file(
                     will=int(row["will"]),
                     fate=int(row["fate"]),
                     max_in_army=int(row["max_in_army"]),
+
+                    heroic_status=(
+                        HeroicStatus(row["heroic_status"])
+                        if row.get("heroic_status")
+                        else None
+                    ),
+
+                    model_types={
+                        ModelType(model_type.strip())
+                        for model_type in row.get(
+                            "model_types",
+                            "",
+                        ).split("|")
+                        if model_type.strip()
+                    },
+
+                    races={
+                        race.strip()
+                        for race in row.get(
+                            "races",
+                            "",
+                        ).split("|")
+                        if race.strip()
+                    },
                 )
             )
 

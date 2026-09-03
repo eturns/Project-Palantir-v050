@@ -37,7 +37,7 @@ def make_profile(
     )
 
 
-def test_mobility_capability_matches_benchmark():
+def test_mobility_capability_benchmark_scores_half():
     result = calculate_mobility_capability(
         manoeuvrability=6.0,
         benchmark_manoeuvrability=6.0,
@@ -45,7 +45,7 @@ def test_mobility_capability_matches_benchmark():
 
     assert result == ScenarioCapability(
         dimension=StrategicDemand.MOBILITY,
-        value=1.0,
+        value=0.5,
     )
 
 
@@ -57,11 +57,11 @@ def test_mobility_capability_scales_below_benchmark():
 
     assert result == ScenarioCapability(
         dimension=StrategicDemand.MOBILITY,
-        value=0.5,
+        value=3 / 9,
     )
 
 
-def test_mobility_capability_caps_above_benchmark():
+def test_mobility_capability_preserves_above_benchmark_difference():
     result = calculate_mobility_capability(
         manoeuvrability=9.0,
         benchmark_manoeuvrability=6.0,
@@ -69,7 +69,7 @@ def test_mobility_capability_caps_above_benchmark():
 
     assert result == ScenarioCapability(
         dimension=StrategicDemand.MOBILITY,
-        value=1.0,
+        value=9 / 15,
     )
 
 
@@ -125,5 +125,5 @@ def test_mobility_capability_from_army_uses_existing_army_manoeuvrability():
 
     assert result == ScenarioCapability(
         dimension=StrategicDemand.MOBILITY,
-        value=0.5,
+        value=6 / 18,
     )

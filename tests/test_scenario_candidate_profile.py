@@ -40,6 +40,7 @@ def test_scenario_candidate_profile_passes_builder_inputs():
         army,
         army_list,
         key_profile,
+        preservation_profile,
         combat_benchmark,
         benchmark_presence,
         benchmark_manoeuvrability,
@@ -58,6 +59,7 @@ def test_scenario_candidate_profile_passes_builder_inputs():
                 "benchmark_combat_capability": benchmark_combat_capability,
                 "benchmark_fate": benchmark_fate,
                 "resurrection_config": resurrection_config,
+                "preservation_profile": preservation_profile,
             }
         )
 
@@ -68,6 +70,7 @@ def test_scenario_candidate_profile_passes_builder_inputs():
         profile_builder=fake_builder,
         army_list="ARMY_LIST",
         key_profile="KEY_PROFILE",
+        preservation_profile="PRESERVATION_PROFILE",
         combat_benchmark="COMBAT_BENCHMARK",
         benchmark_presence=10,
         benchmark_manoeuvrability=20,
@@ -82,6 +85,7 @@ def test_scenario_candidate_profile_passes_builder_inputs():
         "army": "TEST_ARMY",
         "army_list": "ARMY_LIST",
         "key_profile": "KEY_PROFILE",
+        "preservation_profile": "PRESERVATION_PROFILE",
         "combat_benchmark": "COMBAT_BENCHMARK",
         "benchmark_presence": 10,
         "benchmark_manoeuvrability": 20,
@@ -106,6 +110,7 @@ def test_scenario_candidate_profile_uses_default_builder(monkeypatch):
         army,
         army_list,
         key_profile,
+        preservation_profile,
         combat_benchmark,
         benchmark_presence,
         benchmark_manoeuvrability,

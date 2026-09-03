@@ -21,6 +21,64 @@ def test_concentrated_control_is_equal_weight_average():
     )
     assert result.value == pytest.approx(0.6)
 
+def test_concentrated_control_does_not_use_distributed_control(
+    monkeypatch,
+):
+    import concentrated_control_capability
+
+    army = Army()
+
+    combat_benchmark = CombatBenchmark(
+        fight=4,
+        strength=4,
+        defence=6,
+        attacks=1,
+        wounds=1,
+    )
+
+    monkeypatch.setattr(
+        concentrated_control_capability,
+        "calculate_army_scenario_presence",
+        lambda profiles: 8,
+    )
+
+    monkeypatch.setattr(
+        concentrated_control_capability,
+        "calculate_distributed_control_capability",
+        lambda *args, **kwargs: (
+            pytest.fail(
+                "Concentrated Control must not use "
+                "Distributed Control."
+            )
+        ),
+        raising=False,
+    )
+
+    monkeypatch.setattr(
+        concentrated_control_capability,
+        "calculate_attrition_output_capability_from_army",
+        lambda army, combat_benchmark, benchmark_combat_capability: (
+            ScenarioCapability(
+                dimension=StrategicDemand.ATTRITION_OUTPUT,
+                value=0.4,
+            )
+        ),
+    )
+
+    result = calculate_concentrated_control_from_army(
+        army=army,
+        benchmark_presence=10,
+        combat_benchmark=combat_benchmark,
+        benchmark_combat_capability=0.5,
+    )
+
+    assert result.value == pytest.approx(
+        (
+            (8 / 18)
+            + 0.4
+        )
+        / 2
+    )
 
 def test_concentrated_control_is_one_when_both_inputs_are_one():
     result = calculate_concentrated_control_capability(
@@ -134,4 +192,10 @@ def test_concentrated_control_from_army_combines_presence_and_attrition(
         result.dimension
         == StrategicDemand.CONCENTRATED_CONTROL
     )
-    assert result.value == pytest.approx(0.6)
+    assert result.value == pytest.approx(
+        (
+            (8 / 18)
+            + 0.4
+        )
+        / 2
+    )

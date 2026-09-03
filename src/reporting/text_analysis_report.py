@@ -1,3 +1,8 @@
+from scenario_analysis_report import (
+    build_scenario_analysis_report,
+)
+
+
 def print_text_analysis_report(
     result: dict,
 ) -> None:
@@ -10,7 +15,7 @@ def print_text_analysis_report(
     ]
     army = result[
         "army"
-        ]
+    ]
     analysis = result[
         "analysis"
     ]
@@ -74,3 +79,16 @@ def print_text_analysis_report(
             )
     else:
         print("None")
+
+    scenario_analysis_results = result.get(
+        "scenario_analysis_results",
+    )
+
+    if scenario_analysis_results is not None:
+        print()
+        print("========== SCENARIO ANALYSIS ==========")
+        print(
+            build_scenario_analysis_report(
+                scenario_analysis_results,
+            )
+        )

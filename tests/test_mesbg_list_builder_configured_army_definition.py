@@ -104,3 +104,96 @@ def test_build_army_definition_keeps_distinct_options_separate():
         "OPT_B",
     )
     assert army.entries[1].quantity == 2
+
+def test_build_army_definition_preserves_leader_warband_id():
+    external_model_id = get_known_external_model_id()
+
+    data = {
+        "id": "test-army",
+        "name": "Test Army",
+        "armyList": "Rise of the Necromancer",
+        "metadata": {
+            "maxPoints": 700,
+            "leader": "WAR-BAND-LEADER",
+        },
+        "warbands": [
+            {
+                "id": "WAR-BAND-LEADER",
+                "hero": {
+                    "model_id": external_model_id,
+                    "options": [],
+                },
+                "units": [],
+            }
+        ],
+    }
+
+    army = build_army_definition_from_data(
+        data,
+    )
+
+    assert army.leader_warband_id == (
+        "WAR-BAND-LEADER"
+    )
+
+def test_build_army_definition_resolves_leader_profile_id():
+    external_model_id = get_known_external_model_id()
+
+    data = {
+        "id": "test-army",
+        "name": "Test Army",
+        "armyList": "Rise of the Necromancer",
+        "metadata": {
+            "maxPoints": 777,
+            "leader": "WAR-BAND-LEADER",
+        },
+        "warbands": [
+            {
+                "id": "WAR-BAND-LEADER",
+                "hero": {
+                    "model_id": external_model_id,
+                    "options": [],
+                },
+                "units": [],
+            }
+        ],
+    }
+
+    army = build_army_definition_from_data(
+        data,
+    )
+
+    assert army.leader_profile_id == (
+        EXTERNAL_PROFILE_IDS[
+            external_model_id
+        ]
+    )
+
+def test_build_army_definition_without_leader_keeps_leader_profile_none():
+    external_model_id = get_known_external_model_id()
+
+    data = {
+        "id": "test-army",
+        "name": "Test Army",
+        "armyList": "Rise of the Necromancer",
+        "metadata": {
+            "maxPoints": 777,
+        },
+        "warbands": [
+            {
+                "id": "WAR-BAND-ONE",
+                "hero": {
+                    "model_id": external_model_id,
+                    "options": [],
+                },
+                "units": [],
+            }
+        ],
+    }
+
+    army = build_army_definition_from_data(
+        data,
+    )
+
+    assert army.leader_warband_id is None
+    assert army.leader_profile_id is None

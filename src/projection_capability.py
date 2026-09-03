@@ -11,7 +11,13 @@ from battlefield_effects_input_builder import (
 )
 from scenario_capability import ScenarioCapability
 from scenario_demand import StrategicDemand
-
+from army_metric_densities import (
+    calculate_army_metric_densities,
+)
+from objective_normalisation import (
+    MAGIC_DENSITY_MAX,
+    normalise_battlefield_effect,
+)
 
 def calculate_projection_capability(
     battlefield_effects_score: int | float,
@@ -86,6 +92,23 @@ def calculate_projection_capability_from_army(
         army_list,
     )
 
-    return calculate_projection_capability_from_inputs(
-        inputs=inputs,
+    densities = calculate_army_metric_densities(
+        army,
+        army_list,
+    )
+
+    magic = normalise_battlefield_effect(
+        densities.magic,
+        MAGIC_DENSITY_MAX,
+    )
+
+    projection_score = (
+        magic
+        + inputs.shooting
+    ) / 2
+
+    return calculate_projection_capability(
+        battlefield_effects_score=(
+            projection_score
+        ),
     )

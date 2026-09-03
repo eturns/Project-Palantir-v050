@@ -40,6 +40,10 @@ from mount import Mount
 from resource_use import ResourceUse
 from resource_use_permission import ResourceType
 from resource_conversion import ResourceConversion
+from profile_classification import (
+    HeroicStatus,
+    ModelType,
+)
 # ============================================================================
 # Constants
 # ============================================================================
@@ -76,6 +80,16 @@ class Profile:
     fate: int
 
     max_in_army: int
+
+    heroic_status: HeroicStatus | None = None
+
+    model_types: set[ModelType] = field(
+        default_factory=set,
+    )
+
+    races: set[str] = field(
+        default_factory=set,
+    )
 
     base_size_mm: int = 25
 

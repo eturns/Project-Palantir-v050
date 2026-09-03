@@ -15,6 +15,7 @@ from projection_capability import (
 from scenario_capability import ScenarioCapability
 from scenario_demand import StrategicDemand
 
+from types import SimpleNamespace
 
 def test_projection_capability_stores_score():
     result = calculate_projection_capability(
@@ -108,7 +109,7 @@ def test_projection_capability_from_inputs_uses_existing_score():
         value=0.5,
     )
 
-def test_projection_capability_from_army_uses_existing_builder(
+def test_projection_capability_from_army_uses_magic_and_shooting(
     monkeypatch,
 ):
     army = Army()
@@ -139,6 +140,14 @@ def test_projection_capability_from_army_uses_existing_builder(
         lambda army, army_list: expected_inputs,
     )
 
+    monkeypatch.setattr(
+        projection_capability,
+        "calculate_army_metric_densities",
+        lambda army, army_list: SimpleNamespace(
+            magic=1.5,
+        ),
+    )
+
     result = calculate_projection_capability_from_army(
         army=army,
         army_list=army_list,
@@ -146,5 +155,55 @@ def test_projection_capability_from_army_uses_existing_builder(
 
     assert result == ScenarioCapability(
         dimension=StrategicDemand.PROJECTION,
-        value=0.6,
+        value=0.55,
+    )
+
+def test_projection_from_army_uses_only_magic_and_shooting(
+    monkeypatch,
+):
+    army = Army()
+
+    army_list = ArmyList(
+        id="TEST_LIST",
+        name="Test List",
+        faction=Faction(
+            id="TEST_FACTION",
+            name="Test Faction",
+        ),
+    )
+
+    inputs = BattlefieldEffectsInputs(
+        offence=1.0,
+        defence=1.0,
+        shooting=0.2,
+        courage=1.0,
+        command=1.0,
+        hero_hunting=1.0,
+    )
+
+    import projection_capability
+
+    monkeypatch.setattr(
+        projection_capability,
+        "build_battlefield_effects_inputs",
+        lambda army, army_list: inputs,
+    )
+
+    monkeypatch.setattr(
+        projection_capability,
+        "calculate_army_metric_densities",
+        lambda army, army_list: SimpleNamespace(
+            magic=1.5,
+        ),
+        raising=False,
+    )
+
+    result = calculate_projection_capability_from_army(
+        army=army,
+        army_list=army_list,
+    )
+
+    assert result == ScenarioCapability(
+        dimension=StrategicDemand.PROJECTION,
+        value=0.35,
     )

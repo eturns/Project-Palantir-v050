@@ -43,10 +43,12 @@ def calculate_attrition_output_capability(
             "benchmark_combat_capability must be greater than zero."
         )
 
-    value = min(
+    value = (
         combat_capability
-        / benchmark_combat_capability,
-        1.0,
+        / (
+            combat_capability
+            + benchmark_combat_capability
+        )
     )
 
     return ScenarioCapability(

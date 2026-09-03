@@ -5,9 +5,6 @@ from attrition_output_capability import (
     calculate_attrition_output_capability_from_army,
 )
 from combat_benchmark import CombatBenchmark
-from distributed_control_capability import (
-    calculate_distributed_control_capability,
-)
 from scenario_presence import (
     calculate_army_scenario_presence,
 )
@@ -80,10 +77,11 @@ def calculate_concentrated_control_from_army(
         profiles,
     )
 
-    presence_capability = (
-        calculate_distributed_control_capability(
-            scenario_presence=scenario_presence,
-            benchmark_presence=benchmark_presence,
+    presence_strength = (
+        scenario_presence
+        / (
+            scenario_presence
+            + benchmark_presence
         )
     )
 
@@ -98,6 +96,6 @@ def calculate_concentrated_control_from_army(
     )
 
     return calculate_concentrated_control_capability(
-        presence_strength=presence_capability.value,
+        presence_strength=presence_strength,
         attrition_output=attrition_capability.value,
     )

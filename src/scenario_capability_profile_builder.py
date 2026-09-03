@@ -45,6 +45,7 @@ def build_scenario_capability_profile(
     benchmark_manoeuvrability: int | float,
     benchmark_combat_capability: int | float,
     benchmark_fate: int | float,
+    preservation_profile: Profile | None = None,
     resurrection_config: dict | None = None,
 ) -> ScenarioCapabilityProfile:
     profiles = tuple(
@@ -104,11 +105,16 @@ def build_scenario_capability_profile(
         )
     )
 
+    if preservation_profile is None:
+        preservation_profile = key_profile
+
     key_model_preservation = (
         calculate_key_model_preservation_from_profile(
-            profile=key_profile,
+            profile=preservation_profile,
             benchmark=combat_benchmark,
             benchmark_fate=benchmark_fate,
+            army=army,
+            army_list=army_list,
         )
     )
 

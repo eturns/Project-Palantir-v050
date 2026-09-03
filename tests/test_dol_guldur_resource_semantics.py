@@ -18,7 +18,9 @@ from special_rule_resource_conversions import (
 from special_rule_resource_permissions import (
     get_special_rule_resource_permissions,
 )
-
+from loader import load_all_profiles
+from relationship_loader import load_profile_special_rules
+from rule_loader import load_special_rules
 
 def test_necromancer_special_rules_expose_expected_resource_semantics():
     owner = ResourceOwner(
@@ -98,4 +100,31 @@ def test_necromancer_remaining_will_changes_master_aura_range():
             )
         )
         == 6
+    )
+
+def test_necromancer_loaded_profile_has_will_as_fate_rule():
+    profiles = load_all_profiles()
+
+    profiles_by_id = {
+        profile.id: profile
+        for profile in profiles
+    }
+
+    special_rules = load_special_rules()
+
+    load_profile_special_rules(
+        profiles_by_id,
+        special_rules,
+    )
+
+    necromancer = profiles_by_id["DG_NEC"]
+
+    special_rule_ids = {
+        assignment.rule.id
+        for assignment in necromancer.special_rules
+    }
+
+    assert (
+        "HE_CANNOT_YET_TAKE_PHYSICAL_FORM"
+        in special_rule_ids
     )
