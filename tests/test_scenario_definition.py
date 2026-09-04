@@ -11,6 +11,7 @@ from scenario_demand import (
     ScenarioDemand,
     StrategicDemand,
 )
+from object_interaction import ObjectInteractionMode
 
 def test_scenario_pool_contains_all_six_official_pools():
     assert ScenarioPool.HOLD_OBJECTIVE.value == "hold_objective"
@@ -302,4 +303,34 @@ def test_scenario_definition_rejects_duplicate_strategic_dimensions():
                     intensity=0.5,
                 ),
             ),
+        )
+
+def test_scenario_definition_accepts_object_interaction_mode():
+    scenario = ScenarioDefinition(
+        id="TEST_OBJECT",
+        name="Test Object",
+        pool=ScenarioPool.OBJECT,
+        deployment_type=DeploymentType.STANDARD,
+        termination_type=TerminationType.QUARTER_STRENGTH,
+        object_interaction_mode=ObjectInteractionMode.LIGHT_OBJECT,
+    )
+
+    assert (
+        scenario.object_interaction_mode
+        is ObjectInteractionMode.LIGHT_OBJECT
+    )
+
+
+def test_scenario_definition_rejects_invalid_object_interaction_mode():
+    with pytest.raises(
+        TypeError,
+        match="object_interaction_mode must be an ObjectInteractionMode or None.",
+    ):
+        ScenarioDefinition(
+            id="TEST_OBJECT",
+            name="Test Object",
+            pool=ScenarioPool.OBJECT,
+            deployment_type=DeploymentType.STANDARD,
+            termination_type=TerminationType.QUARTER_STRENGTH,
+            object_interaction_mode="light_object",
         )

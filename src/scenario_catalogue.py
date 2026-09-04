@@ -9,6 +9,7 @@ from scenario_demand import (
     ScenarioDemand,
     StrategicDemand,
 )
+from object_interaction import ObjectInteractionMode
 
 OFFICIAL_SCENARIOS = (
     ScenarioDefinition(
@@ -164,7 +165,12 @@ OFFICIAL_SCENARIOS = (
                 dimension=StrategicDemand.DEPLOYMENT_RECOVERY,
                 intensity=1.0,
             ),
+            ScenarioDemand(
+                dimension=StrategicDemand.OBJECT_INTERACTION,
+                intensity=1.0,
+            ),
         ),
+        object_interaction_mode=ObjectInteractionMode.SEARCH_AND_LIGHT_OBJECT,
     ),
     ScenarioDefinition(
         id="SITES_OF_POWER",
@@ -215,7 +221,12 @@ OFFICIAL_SCENARIOS = (
                 dimension=StrategicDemand.CONCENTRATED_CONTROL,
                 intensity=1.0,
             ),
+            ScenarioDemand(
+                dimension=StrategicDemand.OBJECT_INTERACTION,
+                intensity=1.0,
+            ),
         ),
+        object_interaction_mode=ObjectInteractionMode.STATIC_ACTION,
     ),
     ScenarioDefinition(
         id="RETRIEVAL",
@@ -232,7 +243,12 @@ OFFICIAL_SCENARIOS = (
                 dimension=StrategicDemand.STATE_RESILIENCE,
                 intensity=1.0,
             ),
+            ScenarioDemand(
+                dimension=StrategicDemand.OBJECT_INTERACTION,
+                intensity=1.0,
+            ),
         ),
+        object_interaction_mode=ObjectInteractionMode.LIGHT_OBJECT,
     ),
     ScenarioDefinition(
         id="SEIZE_THE_PRIZES",
@@ -245,7 +261,12 @@ OFFICIAL_SCENARIOS = (
                 dimension=StrategicDemand.MOBILITY,
                 intensity=1.0,
             ),
+            ScenarioDemand(
+                dimension=StrategicDemand.OBJECT_INTERACTION,
+                intensity=1.0,
+            ),
         ),
+        object_interaction_mode=ObjectInteractionMode.UNCOVER_AND_LIGHT_OBJECT,
     ),
     ScenarioDefinition(
         id="TREASURE_HOARD",
@@ -258,7 +279,12 @@ OFFICIAL_SCENARIOS = (
                 dimension=StrategicDemand.MOBILITY,
                 intensity=1.0,
             ),
+            ScenarioDemand(
+                dimension=StrategicDemand.OBJECT_INTERACTION,
+                intensity=1.0,
+            ),
         ),
+        object_interaction_mode=ObjectInteractionMode.UNCOVER_AND_LIGHT_OBJECT,
     ),
 
     ScenarioDefinition(
@@ -323,7 +349,12 @@ OFFICIAL_SCENARIOS = (
                 dimension=StrategicDemand.MOBILITY,
                 intensity=1.0,
             ),
+            ScenarioDemand(
+                dimension=StrategicDemand.OBJECT_INTERACTION,
+                intensity=1.0,
+            ),
         ),
+        object_interaction_mode=ObjectInteractionMode.HEAVY_OBJECT, 
     ),
 
     ScenarioDefinition(
@@ -390,7 +421,13 @@ OFFICIAL_SCENARIOS = (
                 dimension=StrategicDemand.DEPLOYMENT_RECOVERY,
                 intensity=1.0,
             ),
+            ScenarioDemand(
+                dimension=StrategicDemand.OBJECT_INTERACTION,
+                intensity=1.0,
+            ),
         ),
+        object_interaction_mode=ObjectInteractionMode.LIGHT_OBJECT,
+        
     ),
 )
 

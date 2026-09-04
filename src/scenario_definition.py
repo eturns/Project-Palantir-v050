@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from enum import Enum
 from scenario_demand import ScenarioDemand
+from object_interaction import ObjectInteractionMode
 
 class ScenarioPool(Enum):
     HOLD_OBJECTIVE = "hold_objective"
@@ -39,6 +40,7 @@ class ScenarioDefinition:
     termination_type: TerminationType
     special_rules: tuple[ScenarioRule, ...] = ()
     strategic_demands: tuple[ScenarioDemand, ...] = ()
+    object_interaction_mode: ObjectInteractionMode | None = None
 
     def __post_init__(self) -> None:
         if not self.id.strip():
@@ -73,6 +75,18 @@ class ScenarioDefinition:
         ):
             raise TypeError(
                 "termination_type must be a TerminationType."
+            )
+
+        if (
+            self.object_interaction_mode is not None
+            and not isinstance(
+                self.object_interaction_mode,
+                ObjectInteractionMode,
+            )
+        ):
+            raise TypeError(
+                "object_interaction_mode must be an "
+                "ObjectInteractionMode or None."
             )
 
         if not all(

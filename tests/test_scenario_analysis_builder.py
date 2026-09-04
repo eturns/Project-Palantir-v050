@@ -17,6 +17,9 @@ from scenario_analysis_builder import (
     scenario_analysis_extremes,
 )
 from scenario_analysis_result import ScenarioAnalysisResult
+from army import Army
+from profiles import Profile
+from profile_classification import ModelType
 
 def test_build_scenario_analysis_results_returns_all_24_scenarios():
     results = build_scenario_analysis_results(
@@ -155,6 +158,12 @@ def test_build_scenario_analysis_results_from_candidate_uses_candidate_profile_p
         fake_result_builder,
     )
 
+    monkeypatch.setattr(
+        "scenario_analysis_builder."
+        "calculate_object_interaction_capability_from_army",
+        lambda army, mode: 0.5,
+    )
+
     result = build_scenario_analysis_results_from_candidate(
         candidate=candidate,
         army_list="ARMY_LIST",
@@ -176,7 +185,29 @@ def test_build_scenario_analysis_results_from_candidate_uses_candidate_profile_p
 
     assert captured["profile"] is capability_profile
 
-    assert captured["scenario_capability_overrides"] == {}
+    assert captured["scenario_capability_overrides"] == {
+        "DESTROY_THE_SUPPLIES": {
+            StrategicDemand.OBJECT_INTERACTION: 0.5,
+        },
+        "HEIRLOOM_OF_AGES_PAST": {
+            StrategicDemand.OBJECT_INTERACTION: 0.5,
+        },
+        "RETRIEVAL": {
+            StrategicDemand.OBJECT_INTERACTION: 0.5,
+        },
+        "SEIZE_THE_PRIZES": {
+            StrategicDemand.OBJECT_INTERACTION: 0.5,
+        },
+        "TREASURE_HOARD": {
+            StrategicDemand.OBJECT_INTERACTION: 0.5,
+        },
+        "ESCORT_THE_WOUNDED": {
+            StrategicDemand.OBJECT_INTERACTION: 0.5,
+        },
+        "CONVERGENCE": {
+            StrategicDemand.OBJECT_INTERACTION: 0.5,
+        },
+    }
 
     assert captured["kwargs"] == {
         "army_list": "ARMY_LIST",
@@ -503,6 +534,12 @@ def test_candidate_analysis_uses_fog_of_war_preservation_override(
         fake_result_builder,
     )
 
+    monkeypatch.setattr(
+        "scenario_analysis_builder."
+        "calculate_object_interaction_capability_from_army",
+        lambda army, mode: 0.5,
+    )
+
     result = build_scenario_analysis_results_from_candidate(
         candidate=candidate,
         army_list="ARMY_LIST",
@@ -527,6 +564,27 @@ def test_candidate_analysis_uses_fog_of_war_preservation_override(
     assert captured["profile"] is capability_profile
 
     assert captured["overrides"] == {
+        "DESTROY_THE_SUPPLIES": {
+            StrategicDemand.OBJECT_INTERACTION: 0.5,
+        },
+        "HEIRLOOM_OF_AGES_PAST": {
+            StrategicDemand.OBJECT_INTERACTION: 0.5,
+        },
+        "RETRIEVAL": {
+            StrategicDemand.OBJECT_INTERACTION: 0.5,
+        },
+        "SEIZE_THE_PRIZES": {
+            StrategicDemand.OBJECT_INTERACTION: 0.5,
+        },
+        "TREASURE_HOARD": {
+            StrategicDemand.OBJECT_INTERACTION: 0.5,
+        },
+        "ESCORT_THE_WOUNDED": {
+            StrategicDemand.OBJECT_INTERACTION: 0.5,
+        },
+        "CONVERGENCE": {
+            StrategicDemand.OBJECT_INTERACTION: 0.5,
+        },
         "FOG_OF_WAR": {
             StrategicDemand.KEY_MODEL_PRESERVATION: 0.8,
         },
@@ -534,3 +592,224 @@ def test_candidate_analysis_uses_fog_of_war_preservation_override(
     assert captured["preservation_army"] == "TEST_ARMY"
 
     assert captured["preservation_army_list"] == "ARMY_LIST"
+
+def test_candidate_analysis_builds_object_interaction_overrides(
+    monkeypatch,
+):
+    candidate = OptimiserCandidate(
+        army="TEST_ARMY",
+    )
+
+    capability_profile = object()
+
+    expected_results = (
+        "RESULT_A",
+        "RESULT_B",
+    )
+
+    captured = {}
+
+    def fake_profile_builder(
+        candidate,
+        **kwargs,
+    ):
+        return capability_profile
+
+    def fake_object_interaction_calculator(
+        army,
+        mode,
+    ):
+        captured.setdefault(
+            "calls",
+            [],
+        ).append(
+            (
+                army,
+                mode,
+            )
+        )
+
+        return 0.75
+
+    def fake_result_builder(
+        profile,
+        *,
+        scenario_capability_overrides=None,
+    ):
+        captured["profile"] = profile
+        captured["overrides"] = (
+            scenario_capability_overrides
+        )
+
+        return expected_results
+
+    monkeypatch.setattr(
+        "scenario_analysis_builder."
+        "build_scenario_capability_profile_from_candidate",
+        fake_profile_builder,
+    )
+
+    monkeypatch.setattr(
+        "scenario_analysis_builder."
+        "calculate_object_interaction_capability_from_army",
+        fake_object_interaction_calculator,
+    )
+
+    monkeypatch.setattr(
+        "scenario_analysis_builder."
+        "build_scenario_analysis_results_from_profile",
+        fake_result_builder,
+    )
+
+    result = build_scenario_analysis_results_from_candidate(
+        candidate=candidate,
+    )
+
+    assert result is expected_results
+
+    assert captured["profile"] is capability_profile
+
+    assert captured["overrides"] == {
+        "DESTROY_THE_SUPPLIES": {
+            StrategicDemand.OBJECT_INTERACTION: 0.75,
+        },
+        "HEIRLOOM_OF_AGES_PAST": {
+            StrategicDemand.OBJECT_INTERACTION: 0.75,
+        },
+        "RETRIEVAL": {
+            StrategicDemand.OBJECT_INTERACTION: 0.75,
+        },
+        "SEIZE_THE_PRIZES": {
+            StrategicDemand.OBJECT_INTERACTION: 0.75,
+        },
+        "TREASURE_HOARD": {
+            StrategicDemand.OBJECT_INTERACTION: 0.75,
+        },
+        "ESCORT_THE_WOUNDED": {
+            StrategicDemand.OBJECT_INTERACTION: 0.75,
+        },
+        "CONVERGENCE": {
+            StrategicDemand.OBJECT_INTERACTION: 0.75,
+        },
+    }
+
+    assert len(captured["calls"]) == 7
+
+    assert all(
+        army == "TEST_ARMY"
+        for army, mode in captured["calls"]
+    )
+
+def test_candidate_analysis_uses_real_object_interaction_modes(
+    monkeypatch,
+):
+    cavalry = Profile(
+        id="TEST_CAVALRY",
+        name="Test Cavalry",
+        points=10,
+        movement=10,
+        fight=4,
+        shooting="4+",
+        strength=4,
+        defence=5,
+        attacks=1,
+        wounds=1,
+        courage="6+",
+        intelligence="6+",
+        might=0,
+        will=0,
+        fate=0,
+        max_in_army=0,
+        model_types={ModelType.CAVALRY},
+    )
+
+    army = Army()
+    army.add_profile(
+        cavalry,
+        quantity=4,
+    )
+
+    candidate = OptimiserCandidate(
+        army=army,
+    )
+
+    capability_profile = object()
+
+    captured = {}
+
+    def fake_profile_builder(
+        candidate,
+        **kwargs,
+    ):
+        return capability_profile
+
+    def fake_result_builder(
+        profile,
+        *,
+        scenario_capability_overrides=None,
+    ):
+        captured["overrides"] = (
+            scenario_capability_overrides
+        )
+
+        return ()
+
+    monkeypatch.setattr(
+        "scenario_analysis_builder."
+        "build_scenario_capability_profile_from_candidate",
+        fake_profile_builder,
+    )
+
+    monkeypatch.setattr(
+        "scenario_analysis_builder."
+        "build_scenario_analysis_results_from_profile",
+        fake_result_builder,
+    )
+
+    build_scenario_analysis_results_from_candidate(
+        candidate=candidate,
+    )
+
+    overrides = captured["overrides"]
+
+    assert overrides[
+        "DESTROY_THE_SUPPLIES"
+    ][
+        StrategicDemand.OBJECT_INTERACTION
+    ] == 1.0
+
+    assert overrides[
+        "HEIRLOOM_OF_AGES_PAST"
+    ][
+        StrategicDemand.OBJECT_INTERACTION
+    ] == 0.0
+
+    assert overrides[
+        "RETRIEVAL"
+    ][
+        StrategicDemand.OBJECT_INTERACTION
+    ] == 0.0
+
+    assert overrides[
+        "SEIZE_THE_PRIZES"
+    ][
+        StrategicDemand.OBJECT_INTERACTION
+    ] == 0.0
+
+    assert overrides[
+        "TREASURE_HOARD"
+    ][
+        StrategicDemand.OBJECT_INTERACTION
+    ] == 0.0
+
+    assert overrides[
+        "ESCORT_THE_WOUNDED"
+    ][
+        StrategicDemand.OBJECT_INTERACTION
+    ] == 1.0
+
+    assert overrides[
+        "CONVERGENCE"
+    ][
+        StrategicDemand.OBJECT_INTERACTION
+    ] == 0.0

@@ -12,6 +12,9 @@ from scenario_preservation_profile import (
     select_fog_of_war_preservation_profile,
 )
 from scenario_demand import StrategicDemand
+from object_interaction import (
+    calculate_object_interaction_capability_from_army,
+)
 
 def build_scenario_analysis_results(
     *,
@@ -108,7 +111,24 @@ def build_scenario_analysis_results_from_candidate(
     )
 )
     scenario_capability_overrides = {}
+    for scenario in get_official_scenarios():
+        if scenario.object_interaction_mode is None:
+            continue
 
+        object_interaction_capability = (
+            calculate_object_interaction_capability_from_army(
+                candidate.army,
+                scenario.object_interaction_mode,
+            )
+        )
+
+        scenario_capability_overrides[
+            scenario.id
+        ] = {
+            StrategicDemand.OBJECT_INTERACTION:
+                object_interaction_capability,
+        }
+        
     if (
         leader_profile is not None
         and combat_benchmark is not None
@@ -174,3 +194,4 @@ def scenario_analysis_extremes(
     ]
 
     return top, bottom
+

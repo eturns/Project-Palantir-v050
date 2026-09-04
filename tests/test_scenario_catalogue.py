@@ -14,6 +14,7 @@ from scenario_demand import (
     ScenarioDemand,
     StrategicDemand,
 )
+from object_interaction import ObjectInteractionMode
 
 def test_official_scenario_catalogue_contains_24_scenarios():
     assert len(OFFICIAL_SCENARIOS) == 24
@@ -907,3 +908,95 @@ def test_object_scenarios_have_secondary_canonical_demands():
         dimension=StrategicDemand.STATE_RESILIENCE,
         intensity=1.0,
     ) in retrieval.strategic_demands
+
+def test_destroy_the_supplies_uses_static_action_interaction():
+    scenario = get_official_scenario("DESTROY_THE_SUPPLIES")
+
+    assert (
+        scenario.object_interaction_mode
+        is ObjectInteractionMode.STATIC_ACTION
+    )
+
+
+def test_heirloom_of_ages_past_uses_search_and_light_object_interaction():
+    scenario = get_official_scenario("HEIRLOOM_OF_AGES_PAST")
+
+    assert (
+        scenario.object_interaction_mode
+        is ObjectInteractionMode.SEARCH_AND_LIGHT_OBJECT
+    )
+
+
+def test_retrieval_uses_light_object_interaction():
+    scenario = get_official_scenario("RETRIEVAL")
+
+    assert (
+        scenario.object_interaction_mode
+        is ObjectInteractionMode.LIGHT_OBJECT
+    )
+
+
+def test_seize_the_prizes_uses_uncover_and_light_object_interaction():
+    scenario = get_official_scenario("SEIZE_THE_PRIZES")
+
+    assert (
+        scenario.object_interaction_mode
+        is ObjectInteractionMode.UNCOVER_AND_LIGHT_OBJECT
+    )
+
+
+def test_treasure_hoard_uses_uncover_and_light_object_interaction():
+    scenario = get_official_scenario("TREASURE_HOARD")
+
+    assert (
+        scenario.object_interaction_mode
+        is ObjectInteractionMode.UNCOVER_AND_LIGHT_OBJECT
+    )
+
+
+def test_escort_the_wounded_uses_heavy_object_interaction():
+    scenario = get_official_scenario("ESCORT_THE_WOUNDED")
+
+    assert (
+        scenario.object_interaction_mode
+        is ObjectInteractionMode.HEAVY_OBJECT
+    )
+
+
+def test_convergence_uses_light_object_interaction():
+    scenario = get_official_scenario("CONVERGENCE")
+
+    assert (
+        scenario.object_interaction_mode
+        is ObjectInteractionMode.LIGHT_OBJECT
+    )
+
+def test_object_interaction_scenarios_have_canonical_object_interaction_demand():
+    scenario_ids = (
+        "DESTROY_THE_SUPPLIES",
+        "HEIRLOOM_OF_AGES_PAST",
+        "RETRIEVAL",
+        "SEIZE_THE_PRIZES",
+        "TREASURE_HOARD",
+        "ESCORT_THE_WOUNDED",
+        "CONVERGENCE",
+    )
+
+    missing_object_interaction = []
+
+    for scenario_id in scenario_ids:
+        scenario = get_official_scenario(
+            scenario_id,
+        )
+
+        expected_demand = ScenarioDemand(
+            dimension=StrategicDemand.OBJECT_INTERACTION,
+            intensity=1.0,
+        )
+
+        if expected_demand not in scenario.strategic_demands:
+            missing_object_interaction.append(
+                scenario_id
+            )
+
+    assert missing_object_interaction == []
