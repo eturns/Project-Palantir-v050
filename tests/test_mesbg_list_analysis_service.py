@@ -419,8 +419,9 @@ def test_real_eddies_choice_matches_main_scenario_pipeline():
 
     result = analyse_mesbg_list_builder_file(
         str(
-            Path("src")
-            / "eddies-choice.json"
+            Path("tests")
+            / "fixtures"
+            / "dol_guldur_700.json"
         ),
         profiles_by_id,
         army_lists,
