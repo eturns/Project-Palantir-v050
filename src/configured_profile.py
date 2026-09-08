@@ -24,7 +24,7 @@ Created:
 # ============================================================================
 
 from dataclasses import dataclass
-
+from profile_classification import ModelType
 from profile_option import ProfileOption
 from profiles import Profile
 from profile_option_wargear_assignment import (
@@ -33,6 +33,9 @@ from profile_option_wargear_assignment import (
 from wargear import Wargear
 from mount import Mount
 from model_platform import Platform
+from profile_special_rule_assignment import (
+    ProfileSpecialRuleAssignment,
+)
 # ============================================================================
 # Classes
 # ============================================================================
@@ -166,16 +169,159 @@ class ConfiguredProfile:
         return None
 
     @property
+    def effective_movement(self) -> int:
+        """
+        Returns the Profile's effective Movement after applying
+        selected configured-state effects.
+        """
+
+        movement_overrides = [
+            effect.movement_override
+            for option in self.selected_options
+            for effect in option.configured_state_effects
+            if effect.movement_override is not None
+        ]
+
+        if len(movement_overrides) > 1:
+            raise ValueError(
+                "Configured Profile cannot have more than "
+                "one Movement override."
+            )
+
+        if movement_overrides:
+            return movement_overrides[0]
+
+        return self.profile.movement
+
+    @property
     def effective_base_size_mm(self) -> int:
         """
-        Returns the physical base size used by this configured Profile.
+        Returns the effective base size after applying configured-state
+        overrides, Mount configuration, and the base Profile value.
         """
+
+        base_size_overrides = [
+            effect.base_size_override_mm
+            for option in self.selected_options
+            for effect in option.configured_state_effects
+            if effect.base_size_override_mm is not None
+        ]
+
+        if len(base_size_overrides) > 1:
+            raise ValueError(
+                "Configured Profile cannot have more than "
+                "one base-size override."
+            )
+
+        if base_size_overrides:
+            return base_size_overrides[0]
 
         if self.effective_mount is not None:
             return self.effective_mount.base_size_mm
 
         return self.profile.base_size_mm
 
+    @property
+    def effective_defence(self) -> int:
+        """
+        Returns the Profile's effective Defence after applying
+        selected configured-state modifiers.
+        """
+
+        defence_modifier = sum(
+            effect.defence_modifier
+            for option in self.selected_options
+            for effect in option.configured_state_effects
+        )
+
+        return (
+            self.profile.defence
+            + defence_modifier
+        )
+
+    @property
+    def effective_model_types(self) -> set[ModelType]:
+        """
+        Returns the Profile's effective model types after applying
+        selected configured-state overrides.
+        """
+
+        model_type_overrides = [
+            effect.model_type_override
+            for option in self.selected_options
+            for effect in option.configured_state_effects
+            if effect.model_type_override is not None
+        ]
+
+        if len(model_type_overrides) > 1:
+            raise ValueError(
+                "Configured Profile cannot have more than "
+                "one model type override."
+            )
+
+        if model_type_overrides:
+            return {
+                model_type_overrides[0]
+            }
+
+        return set(
+            self.profile.model_types
+        )
+
+    @property
+    def effective_shooting(self) -> str:
+        """
+        Returns the Profile's effective shooting value after applying
+        selected configured-state overrides.
+        """
+
+        shooting_overrides = [
+            effect.shooting_override
+            for option in self.selected_options
+            for effect in option.configured_state_effects
+            if effect.shooting_override is not None
+        ]
+
+        if len(shooting_overrides) > 1:
+            raise ValueError(
+                "Configured Profile cannot have more than "
+                "one shooting override."
+            )
+
+        if shooting_overrides:
+            return shooting_overrides[0]
+
+        return self.profile.shooting
+
+    @property
+    def effective_special_rules(
+        self,
+    ) -> list[ProfileSpecialRuleAssignment]:
+        """
+        Returns the Profile's effective static Special Rules after
+        applying removals and grants from selected configured-state effects.
+        """
+
+        removed_rule_ids = {
+            rule_id
+            for option in self.selected_options
+            for effect in option.configured_state_effects
+            for rule_id in effect.removed_special_rule_ids
+        }
+
+        effective_rules = [
+            assignment
+            for assignment in self.profile.special_rules
+            if assignment.rule.id not in removed_rule_ids
+        ]
+
+        for option in self.selected_options:
+            for effect in option.configured_state_effects:
+                effective_rules.extend(
+                    effect.granted_special_rules
+                )
+
+        return effective_rules
 
 def create_configured_profile_from_external_options(
     profile: Profile,
@@ -211,4 +357,3 @@ def create_configured_profile_from_external_options(
         profile=profile,
         selected_options=tuple(selected_options),
     ) 
-    

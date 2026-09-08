@@ -12,6 +12,8 @@ from model_platform import Platform, PlatformType
 from profile_option_platform_assignment import (
     ProfileOptionPlatformAssignment,
 )
+from configured_state_effect import ConfiguredStateEffect
+from profile_option import ProfileOption
 
 def test_profile_option_stores_identity_and_points():
     option = ProfileOption(
@@ -292,4 +294,32 @@ def test_profile_option_stores_platform_assignment():
 
     assert option.platform_assignments[0].platform is (
         chariot
+    )
+
+def test_profile_option_defaults_configured_state_effects_to_empty():
+    option = ProfileOption(
+        id="TEST_OPTION",
+        name="Test option",
+        points=5,
+    )
+
+    assert option.configured_state_effects == ()
+
+
+def test_profile_option_accepts_configured_state_effects():
+    movement_effect = ConfiguredStateEffect(
+        movement_override=10,
+    )
+
+    option = ProfileOption(
+        id="MOUNTED",
+        name="Mounted",
+        points=10,
+        configured_state_effects=(
+            movement_effect,
+        ),
+    )
+
+    assert option.configured_state_effects == (
+        movement_effect,
     )

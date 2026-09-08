@@ -9,7 +9,16 @@ from profile_option_wargear_assignment import (
     WargearAssignmentAction,
 )
 from wargear import Wargear
+from configured_state_effect import ConfiguredStateEffect
+from profile_classification import ModelType
 
+from database.rule_category import RuleCategory
+from profile_special_rule_assignment import ProfileSpecialRuleAssignment
+from special_rule import SpecialRule
+from mount import Mount
+from profile_option_mount_assignment import (
+    ProfileOptionMountAssignment,
+)
 
 def create_test_profile(
     profile_id: str = "IH_WR",
@@ -471,4 +480,1183 @@ def test_external_option_configuration_rejects_option_for_wrong_profile():
         raise AssertionError(
             "Expected ValueError when the external option "
             "is not legal for the Profile."
+        )
+
+def test_effective_movement_uses_base_profile_movement_without_effect():
+    profile = create_test_profile()
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+    )
+
+    assert configured_profile.effective_movement == 5
+
+
+def test_effective_movement_applies_selected_option_override():
+    profile = create_test_profile()
+
+    mounted_option = ProfileOption(
+        id="MOUNTED",
+        name="Mounted",
+        points=10,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                movement_override=10,
+            ),
+        ),
+    )
+
+    profile.profile_options.append(
+        mounted_option
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            mounted_option,
+        ),
+    )
+
+    assert configured_profile.effective_movement == 10
+
+
+def test_effective_movement_does_not_mutate_base_profile():
+    profile = create_test_profile()
+
+    mounted_option = ProfileOption(
+        id="MOUNTED",
+        name="Mounted",
+        points=10,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                movement_override=10,
+            ),
+        ),
+    )
+
+    profile.profile_options.append(
+        mounted_option
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            mounted_option,
+        ),
+    )
+
+    assert configured_profile.effective_movement == 10
+    assert profile.movement == 5
+
+def test_effective_movement_rejects_multiple_overrides():
+    profile = create_test_profile()
+
+    first_option = ProfileOption(
+        id="FIRST_MOVEMENT",
+        name="First Movement override",
+        points=5,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                movement_override=8,
+            ),
+        ),
+    )
+
+    second_option = ProfileOption(
+        id="SECOND_MOVEMENT",
+        name="Second Movement override",
+        points=5,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                movement_override=10,
+            ),
+        ),
+    )
+
+    profile.profile_options.extend(
+        (
+            first_option,
+            second_option,
+        )
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            first_option,
+            second_option,
+        ),
+    )
+
+    try:
+        configured_profile.effective_movement
+    except ValueError:
+        pass
+    else:
+        raise AssertionError(
+            "Expected ValueError for multiple "
+            "Movement overrides."
+        )
+
+def test_effective_defence_uses_base_profile_defence_without_effect():
+    profile = create_test_profile()
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+    )
+
+    assert configured_profile.effective_defence == 6
+
+
+def test_effective_defence_applies_selected_option_modifier():
+    profile = create_test_profile()
+
+    shield_option = ProfileOption(
+        id="SHIELD",
+        name="Shield",
+        points=1,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                defence_modifier=1,
+            ),
+        ),
+    )
+
+    profile.profile_options.append(
+        shield_option
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            shield_option,
+        ),
+    )
+
+    assert configured_profile.effective_defence == 7
+
+
+def test_effective_defence_combines_multiple_modifiers():
+    profile = create_test_profile()
+
+    first_option = ProfileOption(
+        id="FIRST_DEFENCE",
+        name="First Defence modifier",
+        points=1,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                defence_modifier=1,
+            ),
+        ),
+    )
+
+    second_option = ProfileOption(
+        id="SECOND_DEFENCE",
+        name="Second Defence modifier",
+        points=1,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                defence_modifier=1,
+            ),
+        ),
+    )
+
+    profile.profile_options.extend(
+        (
+            first_option,
+            second_option,
+        )
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            first_option,
+            second_option,
+        ),
+    )
+
+    assert configured_profile.effective_defence == 8
+
+
+def test_effective_defence_does_not_mutate_base_profile():
+    profile = create_test_profile()
+
+    shield_option = ProfileOption(
+        id="SHIELD",
+        name="Shield",
+        points=1,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                defence_modifier=1,
+            ),
+        ),
+    )
+
+    profile.profile_options.append(
+        shield_option
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            shield_option,
+        ),
+    )
+
+    assert configured_profile.effective_defence == 7
+    assert profile.defence == 6
+
+def test_effective_model_types_uses_base_profile_types_without_effect():
+    profile = create_test_profile()
+
+    profile.model_types.add(
+        ModelType.INFANTRY
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+    )
+
+    assert configured_profile.effective_model_types == {
+        ModelType.INFANTRY
+    }
+
+
+def test_effective_model_types_applies_selected_option_override():
+    profile = create_test_profile()
+
+    profile.model_types.add(
+        ModelType.INFANTRY
+    )
+
+    mounted_option = ProfileOption(
+        id="MOUNTED",
+        name="Mounted",
+        points=10,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                model_type_override=ModelType.CAVALRY,
+            ),
+        ),
+    )
+
+    profile.profile_options.append(
+        mounted_option
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            mounted_option,
+        ),
+    )
+
+    assert configured_profile.effective_model_types == {
+        ModelType.CAVALRY
+    }
+
+
+def test_effective_model_types_does_not_mutate_base_profile():
+    profile = create_test_profile()
+
+    profile.model_types.add(
+        ModelType.INFANTRY
+    )
+
+    mounted_option = ProfileOption(
+        id="MOUNTED",
+        name="Mounted",
+        points=10,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                model_type_override=ModelType.CAVALRY,
+            ),
+        ),
+    )
+
+    profile.profile_options.append(
+        mounted_option
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            mounted_option,
+        ),
+    )
+
+    assert configured_profile.effective_model_types == {
+        ModelType.CAVALRY
+    }
+
+    assert profile.model_types == {
+        ModelType.INFANTRY
+    }
+
+
+def test_effective_model_types_rejects_multiple_overrides():
+    profile = create_test_profile()
+
+    profile.model_types.add(
+        ModelType.INFANTRY
+    )
+
+    first_option = ProfileOption(
+        id="FIRST_TYPE",
+        name="First type override",
+        points=5,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                model_type_override=ModelType.CAVALRY,
+            ),
+        ),
+    )
+
+    second_option = ProfileOption(
+        id="SECOND_TYPE",
+        name="Second type override",
+        points=5,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                model_type_override=ModelType.MONSTER,
+            ),
+        ),
+    )
+
+    profile.profile_options.extend(
+        (
+            first_option,
+            second_option,
+        )
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            first_option,
+            second_option,
+        ),
+    )
+
+    try:
+        configured_profile.effective_model_types
+    except ValueError:
+        pass
+    else:
+        raise AssertionError(
+            "Expected ValueError for multiple "
+            "model type overrides."
+        )
+
+def test_effective_shooting_uses_base_profile_shooting_without_effect():
+    profile = create_test_profile()
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+    )
+
+    assert configured_profile.effective_shooting == profile.shooting
+
+
+def test_effective_shooting_applies_selected_option_override():
+    profile = create_test_profile()
+
+    shooting_option = ProfileOption(
+        id="SHOOTING_OPTION",
+        name="Shooting option",
+        points=5,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                shooting_override="3+",
+            ),
+        ),
+    )
+
+    profile.profile_options.append(
+        shooting_option
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            shooting_option,
+        ),
+    )
+
+    assert configured_profile.effective_shooting == "3+"
+
+
+def test_effective_shooting_does_not_mutate_base_profile():
+    profile = create_test_profile()
+    original_shooting = profile.shooting
+
+    shooting_option = ProfileOption(
+        id="SHOOTING_OPTION",
+        name="Shooting option",
+        points=5,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                shooting_override="3+",
+            ),
+        ),
+    )
+
+    profile.profile_options.append(
+        shooting_option
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            shooting_option,
+        ),
+    )
+
+    assert configured_profile.effective_shooting == "3+"
+    assert profile.shooting == original_shooting
+
+
+def test_effective_shooting_rejects_multiple_overrides():
+    profile = create_test_profile()
+
+    first_option = ProfileOption(
+        id="FIRST_SHOOTING",
+        name="First shooting override",
+        points=5,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                shooting_override="4+",
+            ),
+        ),
+    )
+
+    second_option = ProfileOption(
+        id="SECOND_SHOOTING",
+        name="Second shooting override",
+        points=5,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                shooting_override="3+",
+            ),
+        ),
+    )
+
+    profile.profile_options.extend(
+        (
+            first_option,
+            second_option,
+        )
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            first_option,
+            second_option,
+        ),
+    )
+
+    try:
+        configured_profile.effective_shooting
+    except ValueError:
+        pass
+    else:
+        raise AssertionError(
+            "Expected ValueError for multiple "
+            "shooting overrides."
+        )
+
+def test_effective_special_rules_uses_base_profile_rules_without_effect():
+    profile = create_test_profile()
+
+    base_rule = SpecialRule(
+        id="BASE_RULE",
+        name="Base Rule",
+        category=RuleCategory.SPECIAL,
+    )
+
+    base_assignment = ProfileSpecialRuleAssignment(
+        rule=base_rule,
+    )
+
+    profile.special_rules.append(
+        base_assignment
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+    )
+
+    assert configured_profile.effective_special_rules == [
+        base_assignment
+    ]
+
+
+def test_effective_special_rules_includes_rule_granted_by_selected_option():
+    profile = create_test_profile()
+
+    granted_rule = SpecialRule(
+        id="GRANTED_RULE",
+        name="Granted Rule",
+        category=RuleCategory.SPECIAL,
+    )
+
+    granted_assignment = ProfileSpecialRuleAssignment(
+        rule=granted_rule,
+    )
+
+    rule_option = ProfileOption(
+        id="RULE_OPTION",
+        name="Rule option",
+        points=5,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                granted_special_rules=(
+                    granted_assignment,
+                ),
+            ),
+        ),
+    )
+
+    profile.profile_options.append(
+        rule_option
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            rule_option,
+        ),
+    )
+
+    assert configured_profile.effective_special_rules == [
+        granted_assignment
+    ]
+
+
+def test_effective_special_rules_preserves_base_and_granted_rules():
+    profile = create_test_profile()
+
+    base_assignment = ProfileSpecialRuleAssignment(
+        rule=SpecialRule(
+            id="BASE_RULE",
+            name="Base Rule",
+            category=RuleCategory.SPECIAL,
+        ),
+    )
+
+    granted_assignment = ProfileSpecialRuleAssignment(
+        rule=SpecialRule(
+            id="GRANTED_RULE",
+            name="Granted Rule",
+            category=RuleCategory.SPECIAL,
+        ),
+    )
+
+    profile.special_rules.append(
+        base_assignment
+    )
+
+    rule_option = ProfileOption(
+        id="RULE_OPTION",
+        name="Rule option",
+        points=5,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                granted_special_rules=(
+                    granted_assignment,
+                ),
+            ),
+        ),
+    )
+
+    profile.profile_options.append(
+        rule_option
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            rule_option,
+        ),
+    )
+
+    assert configured_profile.effective_special_rules == [
+        base_assignment,
+        granted_assignment,
+    ]
+
+
+def test_effective_special_rules_does_not_mutate_base_profile():
+    profile = create_test_profile()
+
+    granted_assignment = ProfileSpecialRuleAssignment(
+        rule=SpecialRule(
+            id="GRANTED_RULE",
+            name="Granted Rule",
+            category=RuleCategory.SPECIAL,
+        ),
+    )
+
+    rule_option = ProfileOption(
+        id="RULE_OPTION",
+        name="Rule option",
+        points=5,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                granted_special_rules=(
+                    granted_assignment,
+                ),
+            ),
+        ),
+    )
+
+    profile.profile_options.append(
+        rule_option
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            rule_option,
+        ),
+    )
+
+    assert configured_profile.effective_special_rules == [
+        granted_assignment
+    ]
+
+    assert profile.special_rules == []
+
+def test_effective_special_rules_removes_base_rule_by_id():
+    profile = create_test_profile()
+
+    removed_assignment = ProfileSpecialRuleAssignment(
+        rule=SpecialRule(
+            id="REMOVED_RULE",
+            name="Removed Rule",
+            category=RuleCategory.SPECIAL,
+        ),
+    )
+
+    retained_assignment = ProfileSpecialRuleAssignment(
+        rule=SpecialRule(
+            id="RETAINED_RULE",
+            name="Retained Rule",
+            category=RuleCategory.SPECIAL,
+        ),
+    )
+
+    profile.special_rules.extend(
+        (
+            removed_assignment,
+            retained_assignment,
+        )
+    )
+
+    rule_option = ProfileOption(
+        id="REMOVE_RULE_OPTION",
+        name="Remove rule option",
+        points=0,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                removed_special_rule_ids=(
+                    "REMOVED_RULE",
+                ),
+            ),
+        ),
+    )
+
+    profile.profile_options.append(
+        rule_option
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            rule_option,
+        ),
+    )
+
+    assert configured_profile.effective_special_rules == [
+        retained_assignment
+    ]
+
+
+def test_effective_special_rules_can_remove_and_grant_in_same_configuration():
+    profile = create_test_profile()
+
+    base_assignment = ProfileSpecialRuleAssignment(
+        rule=SpecialRule(
+            id="BASE_RULE",
+            name="Base Rule",
+            category=RuleCategory.SPECIAL,
+        ),
+    )
+
+    replacement_assignment = ProfileSpecialRuleAssignment(
+        rule=SpecialRule(
+            id="REPLACEMENT_RULE",
+            name="Replacement Rule",
+            category=RuleCategory.SPECIAL,
+        ),
+    )
+
+    profile.special_rules.append(
+        base_assignment
+    )
+
+    rule_option = ProfileOption(
+        id="REPLACE_RULE_OPTION",
+        name="Replace rule option",
+        points=5,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                removed_special_rule_ids=(
+                    "BASE_RULE",
+                ),
+                granted_special_rules=(
+                    replacement_assignment,
+                ),
+            ),
+        ),
+    )
+
+    profile.profile_options.append(
+        rule_option
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            rule_option,
+        ),
+    )
+
+    assert configured_profile.effective_special_rules == [
+        replacement_assignment
+    ]
+
+
+def test_effective_special_rule_removal_does_not_mutate_base_profile():
+    profile = create_test_profile()
+
+    base_assignment = ProfileSpecialRuleAssignment(
+        rule=SpecialRule(
+            id="BASE_RULE",
+            name="Base Rule",
+            category=RuleCategory.SPECIAL,
+        ),
+    )
+
+    profile.special_rules.append(
+        base_assignment
+    )
+
+    rule_option = ProfileOption(
+        id="REMOVE_RULE_OPTION",
+        name="Remove rule option",
+        points=0,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                removed_special_rule_ids=(
+                    "BASE_RULE",
+                ),
+            ),
+        ),
+    )
+
+    profile.profile_options.append(
+        rule_option
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            rule_option,
+        ),
+    )
+
+    assert configured_profile.effective_special_rules == []
+    assert profile.special_rules == [
+        base_assignment
+    ]
+
+def test_effective_base_size_applies_selected_option_override():
+    profile = create_test_profile()
+
+    base_size_option = ProfileOption(
+        id="LARGE_BASE",
+        name="Large base",
+        points=0,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                base_size_override_mm=40,
+            ),
+        ),
+    )
+
+    profile.profile_options.append(
+        base_size_option
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            base_size_option,
+        ),
+    )
+
+    assert configured_profile.effective_base_size_mm == 40
+
+
+def test_effective_base_size_override_takes_precedence_over_mount():
+    profile = create_test_profile()
+
+    base_size_option = ProfileOption(
+        id="BASE_OVERRIDE",
+        name="Base override",
+        points=0,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                base_size_override_mm=50,
+            ),
+        ),
+    )
+
+    profile.profile_options.append(
+        base_size_option
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            base_size_option,
+        ),
+    )
+
+    assert configured_profile.effective_base_size_mm == 50
+
+
+def test_effective_base_size_override_does_not_mutate_profile():
+    profile = create_test_profile()
+    original_base_size = profile.base_size_mm
+
+    base_size_option = ProfileOption(
+        id="LARGE_BASE",
+        name="Large base",
+        points=0,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                base_size_override_mm=40,
+            ),
+        ),
+    )
+
+    profile.profile_options.append(
+        base_size_option
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            base_size_option,
+        ),
+    )
+
+    assert configured_profile.effective_base_size_mm == 40
+    assert profile.base_size_mm == original_base_size
+
+
+def test_effective_base_size_rejects_multiple_overrides():
+    profile = create_test_profile()
+
+    first_option = ProfileOption(
+        id="FIRST_BASE",
+        name="First base override",
+        points=0,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                base_size_override_mm=40,
+            ),
+        ),
+    )
+
+    second_option = ProfileOption(
+        id="SECOND_BASE",
+        name="Second base override",
+        points=0,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                base_size_override_mm=50,
+            ),
+        ),
+    )
+
+    profile.profile_options.extend(
+        (
+            first_option,
+            second_option,
+        )
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            first_option,
+            second_option,
+        ),
+    )
+
+    try:
+        configured_profile.effective_base_size_mm
+    except ValueError:
+        pass
+    else:
+        raise AssertionError(
+            "Expected ValueError for multiple "
+            "base-size overrides."
+        )
+
+def test_effective_base_size_override_takes_precedence_over_selected_mount():
+    profile = create_test_profile()
+
+    mount = Mount(
+        id="TEST_MOUNT",
+        name="Test Mount",
+        base_size_mm=40,
+    )
+
+    mounted_option = ProfileOption(
+        id="MOUNTED",
+        name="Mounted",
+        points=10,
+        mount_assignments=(
+            ProfileOptionMountAssignment(
+                mount=mount,
+            ),
+        ),
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                base_size_override_mm=50,
+            ),
+        ),
+    )
+
+    profile.profile_options.append(
+        mounted_option
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            mounted_option,
+        ),
+    )
+
+    assert configured_profile.effective_mount is mount
+    assert configured_profile.effective_mount.base_size_mm == 40
+    assert configured_profile.effective_base_size_mm == 50
+
+def test_effective_movement_rejects_duplicate_identical_overrides():
+    profile = create_test_profile()
+
+    first_option = ProfileOption(
+        id="FIRST_MOVEMENT",
+        name="First Movement override",
+        points=5,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                movement_override=10,
+            ),
+        ),
+    )
+
+    second_option = ProfileOption(
+        id="SECOND_MOVEMENT",
+        name="Second Movement override",
+        points=5,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                movement_override=10,
+            ),
+        ),
+    )
+
+    profile.profile_options.extend(
+        (
+            first_option,
+            second_option,
+        )
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            first_option,
+            second_option,
+        ),
+    )
+
+    try:
+        configured_profile.effective_movement
+    except ValueError:
+        pass
+    else:
+        raise AssertionError(
+            "Expected ValueError for duplicate "
+            "Movement overrides."
+        )
+
+def test_effective_model_types_rejects_duplicate_identical_overrides():
+    profile = create_test_profile()
+
+    first_option = ProfileOption(
+        id="FIRST_TYPE",
+        name="First type override",
+        points=5,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                model_type_override=ModelType.CAVALRY,
+            ),
+        ),
+    )
+
+    second_option = ProfileOption(
+        id="SECOND_TYPE",
+        name="Second type override",
+        points=5,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                model_type_override=ModelType.CAVALRY,
+            ),
+        ),
+    )
+
+    profile.profile_options.extend(
+        (
+            first_option,
+            second_option,
+        )
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            first_option,
+            second_option,
+        ),
+    )
+
+    try:
+        configured_profile.effective_model_types
+    except ValueError:
+        pass
+    else:
+        raise AssertionError(
+            "Expected ValueError for duplicate "
+            "model type overrides."
+        )
+
+
+def test_effective_shooting_rejects_duplicate_identical_overrides():
+    profile = create_test_profile()
+
+    first_option = ProfileOption(
+        id="FIRST_SHOOTING",
+        name="First shooting override",
+        points=5,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                shooting_override="3+",
+            ),
+        ),
+    )
+
+    second_option = ProfileOption(
+        id="SECOND_SHOOTING",
+        name="Second shooting override",
+        points=5,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                shooting_override="3+",
+            ),
+        ),
+    )
+
+    profile.profile_options.extend(
+        (
+            first_option,
+            second_option,
+        )
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            first_option,
+            second_option,
+        ),
+    )
+
+    try:
+        configured_profile.effective_shooting
+    except ValueError:
+        pass
+    else:
+        raise AssertionError(
+            "Expected ValueError for duplicate "
+            "shooting overrides."
+        )
+
+
+def test_effective_base_size_rejects_duplicate_identical_overrides():
+    profile = create_test_profile()
+
+    first_option = ProfileOption(
+        id="FIRST_BASE",
+        name="First base override",
+        points=0,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                base_size_override_mm=40,
+            ),
+        ),
+    )
+
+    second_option = ProfileOption(
+        id="SECOND_BASE",
+        name="Second base override",
+        points=0,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                base_size_override_mm=40,
+            ),
+        ),
+    )
+
+    profile.profile_options.extend(
+        (
+            first_option,
+            second_option,
+        )
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            first_option,
+            second_option,
+        ),
+    )
+
+    try:
+        configured_profile.effective_base_size_mm
+    except ValueError:
+        pass
+    else:
+        raise AssertionError(
+            "Expected ValueError for duplicate "
+            "base-size overrides."
         )

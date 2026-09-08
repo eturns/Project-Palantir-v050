@@ -33,6 +33,7 @@ from profile_option_mount_assignment import (
 from profile_option_platform_assignment import (
     ProfileOptionPlatformAssignment,
 )
+from configured_state_effect import ConfiguredStateEffect
 # ============================================================================
 # Classes
 # ============================================================================
@@ -50,6 +51,10 @@ class ProfileOption:
     name: str
     points: int
     external_id: str | None = None
+    configured_state_effects: tuple[
+        ConfiguredStateEffect,
+        ...
+    ] = ()
     wargear_assignments: tuple[
         ProfileOptionWargearAssignment,
         ...,
