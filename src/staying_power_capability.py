@@ -7,6 +7,7 @@ from wound_capacity import (
     calculate_wound_capacity,
 )
 from army import Army
+from configured_profile import ConfiguredProfile
 
 def calculate_staying_power(
     defensive_combat: int | float,
@@ -42,12 +43,15 @@ def calculate_staying_power(
     ) / 2
 
 def calculate_staying_power_from_profile(
-    profile: Profile,
+    profile: Profile | ConfiguredProfile,
     benchmark: CombatBenchmark,
 ) -> float:
-    if not isinstance(profile, Profile):
+    if not isinstance(
+        profile,
+        (Profile, ConfiguredProfile),
+    ):
         raise TypeError(
-            "profile must be a Profile."
+            "profile must be a Profile or ConfiguredProfile."
         )
 
     if not isinstance(
@@ -65,8 +69,16 @@ def calculate_staying_power_from_profile(
         )
     )
 
+    if isinstance(
+        profile,
+        ConfiguredProfile,
+    ):
+        base_profile = profile.profile
+    else:
+        base_profile = profile
+
     wound_capacity = calculate_wound_capacity(
-        wounds=profile.wounds,
+        wounds=base_profile.wounds,
     )
 
     return calculate_staying_power(
@@ -101,7 +113,7 @@ def calculate_army_staying_power(
     for entry in army.entries:
         profile_staying_power = (
             calculate_staying_power_from_profile(
-                profile=entry.profile,
+                profile=entry.configured_profile,
                 benchmark=benchmark,
             )
         )

@@ -58,7 +58,7 @@ def count_models_with_special_rule(
 
         has_rule = any(
             assignment.rule.id == rule_id
-            for assignment in entry.profile.special_rules
+            for assignment in entry.configured_profile.effective_special_rules
         )
 
         if has_rule:
@@ -80,7 +80,7 @@ def highest_special_rule_parameter(
 
     for entry in army.entries:
 
-        for assignment in entry.profile.special_rules:
+        for assignment in entry.configured_profile.effective_special_rules:
 
             if (
                 assignment.rule.id == rule_id
@@ -110,7 +110,7 @@ def count_models_with_parameterised_special_rule(
         has_rule = any(
             assignment.rule.id == rule_id
             and assignment.parameter is not None
-            for assignment in entry.profile.special_rules
+            for assignment in entry.configured_profile.effective_special_rules
         )
 
         if has_rule:

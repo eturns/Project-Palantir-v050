@@ -1,5 +1,4 @@
 from army import Army
-from configured_profile import ConfiguredProfile
 from manoeuvrability_inputs import ManoeuvrabilityInputs
 from manoeuvrability_score import (
     calculate_manoeuvrability,
@@ -11,9 +10,24 @@ def _calculate_special_rule_mobility(
     profile,
     rule_id: str,
 ) -> float:
+    """
+    Returns the Mobility contribution of one Special Rule
+    for either a base Profile or ConfiguredProfile.
+    """
+
+    if hasattr(
+        profile,
+        "effective_special_rules",
+    ):
+        special_rules = (
+            profile.effective_special_rules
+        )
+    else:
+        special_rules = profile.special_rules
+
     matching_assignments = [
         assignment
-        for assignment in profile.special_rules
+        for assignment in special_rules
         if assignment.rule.id == rule_id
     ]
 
@@ -31,13 +45,12 @@ def calculate_army_manoeuvrability(
     total = 0.0
 
     for entry in army.entries:
-        configured_profile = ConfiguredProfile(
-            profile=entry.profile,
-        )
+        configured_profile = entry.configured_profile
+        
 
         manoeuvrability = calculate_manoeuvrability(
             ManoeuvrabilityInputs(
-                movement=entry.profile.movement,
+                movement=configured_profile.effective_movement,
                 base_size_mm=(
                     configured_profile.effective_base_size_mm
                 ),
@@ -45,12 +58,12 @@ def calculate_army_manoeuvrability(
         )
 
         profile_metrics = calculate_profile_metrics(
-            entry.profile,
+            configured_profile,
         )
 
         spiritual_displacement_mobility = (
             _calculate_special_rule_mobility(
-                entry.profile,
+                entry.configured_profile,
                 "SPIRITUAL_DISPLACEMENT",
             )
         )
@@ -73,9 +86,9 @@ def calculate_army_manoeuvrability(
     for entry in army.entries:
         rule_mobility = (
             _calculate_special_rule_mobility(
-                entry.profile,
-                "SPIRITUAL_DISPLACEMENT",
-            )
+            entry.configured_profile,
+            "SPIRITUAL_DISPLACEMENT",
+        )
         )
 
         if rule_mobility > 0:
@@ -96,7 +109,8 @@ def calculate_army_manoeuvrability(
         for entry in army.entries
         if any(
             assignment.rule.id == "ANGMAR_ARISE_SOM"
-            for assignment in entry.profile.special_rules
+            for assignment
+            in entry.configured_profile.effective_special_rules
         )
     )
 

@@ -1,4 +1,5 @@
 from profiles import Profile
+from configured_profile import ConfiguredProfile
 
 def calculate_scenario_presence_weight(
     dominant_value: int | None,
@@ -90,16 +91,29 @@ def calculate_total_model_scenario_presence(
     )
 
 def calculate_profile_scenario_presence(
-    profile: Profile,
+    profile: Profile | ConfiguredProfile,
 ) -> int:
-    if not isinstance(profile, Profile):
+    if not isinstance(
+        profile,
+        (Profile, ConfiguredProfile),
+    ):
         raise TypeError(
-            "profile must be a Profile."
+            "profile must be a Profile or ConfiguredProfile."
         )
+
+    if isinstance(
+        profile,
+        ConfiguredProfile,
+    ):
+        special_rules = (
+            profile.effective_special_rules
+        )
+    else:
+        special_rules = profile.special_rules
 
     dominant_values = tuple(
         assignment.parameter
-        for assignment in profile.special_rules
+        for assignment in special_rules
         if (
             assignment.rule.id == "DOMINANT"
             and isinstance(assignment.parameter, int)
@@ -112,12 +126,19 @@ def calculate_profile_scenario_presence(
     )
 
 def calculate_army_scenario_presence(
-    profiles: tuple[Profile, ...],
+    profiles: tuple[
+        Profile | ConfiguredProfile,
+        ...
+    ],
 ) -> int:
     for profile in profiles:
-        if not isinstance(profile, Profile):
+        if not isinstance(
+            profile,
+            (Profile, ConfiguredProfile),
+        ):
             raise TypeError(
-                "profiles must contain only Profile values."
+                "profiles must contain only Profile "
+                "or ConfiguredProfile values."
             )
 
     return sum(

@@ -35,6 +35,10 @@ from rule_loader import (
 )
 from scenario_demand import StrategicDemand
 
+from services.mesbg_list_builder_import_service import (
+    import_army_from_mesbg_list_builder,
+)
+
 def test_mesbg_list_analysis_service_returns_scenario_analysis_results(
     monkeypatch,
 ):
@@ -116,6 +120,7 @@ def test_analysis_service_passes_imported_leader_profile_to_scenario_builder(
         file_path,
         profiles_by_id,
         army_lists_by_id,
+        profile_options_by_external_id=None,
     ):
         return (
             definition,
@@ -200,6 +205,7 @@ def test_analysis_service_builds_default_scenario_context_when_not_supplied(
         file_path,
         profiles_by_id,
         army_lists_by_id,
+        profile_options_by_external_id=None,
     ):
         return (
             definition,
@@ -280,6 +286,7 @@ def test_analysis_service_runs_scenario_analysis_without_manual_context(
         file_path,
         profiles_by_id,
         army_lists_by_id,
+        profile_options_by_external_id=None,
     ):
         return (
             definition,
@@ -452,3 +459,99 @@ def test_real_eddies_choice_matches_main_scenario_pipeline():
     assert lead_preservation.capability == pytest.approx(
         0.5241126543209876,
     )
+
+def test_analysis_service_passes_external_option_lookup_to_import_service(
+    monkeypatch,
+):
+    definition = SimpleNamespace(
+        points_limit=700,
+        leader_profile_id=None,
+    )
+
+    army = object()
+    army_list = object()
+
+    profile_options_by_external_id = {
+        "EXT_OPTION": object(),
+    }
+
+    captured = {}
+
+    def fake_import(
+        file_path,
+        profiles_by_id,
+        army_lists_by_id,
+        profile_options_by_external_id=None,
+    ):
+        captured["options"] = (
+            profile_options_by_external_id
+        )
+
+        return (
+            definition,
+            army,
+            army_list,
+        )
+
+    monkeypatch.setattr(
+        mesbg_list_analysis_service,
+        "import_army_from_mesbg_list_builder",
+        fake_import,
+    )
+
+    monkeypatch.setattr(
+        mesbg_list_analysis_service,
+        "analyse_imported_army",
+        lambda *args, **kwargs: "ANALYSIS",
+    )
+
+    result = analyse_mesbg_list_builder_file(
+        "army.json",
+        profiles_by_id={},
+        army_lists_by_id={},
+        metric_thresholds={},
+        profile_options_by_external_id=(
+            profile_options_by_external_id
+        ),
+    )
+
+    assert result["army"] is army
+
+    assert (
+        captured["options"]
+        is profile_options_by_external_id
+    )
+
+def test_real_eddies_choice_runtime_army_contains_necromancer():
+    profiles = load_all_profiles()
+
+    profiles_by_id = {
+        profile.id: profile
+        for profile in profiles
+    }
+
+    factions = load_factions()
+
+    army_lists = load_army_lists(
+        factions,
+    )
+
+    definition, army, _ = (
+        import_army_from_mesbg_list_builder(
+            str(
+                Path("tests")
+                / "fixtures"
+                / "dol_guldur_700.json"
+            ),
+            profiles_by_id,
+            army_lists,
+        )
+    )
+
+    runtime_profile_ids = [
+        entry.profile.id
+        for entry in army.entries
+    ]
+
+    assert definition.leader_profile_id == "DG_NEC"
+    assert "DG_NEC" in runtime_profile_ids

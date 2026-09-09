@@ -46,13 +46,13 @@ def build_army_battlefield_evidence(
 
     for entry in army.entries:
         profile_evidence = build_profile_battlefield_evidence(
-            entry.profile,
+            entry.configured_profile,
         )
 
         _extend_unique(
             evidence.available_special_rules,
             profile_evidence.available_special_rules,
-            key=lambda rule: rule.id,
+            key=lambda assignment: assignment.rule.id,
         )
 
         _extend_unique(

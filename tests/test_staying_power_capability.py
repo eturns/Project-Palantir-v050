@@ -184,9 +184,13 @@ def test_army_staying_power_is_quantity_weighted_average(
         "calculate_staying_power_from_profile",
         lambda profile, benchmark: (
             0.8
-            if profile.id == "DURABLE"
+            if (
+                profile.profile.id
+                if hasattr(profile, "profile")
+                else profile.id
+            ) == "DURABLE"
             else 0.2
-        ),
+        )
     )
 
     result = calculate_army_staying_power(

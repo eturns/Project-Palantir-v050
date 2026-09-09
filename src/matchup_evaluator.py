@@ -41,7 +41,7 @@ def calculate_matchup_result(
 
         defensive_score = sum(
             calculate_profile_defensive_combat_score(
-                entry.profile,
+                entry.configured_profile,
                 benchmark,
             )
             * entry.quantity

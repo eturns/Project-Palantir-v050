@@ -12,6 +12,8 @@ from importers.mesbg_list_builder_json_importer import (
     build_army_definition_from_data,
     get_palantir_army_list_id,
 )
+
+
 def get_entry(
     army_definition,
     profile_id: str,

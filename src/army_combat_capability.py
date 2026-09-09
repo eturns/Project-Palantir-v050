@@ -19,7 +19,7 @@ def calculate_army_combat_capability(
     for entry in army.entries:
         profile_score = (
             calculate_profile_combat_capability(
-                entry.profile,
+                entry.configured_profile,
                 benchmark,
             )
         )

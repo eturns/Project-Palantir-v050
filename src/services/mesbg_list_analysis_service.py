@@ -18,6 +18,7 @@ def analyse_mesbg_list_builder_file(
     army_lists_by_id: dict,
     metric_thresholds,
     *,
+    profile_options_by_external_id: dict | None = None,
     key_profile=None,
     combat_benchmark=None,
     benchmark_presence=None,
@@ -36,6 +37,8 @@ def analyse_mesbg_list_builder_file(
             file_path,
             profiles_by_id,
             army_lists_by_id,
+            profile_options_by_external_id=
+                profile_options_by_external_id,
         )
     )
 

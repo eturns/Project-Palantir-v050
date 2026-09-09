@@ -57,7 +57,13 @@ def test_army_combat_capability_uses_quantity_weighted_mean(
         profile,
         benchmark,
     ):
-        if profile.id == "STRONG":
+        profile_id = (
+            profile.profile.id
+            if hasattr(profile, "profile")
+            else profile.id
+        )
+
+        if profile_id == "STRONG":
             return 0.8
 
         return 0.4

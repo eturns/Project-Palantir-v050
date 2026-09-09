@@ -53,6 +53,36 @@ from file_selection import (
     select_mesbg_json_file,
 )
 from pathlib import Path
+
+from profile_option_loader import (
+    load_profile_options,
+    build_profile_options_by_external_id,
+)
+from mount_loader import load_mounts
+
+from profile_option_mount_loader import (
+    load_profile_option_mount_assignments,
+)
+
+from wargear_loader import load_wargear
+
+from profile_option_wargear_loader import (
+    load_profile_option_wargear_assignments,
+)
+from model_platform_loader import load_platforms
+
+from profile_option_platform_loader import (
+    load_profile_option_platform_assignments,
+)
+
+from profile_option_state_effect_loader import (
+    load_profile_option_state_effects,
+)
+
+from profile_option_special_rule_loader import (
+    load_profile_option_special_rules,
+)
+
 def main(
     file_path: str,
 ):
@@ -91,6 +121,35 @@ def main(
         for profile in profiles
     }
 
+    profile_options = load_profile_options(
+        profiles_by_id,
+    )
+
+    mounts = load_mounts()
+
+    load_profile_option_mount_assignments(
+        profile_options,
+        mounts,
+    )
+
+    wargear = load_wargear()
+
+    load_profile_option_wargear_assignments(
+        profile_options,
+        wargear,
+    )
+
+    platforms = load_platforms()
+
+    load_profile_option_platform_assignments(
+        profile_options,
+        platforms,
+    )
+
+    load_profile_option_state_effects(
+        profile_options,
+    )
+
     database_points = total_points(profiles)
    
     factions = load_factions()
@@ -107,6 +166,16 @@ def main(
     # ==========================================================
 
     special_rules = load_special_rules()
+    load_profile_option_special_rules(
+        profile_options,
+        special_rules,
+    )
+
+    profile_options_by_external_id = (
+        build_profile_options_by_external_id(
+            profile_options,
+        )
+    )
     heroic_actions = load_heroic_actions()
     spells = load_spells()
     ability_tags = load_ability_tags()
@@ -180,7 +249,10 @@ def main(
             str(path),
             profiles_by_id,
             army_lists,
-        metric_thresholds,
+            metric_thresholds,
+            profile_options_by_external_id=(
+                profile_options_by_external_id
+            ),
         )
     except json.JSONDecodeError:
         print(

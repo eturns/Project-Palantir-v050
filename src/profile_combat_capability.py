@@ -8,7 +8,7 @@ from profile_offensive_combat_score import (
     calculate_profile_offensive_combat_score,
 )
 from profiles import Profile
-
+from configured_profile import ConfiguredProfile
 
 OFFENSIVE_COMBAT_WEIGHT = 0.5
 DEFENSIVE_COMBAT_WEIGHT = 0.5
@@ -62,15 +62,25 @@ def _calculate_profile_combat_capability_cached(
 
 
 def calculate_profile_combat_capability(
-    profile: Profile,
+    profile: Profile | ConfiguredProfile,
     benchmark: CombatBenchmark,
 ) -> float:
+    if isinstance(
+        profile,
+        ConfiguredProfile,
+    ):
+        base_profile = profile.profile
+        defence = profile.effective_defence
+    else:
+        base_profile = profile
+        defence = profile.defence
+
     return _calculate_profile_combat_capability_cached(
-        profile_fight=profile.fight,
-        profile_strength=profile.strength,
-        profile_defence=profile.defence,
-        profile_attacks=profile.attacks,
-        profile_wounds=profile.wounds,
+        profile_fight=base_profile.fight,
+        profile_strength=base_profile.strength,
+        profile_defence=defence,
+        profile_attacks=base_profile.attacks,
+        profile_wounds=base_profile.wounds,
         benchmark_fight=benchmark.fight,
         benchmark_strength=benchmark.strength,
         benchmark_defence=benchmark.defence,

@@ -7,22 +7,32 @@ from wound_probability import (
     get_wound_probability,
 )
 from wound_table import get_wound_target
-
+from configured_profile import ConfiguredProfile
 
 def calculate_profile_defensive_combat_score(
-    profile: Profile,
+    profile: Profile | ConfiguredProfile,
     benchmark: CombatBenchmark,
 ) -> float:
+    if isinstance(
+        profile,
+        ConfiguredProfile,
+    ):
+        base_profile = profile.profile
+        defence = profile.effective_defence
+    else:
+        base_profile = profile
+        defence = profile.defence
+
     duel_result = calculate_basic_duel_probability(
         attacker_attacks=benchmark.attacks,
         attacker_fight=benchmark.fight,
-        defender_attacks=profile.attacks,
-        defender_fight=profile.fight,
+        defender_attacks=base_profile.attacks,
+        defender_fight=base_profile.fight,
     )
 
     wound_target = get_wound_target(
         strength=benchmark.strength,
-        defence=profile.defence,
+        defence=defence,
     )
 
     wound_probability = float(

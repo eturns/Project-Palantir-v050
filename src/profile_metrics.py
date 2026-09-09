@@ -36,6 +36,7 @@ from profile_metrics_entity import ProfileMetrics
 
 from army_analysis_context import ArmyAnalysisContext
 from spell_probability import casting_probability
+from configured_profile import ConfiguredProfile
 # ============================================================================
 # Private Functions
 # ============================================================================
@@ -215,12 +216,23 @@ def _calculate_spellcasting_power(
     )
 
 def calculate_profile_metrics(
-    profile: Profile,
+    profile: Profile | ConfiguredProfile,
     context: ArmyAnalysisContext | None = None,
 ) -> ProfileMetrics:
     """
-    Calculates all battlefield metrics for a Profile.
+    Calculates all battlefield metrics for a Profile
+    or ConfiguredProfile.
     """
+
+    if isinstance(
+        profile,
+        ConfiguredProfile,
+    ):
+        
+        base_profile = profile.profile
+    else:
+        
+        base_profile = profile
 
     evidence = build_profile_battlefield_evidence(
         profile,
@@ -230,67 +242,67 @@ def calculate_profile_metrics(
         offence=calculate_metric(
             evidence,
             "OFFENCE",
-            profile,
+            base_profile,
             context,
         ),
         defence=calculate_metric(
             evidence,
             "DEFENCE",
-            profile,
+            base_profile,
             context,
         ),
         mobility=calculate_metric(
             evidence,
             "MOBILITY",
-            profile,
+            base_profile,
             context,
         ),
         magic=(
             calculate_metric(
                 evidence,
                 "MAGIC",
-                profile,
+                base_profile,
                 context,
             )
             + _calculate_spellcasting_power(
-                profile,
+                base_profile,
                 context,
             )
         ),
         shooting=calculate_metric(
             evidence,
             "SHOOTING",
-            profile,
+            base_profile,
             context,
         ),
         courage=calculate_metric(
             evidence,
             "COURAGE",
-            profile,
+            base_profile,
             context,
         ),
         control=calculate_metric(
             evidence,
             "CONTROL",
-            profile,
+            base_profile,
             context,
         ),
         command=calculate_metric(
             evidence,
             "COMMAND",
-            profile,
+            base_profile,
             context,
         ),
         objective=calculate_metric(
             evidence,
             "OBJECTIVE",
-            profile,
+            base_profile,
             context,
         ),
         hero_hunting=calculate_metric(
             evidence,
             "HERO_HUNTING",
-            profile,
+            base_profile,
             context,
         ),
     )

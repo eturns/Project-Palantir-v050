@@ -23,6 +23,7 @@ from profiles import Profile
 from army_entry import ArmyEntry
 from metrics import AnalysisMetrics
 from analysis import ArmyAnalysis
+from configured_profile import ConfiguredProfile
 
 
 class Army:
@@ -48,6 +49,23 @@ class Army:
         entry = ArmyEntry(profile=profile, quantity=quantity,)
         self.entries.append(entry)
 
+    def add_configured_profile(
+        self,
+        configured_profile: ConfiguredProfile,
+        quantity: int = 1,
+    ) -> None:
+        """
+        Adds a configured profile to the army without
+        discarding its selected configuration.
+        """
+
+        entry = ArmyEntry(
+            configured_profile=configured_profile,
+            quantity=quantity,
+        )
+
+        self.entries.append(entry)
+
     def _total_attribute(self, attribute: str) -> int:
         """
         Returns the total of a chosen attribute across the army.
@@ -60,15 +78,18 @@ class Army:
 
         return total 
 
-    def _highest_profile(self, attribute: str) -> Profile:
+    def _highest_entry(
+        self,
+        attribute: str,
+    ) -> ArmyEntry:
         """
-        Returns the profile with the highest value of a chosen attribute.
+        Returns the ArmyEntry with the highest effective
+        value of a chosen analytical characteristic.
         """
 
         highest_entry = self.entries[0]
 
         for entry in self.entries:
-
             if (
                 entry.get_attribute(attribute)
                 >
@@ -76,34 +97,39 @@ class Army:
             ):
                 highest_entry = entry
 
-        return highest_entry.profile
+        return highest_entry
 
-    def _lowest_profile(self, attribute: str) -> Profile:
+    def _lowest_entry(
+        self,
+        attribute: str,
+    ) -> ArmyEntry:
         """
-        Returns the profile with the lowest value of a chosen attribute.
+        Returns the ArmyEntry with the lowest effective
+        value of a chosen analytical characteristic.
         """
 
         lowest_entry = self.entries[0]
 
         for entry in self.entries:
-
-            profile = entry.profile
-
             if (
                 entry.get_attribute(attribute)
-            <    lowest_entry.get_attribute(attribute)
+                <
+                lowest_entry.get_attribute(attribute)
             ):
                 lowest_entry = entry
 
-        return lowest_entry.profile     
+        return lowest_entry  
 
     
     def total_points(self) -> int:
         """
-        Returns the total points value of the army.
+        Returns the total configured points value of the army.
         """
 
-        return self._total_attribute("points") 
+        return sum(
+            entry.total_points()
+            for entry in self.entries
+        )
     
     def total_might(self) -> int:
         """
@@ -126,47 +152,23 @@ class Army:
 
         return self._total_attribute("fate")
     
-    def highest_fight(self) -> Profile:
-        """
-        Returns the profile with the highest Fight value.
-        """
-
-        return self._highest_profile("fight")
+    def highest_fight(self) -> ArmyEntry:
+        return self._highest_entry("fight")
     
-    def highest_strength(self) -> Profile:
-        """
-        Returns the profile with the highest Strength value.
-        """
-
-        return self._highest_profile("strength")
+    def highest_strength(self) -> ArmyEntry:
+        return self._highest_entry("strength")
     
-    def highest_defence(self) -> Profile:
-        """
-        Returns the profile with the highest Defence value.
-        """
-
-        return self._highest_profile("defence")
+    def highest_defence(self) -> ArmyEntry:
+        return self._highest_entry("defence")
     
-    def lowest_fight(self) -> Profile:
-        """
-        Returns the profile with the lowest Fight value.
-        """
-
-        return self._lowest_profile("fight")
+    def lowest_fight(self) -> ArmyEntry:
+        return self._lowest_entry("fight")
     
-    def lowest_strength(self) -> Profile:
-        """
-        Returns the profile with the lowest Strength value.
-        """
-
-        return self._lowest_profile("strength")
+    def lowest_strength(self) -> ArmyEntry:
+        return self._lowest_entry("strength")
     
-    def lowest_defence(self) -> Profile:
-        """
-        Returns the profile with the lowest Defence value.
-        """
-
-        return self._lowest_profile("defence")
+    def lowest_defence(self) -> ArmyEntry:
+        return self._lowest_entry("defence")
 
     def profile_count(self) -> int:
         """
@@ -446,53 +448,34 @@ class Army:
         return total
     
     def _count_models(
-            self,
+        self,
         predicate,
-        ) -> int:
+    ) -> int:
         """
-        Counts models matching a supplied condition.
-
-        Args:
-            predicate:
-                Function accepting a Profile and returning True
-                if the model should be counted.
-
-        Returns:
-            Total number of matching models.
+        Counts models matching a supplied ArmyEntry condition.
         """
 
         total = 0
 
         for entry in self.entries:
-
-            if predicate(entry.profile):
-
+            if predicate(entry):
                 total += entry.quantity
 
         return total
     
     def _average_profile_stat(
-            self,
+        self,
         selector,
-        ) -> float:
+    ) -> float:
         """
-        Returns the quantity-weighted average of a profile statistic.
-
-        Args:
-            selector:
-                Function accepting a Profile and returning the
-                statistic to average.
-
-        Returns:
-            Quantity-weighted average value.
+        Returns the quantity-weighted average of an ArmyEntry statistic.
         """
 
         total = 0
 
         for entry in self.entries:
-
             total += (
-                selector(entry.profile)
+                selector(entry)
                 * entry.quantity
             )
 
@@ -507,7 +490,9 @@ class Army:
         """
 
         return self._count_models(
-            lambda profile: profile.movement >= 8
+            lambda entry: (
+                entry.configured_profile.effective_movement >= 8
+            )
         )
 
     def standard_model_count(self) -> int:
@@ -516,7 +501,9 @@ class Army:
         """
 
         return self._count_models(
-            lambda profile: profile.movement == 6
+            lambda entry: (
+                entry.configured_profile.effective_movement == 6
+            )
         )
 
     def slow_model_count(self) -> int:
@@ -525,7 +512,9 @@ class Army:
         """
 
         return self._count_models(
-            lambda profile: profile.movement <= 5
+            lambda entry: (
+                entry.configured_profile.effective_movement <= 5
+            )
         )
 
     def average_movement(self) -> float:
@@ -534,86 +523,64 @@ class Army:
         """
 
         return self._average_profile_stat(
-            lambda profile: profile.movement
+            lambda entry: (
+                entry.configured_profile.effective_movement
+            )
         )
     
     def average_fight(self) -> float:
-        """
-        Returns the army's quantity-weighted average Fight value.
-        """
-
         return self._average_profile_stat(
-            lambda profile: profile.fight
+            lambda entry: entry.profile.fight
         )
     
     def average_strength(self) -> float:
-        """
-        Returns the army's quantity-weighted average Strength value.
-        """
-
         return self._average_profile_stat(
-            lambda profile: profile.strength
+            lambda entry: entry.profile.strength
         )
     
     def average_attacks(self) -> float:
-        """
-        Returns the army's quantity-weighted average Attacks value.
-        """
-
         return self._average_profile_stat(
-            lambda profile: profile.attacks
+            lambda entry: entry.profile.attacks
         )
     
     def average_defence(self) -> float:
         """
-        Returns the army's quantity-weighted average Defence value.
+        Returns the army's quantity-weighted average effective Defence.
         """
 
         return self._average_profile_stat(
-            lambda profile: profile.defence
+            lambda entry: (
+                entry.configured_profile.effective_defence
+            )
         )
 
     def average_wounds(self) -> float:
-        """
-        Returns the army's quantity-weighted average Wounds value.
-        """
-
         return self._average_profile_stat(
-            lambda profile: profile.wounds
+            lambda entry: entry.profile.wounds
         )
 
     def high_fight_model_count(self) -> int:
-        """
-        Returns the number of models with Fight 5 or higher.
-        """
-
         return self._count_models(
-            lambda profile: profile.fight >= 5
-        )   
+            lambda entry: entry.profile.fight >= 5
+        ) 
     
     def high_strength_model_count(self) -> int:
-        """
-        Returns the number of models with Strength 5 or higher.
-        """
-
         return self._count_models(
-            lambda profile: profile.strength >= 5
+            lambda entry: entry.profile.strength >= 5
         )
     
     def high_defence_model_count(self) -> int:
         """
-        Returns the number of models with Defence 6 or higher.
+        Returns the number of models with effective Defence 6 or higher.
         """
 
         return self._count_models(
-            lambda profile: profile.defence >= 6
+            lambda entry: (
+                entry.configured_profile.effective_defence >= 6
+            )
         )
     
     def multi_wound_model_count(self) -> int:
-        """
-        Returns the number of models with 2 or more Wounds.
-        """
-
         return self._count_models(
-            lambda profile: profile.wounds >= 2
+            lambda entry: entry.profile.wounds >= 2
         )

@@ -149,7 +149,7 @@ def calculate_army_metrics(
     for entry in army.entries:
 
         profile_metrics = calculate_profile_metrics(
-            entry.profile,
+            entry.configured_profile,
             context,
         )
 
