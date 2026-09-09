@@ -43,6 +43,7 @@ def analyse_mesbg_list_builder_file(
     )
 
     leader_profile = None
+    leader_model = None
 
     leader_profile_id = getattr(
         definition,
@@ -54,6 +55,21 @@ def analyse_mesbg_list_builder_file(
         leader_profile = profiles_by_id[
             leader_profile_id
         ]
+
+        leader_model = next(
+            (
+                fielded_model
+                for fielded_model in army.fielded_models()
+                if (
+                    fielded_model
+                    .configured_profile
+                    .profile
+                    .id
+                    == leader_profile_id
+                )
+            ),
+            None,
+        )
 
     if key_profile is None:
             key_profile = leader_profile
@@ -118,7 +134,7 @@ def analyse_mesbg_list_builder_file(
                 candidate=candidate,
                 army_list=army_list,
                 key_profile=key_profile,
-                leader_profile=leader_profile,
+                leader_model=leader_model,
                 preservation_profile=leader_profile,
                 combat_benchmark=combat_benchmark,
                 benchmark_presence=benchmark_presence,

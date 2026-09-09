@@ -24,7 +24,7 @@ from army_entry import ArmyEntry
 from metrics import AnalysisMetrics
 from analysis import ArmyAnalysis
 from configured_profile import ConfiguredProfile
-
+from fielded_model import FieldedModel
 
 class Army:
     """
@@ -462,7 +462,39 @@ class Army:
                 total += entry.quantity
 
         return total
-    
+
+    def fielded_models(self) -> tuple[FieldedModel, ...]:
+        """
+        Expands configured Army entries into distinct fielded model instances.
+
+        Fielded model identity is deterministic for a fixed Army entry order.
+        """
+
+        fielded_models = []
+
+        for configuration_index, entry in enumerate(
+            self.entries,
+            start=1,
+        ):
+            for instance_index in range(
+                1,
+                entry.quantity + 1,
+            ):
+                fielded_models.append(
+                    FieldedModel(
+                        id=(
+                            f"{entry.profile.id}:"
+                            f"{configuration_index}:"
+                            f"{instance_index}"
+                        ),
+                        configured_profile=(
+                            entry.configured_profile
+                        ),
+                    )
+                )
+
+        return tuple(fielded_models)
+
     def _average_profile_stat(
         self,
         selector,
@@ -584,3 +616,5 @@ class Army:
         return self._count_models(
             lambda entry: entry.profile.wounds >= 2
         )
+
+    

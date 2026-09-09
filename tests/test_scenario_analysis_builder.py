@@ -446,8 +446,18 @@ def test_candidate_analysis_uses_fog_of_war_preservation_override(
 
     capability_profile = object()
 
-    leader_profile = object()
-    fog_profile = object()
+    leader_model = object()
+
+
+    class FakeConfiguredProfile:
+        profile = object()
+
+
+    class FakeFieldedModel:
+        configured_profile = FakeConfiguredProfile()
+
+
+    fog_model = FakeFieldedModel()
 
     expected_results = (
         "RESULT_A",
@@ -462,21 +472,21 @@ def test_candidate_analysis_uses_fog_of_war_preservation_override(
     ):
         return capability_profile
 
-    def fake_select_fog_profile(
+    def fake_select_fog_model(
         *,
         army,
-        leader_profile,
+        leader_model,
         combat_benchmark,
         benchmark_fate,
     ):
         captured["selector"] = {
             "army": army,
-            "leader_profile": leader_profile,
+            "leader_model": leader_model,
             "combat_benchmark": combat_benchmark,
             "benchmark_fate": benchmark_fate,
         }
 
-        return fog_profile
+        return fog_model
 
     def fake_preservation_calculator(
         *,
@@ -486,7 +496,7 @@ def test_candidate_analysis_uses_fog_of_war_preservation_override(
         army=None,
         army_list=None,
     ):
-        assert profile is fog_profile
+        assert profile is fog_model.configured_profile.profile
         assert benchmark == "COMBAT_BENCHMARK"
         assert benchmark_fate == 40
 
@@ -518,8 +528,8 @@ def test_candidate_analysis_uses_fog_of_war_preservation_override(
 
     monkeypatch.setattr(
         "scenario_analysis_builder."
-        "select_fog_of_war_preservation_profile",
-        fake_select_fog_profile,
+        "select_fog_of_war_preservation_model",
+        fake_select_fog_model,
     )
 
     monkeypatch.setattr(
@@ -544,7 +554,7 @@ def test_candidate_analysis_uses_fog_of_war_preservation_override(
         candidate=candidate,
         army_list="ARMY_LIST",
         key_profile="KEY_PROFILE",
-        leader_profile=leader_profile,
+        leader_model=leader_model,
         combat_benchmark="COMBAT_BENCHMARK",
         benchmark_presence=10,
         benchmark_manoeuvrability=20,
@@ -556,7 +566,7 @@ def test_candidate_analysis_uses_fog_of_war_preservation_override(
 
     assert captured["selector"] == {
         "army": "TEST_ARMY",
-        "leader_profile": leader_profile,
+        "leader_model": leader_model,
         "combat_benchmark": "COMBAT_BENCHMARK",
         "benchmark_fate": 40,
     }

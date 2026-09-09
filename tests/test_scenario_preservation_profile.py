@@ -1,138 +1,188 @@
 from army import Army
-from profile_classification import (
-    HeroicStatus,
-)
+from configured_profile import ConfiguredProfile
+from profile_classification import HeroicStatus
 from profiles import Profile
 from scenario_preservation_profile import (
-    get_fog_of_war_preservation_profiles,
-    select_fog_of_war_preservation_profile,
+    get_fog_of_war_preservation_models,
+    select_fog_of_war_preservation_model,
 )
 
 
-def build_profile(
-    profile_id: str,
+def make_profile(
     *,
+    profile_id: str,
     heroic_status: HeroicStatus,
+    fate: int = 1,
 ) -> Profile:
     return Profile(
         id=profile_id,
         name=profile_id,
-        points=100,
+        points=50,
         movement=6,
         fight=4,
         shooting="4+",
         strength=4,
-        defence=6,
-        attacks=2,
-        wounds=2,
-        courage="4+",
+        defence=5,
+        attacks=1,
+        wounds=1,
+        courage=4,
         intelligence="4+",
-        might=2,
-        will=2,
-        fate=2,
-        max_in_army=1,
+        might=1,
+        will=1,
+        fate=fate,
+        max_in_army=0,
         heroic_status=heroic_status,
     )
 
 
-def test_fog_of_war_preservation_profiles_exclude_leader():
+def test_leader_model_is_excluded_but_identical_copy_remains_eligible():
+    profile = make_profile(
+        profile_id="GENERIC_HERO",
+        heroic_status=HeroicStatus.HERO,
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+    )
+
     army = Army()
 
-    leader = build_profile(
-        "LEADER",
-        heroic_status=HeroicStatus.HERO,
+    army.add_configured_profile(
+        configured_profile,
+        quantity=2,
     )
 
-    other_hero = build_profile(
-        "OTHER_HERO",
-        heroic_status=HeroicStatus.HERO,
-    )
+    fielded_models = army.fielded_models()
 
-    warrior = build_profile(
-        "WARRIOR",
-        heroic_status=HeroicStatus.WARRIOR,
-    )
+    leader_model = fielded_models[0]
 
-    army.add_profile(
-        leader,
-        quantity=1,
-    )
-
-    army.add_profile(
-        other_hero,
-        quantity=1,
-    )
-
-    army.add_profile(
-        warrior,
-        quantity=1,
-    )
-
-    result = get_fog_of_war_preservation_profiles(
+    eligible_models = get_fog_of_war_preservation_models(
         army=army,
-        leader_profile=leader,
+        leader_model=leader_model,
     )
 
-    assert result == (
-        other_hero,
+    assert eligible_models == (
+        fielded_models[1],
     )
 
-def test_fog_of_war_selects_best_eligible_preservation_profile(
-    monkeypatch,
-):
-    army = Army()
 
-    leader = build_profile(
-        "LEADER",
+def test_non_hero_models_are_not_eligible():
+    hero = make_profile(
+        profile_id="HERO",
         heroic_status=HeroicStatus.HERO,
     )
 
-    weaker_hero = build_profile(
-        "WEAKER_HERO",
-        heroic_status=HeroicStatus.HERO,
-    )
-
-    stronger_hero = build_profile(
-        "STRONGER_HERO",
-        heroic_status=HeroicStatus.HERO,
-    )
-
-    warrior = build_profile(
-        "WARRIOR",
+    warrior = make_profile(
+        profile_id="WARRIOR",
         heroic_status=HeroicStatus.WARRIOR,
     )
 
-    army.add_profile(leader)
-    army.add_profile(weaker_hero)
-    army.add_profile(stronger_hero)
-    army.add_profile(warrior)
+    army = Army()
 
-    scores = {
-        "WEAKER_HERO": 0.40,
-        "STRONGER_HERO": 0.75,
-    }
+    army.add_configured_profile(
+        ConfiguredProfile(
+            profile=hero,
+        ),
+    )
 
-    def fake_calculate_preservation(
-        profile,
-        benchmark,
-        benchmark_fate,
-    ):
-        class Result:
-            value = scores[profile.id]
+    army.add_configured_profile(
+        ConfiguredProfile(
+            profile=warrior,
+        ),
+    )
 
-        return Result()
+    fielded_models = army.fielded_models()
+
+    eligible_models = get_fog_of_war_preservation_models(
+        army=army,
+        leader_model=fielded_models[0],
+    )
+
+    assert eligible_models == ()
+
+
+def test_different_configurations_of_same_profile_remain_distinct():
+    profile = make_profile(
+        profile_id="GENERIC_HERO",
+        heroic_status=HeroicStatus.HERO,
+    )
+
+    first_configuration = ConfiguredProfile(
+        profile=profile,
+    )
+
+    second_configuration = ConfiguredProfile(
+        profile=profile,
+    )
+
+    army = Army()
+
+    army.add_configured_profile(
+        first_configuration,
+    )
+
+    army.add_configured_profile(
+        second_configuration,
+    )
+
+    fielded_models = army.fielded_models()
+
+    eligible_models = get_fog_of_war_preservation_models(
+        army=army,
+        leader_model=fielded_models[0],
+    )
+
+    assert eligible_models == (
+        fielded_models[1],
+    )
+
+    assert (
+        eligible_models[0].configured_profile
+        is second_configuration
+    )
+
+
+def test_preservation_selection_returns_fielded_model(monkeypatch):
+    leader_profile = make_profile(
+        profile_id="LEADER",
+        heroic_status=HeroicStatus.HERO,
+    )
+
+    other_profile = make_profile(
+        profile_id="OTHER_HERO",
+        heroic_status=HeroicStatus.HERO,
+    )
+
+    army = Army()
+
+    army.add_configured_profile(
+        ConfiguredProfile(
+            profile=leader_profile,
+        ),
+    )
+
+    army.add_configured_profile(
+        ConfiguredProfile(
+            profile=other_profile,
+        ),
+    )
+
+    fielded_models = army.fielded_models()
+
+    class FakeCapability:
+        value = 0.5
 
     monkeypatch.setattr(
         "scenario_preservation_profile."
         "calculate_key_model_preservation_from_profile",
-        fake_calculate_preservation,
+        lambda **kwargs: FakeCapability(),
     )
 
-    result = select_fog_of_war_preservation_profile(
+    selected_model = select_fog_of_war_preservation_model(
         army=army,
-        leader_profile=leader,
-        combat_benchmark="BENCHMARK",
-        benchmark_fate=2.0,
+        leader_model=fielded_models[0],
+        combat_benchmark=object(),
+        benchmark_fate=1,
     )
 
-    assert result is stronger_hero
+    assert selected_model == fielded_models[1]

@@ -39,6 +39,20 @@ from services.mesbg_list_builder_import_service import (
     import_army_from_mesbg_list_builder,
 )
 
+class FakeFieldedModel:
+    def __init__(self, profile):
+        self.configured_profile = SimpleNamespace(
+            profile=profile,
+        )
+
+
+class FakeArmy:
+    def __init__(self, models):
+        self._models = models
+
+    def fielded_models(self):
+        return self._models
+    
 def test_mesbg_list_analysis_service_returns_scenario_analysis_results(
     monkeypatch,
 ):
@@ -104,14 +118,22 @@ def test_mesbg_list_analysis_service_returns_scenario_analysis_results(
 def test_analysis_service_passes_imported_leader_profile_to_scenario_builder(
     monkeypatch,
 ):
-    leader_profile = object()
+    leader_profile = SimpleNamespace(
+        id="LEADER_PROFILE",
+    )
+
+    leader_model = FakeFieldedModel(
+        leader_profile,
+    )
 
     definition = SimpleNamespace(
         points_limit=777,
         leader_profile_id="LEADER_PROFILE",
     )
 
-    army = object()
+    army = FakeArmy(
+        (leader_model,)
+    )
     army_list = object()
 
     captured = {}
@@ -182,21 +204,29 @@ def test_analysis_service_passes_imported_leader_profile_to_scenario_builder(
         "SCENARIO_RESULT",
     )
 
-    assert captured["leader_profile"] is leader_profile
+    assert captured["leader_model"] is leader_model
 
     assert captured["preservation_profile"] is leader_profile
 
 def test_analysis_service_builds_default_scenario_context_when_not_supplied(
     monkeypatch,
 ):
-    leader_profile = object()
+    leader_profile = SimpleNamespace(
+        id="LEADER_PROFILE",
+    )
+
+    leader_model = FakeFieldedModel(
+        leader_profile,
+    )
 
     definition = SimpleNamespace(
         points_limit=350,
         leader_profile_id="LEADER_PROFILE",
     )
 
-    army = object()
+    army = FakeArmy(
+        (leader_model,)
+    )
     army_list = object()
 
     captured = {}
@@ -270,14 +300,22 @@ def test_analysis_service_builds_default_scenario_context_when_not_supplied(
 def test_analysis_service_runs_scenario_analysis_without_manual_context(
     monkeypatch,
 ):
-    leader_profile = object()
+    leader_profile = SimpleNamespace(
+        id="LEADER_PROFILE",
+    )
+
+    leader_model = FakeFieldedModel(
+        leader_profile,
+    )
 
     definition = SimpleNamespace(
         points_limit=700,
         leader_profile_id="LEADER_PROFILE",
     )
 
-    army = object()
+    army = FakeArmy(
+        (leader_model,)
+    )
     army_list = object()
 
     captured = {}
@@ -343,7 +381,7 @@ def test_analysis_service_runs_scenario_analysis_without_manual_context(
     )
 
     assert captured["key_profile"] is leader_profile
-    assert captured["leader_profile"] is leader_profile
+    assert captured["leader_model"] is leader_model
     assert captured["preservation_profile"] is leader_profile
 
 def test_real_eddies_choice_matches_main_scenario_pipeline():

@@ -9,7 +9,7 @@ from key_model_preservation_capability import (
     calculate_key_model_preservation_from_profile,
 )
 from scenario_preservation_profile import (
-    select_fog_of_war_preservation_profile,
+    select_fog_of_war_preservation_model,
 )
 from scenario_demand import StrategicDemand
 from object_interaction import (
@@ -87,7 +87,7 @@ def build_scenario_analysis_results_from_candidate(
     candidate,
     army_list=None,
     key_profile=None,
-    leader_profile=None,
+    leader_model=None,
     preservation_profile=None,
     combat_benchmark=None,
     benchmark_presence=None,
@@ -130,23 +130,27 @@ def build_scenario_analysis_results_from_candidate(
         }
         
     if (
-        leader_profile is not None
+        leader_model is not None
         and combat_benchmark is not None
         and benchmark_fate is not None
     ):
-        fog_profile = (
-            select_fog_of_war_preservation_profile(
+        fog_model = (
+            select_fog_of_war_preservation_model(
                 army=candidate.army,
-                leader_profile=leader_profile,
+                leader_model=leader_model,
                 combat_benchmark=combat_benchmark,
                 benchmark_fate=benchmark_fate,
             )
         )
 
-        if fog_profile is not None:
+        if fog_model is not None:
             fog_preservation = (
                 calculate_key_model_preservation_from_profile(
-                    profile=fog_profile,
+                    profile=(
+                        fog_model
+                        .configured_profile
+                        .profile
+                    ),
                     benchmark=combat_benchmark,
                     benchmark_fate=benchmark_fate,
                     army=candidate.army,
