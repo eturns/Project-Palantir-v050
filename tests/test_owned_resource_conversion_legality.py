@@ -12,8 +12,7 @@ from resource_use_permission import ResourceType
 
 def test_matching_owner_can_use_owned_conversion():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     conversion = ResourceConversion(
@@ -35,13 +34,11 @@ def test_matching_owner_can_use_owned_conversion():
 
 def test_conversion_for_one_owner_does_not_apply_to_another_owner():
     permitted_owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     other_owner = ResourceOwner(
-        profile_id="DG_WK",
-        instance_index=1,
+        fielded_model_id="DG_WK:1:1",
     )
 
     conversion = ResourceConversion(
@@ -63,8 +60,7 @@ def test_conversion_for_one_owner_does_not_apply_to_another_owner():
 
 def test_conversion_must_match_source_resource_type():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     permitted_conversion = ResourceConversion(
@@ -91,8 +87,7 @@ def test_conversion_must_match_source_resource_type():
 
 def test_conversion_must_match_target_resource_use():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     permitted_conversion = ResourceConversion(

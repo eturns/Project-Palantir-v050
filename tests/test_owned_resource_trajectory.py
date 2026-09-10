@@ -13,8 +13,7 @@ from resource_use_permission import ResourceType
 
 def test_multi_turn_trajectory_uses_previous_turn_state():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     initial_states = (
@@ -81,13 +80,11 @@ def test_multi_turn_trajectory_uses_previous_turn_state():
 
 def test_multi_turn_trajectory_preserves_owner_isolation():
     necromancer_owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     witch_king_owner = ResourceOwner(
-        profile_id="DG_WK",
-        instance_index=1,
+        fielded_model_id="DG_WK:1:1",
     )
 
     initial_states = (

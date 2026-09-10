@@ -18,8 +18,7 @@ from resource_use_permission import ResourceType
 
 def test_converted_will_spend_reduces_will_without_creating_fate():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     state = OwnedHeroResourceState(
@@ -57,8 +56,7 @@ def test_converted_will_spend_reduces_will_without_creating_fate():
 
 def test_converted_spend_does_not_mutate_original_state():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     state = OwnedHeroResourceState(
@@ -94,8 +92,7 @@ def test_converted_spend_does_not_mutate_original_state():
 def test_conversion_cannot_be_spent_by_different_owner():
     state = OwnedHeroResourceState(
         owner=ResourceOwner(
-            profile_id="DG_WK",
-            instance_index=1,
+            fielded_model_id="DG_WK:1:1",
         ),
         resources=HeroResourceState(
             remaining_might=3,
@@ -106,8 +103,7 @@ def test_conversion_cannot_be_spent_by_different_owner():
 
     conversion = OwnedResourceConversion(
         owner=ResourceOwner(
-            profile_id="DG_NEC",
-            instance_index=1,
+            fielded_model_id="DG_NEC:1:1",
         ),
         conversion=ResourceConversion(
             source_resource_type=ResourceType.WILL,
@@ -174,8 +170,7 @@ def test_profile_declared_conversion_can_be_applied_end_to_end():
 
     state = OwnedHeroResourceState(
         owner=ResourceOwner(
-            profile_id="DG_NEC",
-            instance_index=1,
+            fielded_model_id="DG_NEC:1:1",
         ),
         resources=HeroResourceState(
             remaining_might=3,

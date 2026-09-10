@@ -9,8 +9,7 @@ from resource_use_permission import ResourceType
 
 def test_owned_conversion_stores_owner_and_conversion():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     conversion = ResourceConversion(
@@ -35,16 +34,14 @@ def test_repeated_model_instances_have_distinct_owned_conversions():
 
     first = OwnedResourceConversion(
         owner=ResourceOwner(
-            profile_id="DG_SM",
-            instance_index=1,
+            fielded_model_id="DG_SM:1:1",
         ),
         conversion=conversion,
     )
 
     second = OwnedResourceConversion(
         owner=ResourceOwner(
-            profile_id="DG_SM",
-            instance_index=2,
+            fielded_model_id="DG_SM:1:2",
         ),
         conversion=conversion,
     )
@@ -55,8 +52,7 @@ def test_repeated_model_instances_have_distinct_owned_conversions():
 def test_equivalent_owned_conversions_are_equal():
     conversion_a = OwnedResourceConversion(
         owner=ResourceOwner(
-            profile_id="DG_NEC",
-            instance_index=1,
+            fielded_model_id="DG_NEC:1:1",
         ),
         conversion=ResourceConversion(
             source_resource_type=ResourceType.WILL,
@@ -66,8 +62,7 @@ def test_equivalent_owned_conversions_are_equal():
 
     conversion_b = OwnedResourceConversion(
         owner=ResourceOwner(
-            profile_id="DG_NEC",
-            instance_index=1,
+            fielded_model_id="DG_NEC:1:1",
         ),
         conversion=ResourceConversion(
             source_resource_type=ResourceType.WILL,

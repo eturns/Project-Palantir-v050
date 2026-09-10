@@ -20,8 +20,7 @@ from resource_use_permission import ResourceType
 
 def test_default_legal_allocation_is_accepted():
     owner = ResourceOwner(
-        profile_id="DG_WK",
-        instance_index=1,
+        fielded_model_id="DG_WK:1:1",
     )
 
     allocation = OwnedResourceAllocation(
@@ -40,8 +39,7 @@ def test_default_legal_allocation_is_accepted():
 
 def test_explicit_owner_permission_allows_special_allocation():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     allocation = OwnedResourceAllocation(
@@ -66,8 +64,7 @@ def test_explicit_owner_permission_allows_special_allocation():
 
 def test_matching_conversion_allows_special_allocation():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     allocation = OwnedResourceAllocation(
@@ -94,8 +91,7 @@ def test_matching_conversion_allows_special_allocation():
 
 def test_illegal_allocation_is_rejected():
     owner = ResourceOwner(
-        profile_id="DG_WK",
-        instance_index=1,
+        fielded_model_id="DG_WK:1:1",
     )
 
     allocation = OwnedResourceAllocation(
@@ -118,13 +114,11 @@ def test_illegal_allocation_is_rejected():
 
 def test_conversion_for_different_owner_does_not_allow_allocation():
     allocation_owner = ResourceOwner(
-        profile_id="DG_WK",
-        instance_index=1,
+        fielded_model_id="DG_WK:1:1",
     )
 
     conversion_owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     allocation = OwnedResourceAllocation(

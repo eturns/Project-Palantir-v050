@@ -14,8 +14,7 @@ from resource_use_permission import ResourceType
 
 def test_balanced_strategy_allows_owner_allocation_within_budget():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     state = OwnedHeroResourceState(
@@ -46,8 +45,7 @@ def test_balanced_strategy_allows_owner_allocation_within_budget():
 
 def test_balanced_strategy_rejects_owner_allocation_above_budget():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     state = OwnedHeroResourceState(
@@ -78,8 +76,7 @@ def test_balanced_strategy_rejects_owner_allocation_above_budget():
 
 def test_competing_uses_share_same_owner_turn_budget():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     state = OwnedHeroResourceState(
@@ -116,13 +113,11 @@ def test_competing_uses_share_same_owner_turn_budget():
 
 def test_different_owners_have_independent_turn_budgets():
     necromancer_owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     witch_king_owner = ResourceOwner(
-        profile_id="DG_WK",
-        instance_index=1,
+        fielded_model_id="DG_WK:1:1",
     )
 
     states = (
@@ -169,8 +164,7 @@ def test_different_owners_have_independent_turn_budgets():
 
 def test_unknown_owner_is_rejected_by_strategy_budget():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     allocations = (

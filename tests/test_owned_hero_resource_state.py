@@ -5,8 +5,7 @@ from resource_owner import ResourceOwner
 
 def test_owned_hero_resource_state_stores_owner_and_resources():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     resources = HeroResourceState(
@@ -27,8 +26,7 @@ def test_owned_hero_resource_state_stores_owner_and_resources():
 def test_owned_hero_resource_state_preserves_owner_key():
     owned_state = OwnedHeroResourceState(
         owner=ResourceOwner(
-            profile_id="DG_SM",
-            instance_index=2,
+            fielded_model_id="DG_SM:1:2",
         ),
         resources=HeroResourceState(
             remaining_might=1,
@@ -37,14 +35,13 @@ def test_owned_hero_resource_state_preserves_owner_key():
         ),
     )
 
-    assert owned_state.owner.key == "DG_SM:2"
+    assert owned_state.owner.key == "DG_SM:1:2"
 
 
 def test_equivalent_owned_hero_resource_states_are_equal():
     first_state = OwnedHeroResourceState(
         owner=ResourceOwner(
-            profile_id="DG_WK",
-            instance_index=1,
+            fielded_model_id="DG_WK:1:1",
         ),
         resources=HeroResourceState(
             remaining_might=3,
@@ -55,8 +52,7 @@ def test_equivalent_owned_hero_resource_states_are_equal():
 
     second_state = OwnedHeroResourceState(
         owner=ResourceOwner(
-            profile_id="DG_WK",
-            instance_index=1,
+            fielded_model_id="DG_WK:1:1",
         ),
         resources=HeroResourceState(
             remaining_might=3,
@@ -71,8 +67,7 @@ def test_equivalent_owned_hero_resource_states_are_equal():
 def test_different_owners_with_same_resources_remain_distinct():
     first_state = OwnedHeroResourceState(
         owner=ResourceOwner(
-            profile_id="DG_SM",
-            instance_index=1,
+            fielded_model_id="DG_SM:1:1",
         ),
         resources=HeroResourceState(
             remaining_might=1,
@@ -83,8 +78,7 @@ def test_different_owners_with_same_resources_remain_distinct():
 
     second_state = OwnedHeroResourceState(
         owner=ResourceOwner(
-            profile_id="DG_SM",
-            instance_index=2,
+            fielded_model_id="DG_SM:1:2",
         ),
         resources=HeroResourceState(
             remaining_might=1,

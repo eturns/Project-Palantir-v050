@@ -13,8 +13,7 @@ from resource_use_permission import ResourceType
 
 def test_turn_transition_applies_allocations_to_owner_state():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     states = (
@@ -58,13 +57,11 @@ def test_turn_transition_applies_allocations_to_owner_state():
 
 def test_turn_transition_keeps_untouched_owner_unchanged():
     necromancer_owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     witch_king_owner = ResourceOwner(
-        profile_id="DG_WK",
-        instance_index=1,
+        fielded_model_id="DG_WK:1:1",
     )
 
     states = (

@@ -4,7 +4,7 @@ from profiles import Profile
 from key_model_preservation_capability import (
     calculate_key_model_preservation_capability,
     calculate_key_model_preservation_from_profile,
-    calculate_protective_resources_from_army_profile,
+    calculate_protective_resources_from_fielded_model,
 )
 from scenario_capability import ScenarioCapability
 from scenario_demand import StrategicDemand
@@ -211,18 +211,26 @@ def test_protective_resources_include_legal_will_to_fate_conversion():
         quantity=1,
     )
 
+    fielded_model_without_conversion = (
+        army_without_conversion.fielded_models()[0]
+    )
+
     without_conversion = (
-        calculate_protective_resources_from_army_profile(
+        calculate_protective_resources_from_fielded_model(
             army=army_without_conversion,
-            profile=profile_without_conversion,
+            fielded_model=fielded_model_without_conversion,
             benchmark_fate=4,
         )
     )
 
+    fielded_model_with_conversion = (
+        army_with_conversion.fielded_models()[0]
+    )
+
     with_conversion = (
-        calculate_protective_resources_from_army_profile(
+        calculate_protective_resources_from_fielded_model(
             army=army_with_conversion,
-            profile=profile_with_conversion,
+            fielded_model=fielded_model_with_conversion,
             benchmark_fate=4,
         )
     )
@@ -262,10 +270,12 @@ def test_protective_resources_budget_convertible_will_over_standard_horizon():
         quantity=1,
     )
 
+    fielded_model = army.fielded_models()[0]
+
     result = (
-        calculate_protective_resources_from_army_profile(
+        calculate_protective_resources_from_fielded_model(
             army=army,
-            profile=profile,
+            fielded_model=fielded_model,
             benchmark_fate=4,
         )
     )
@@ -399,9 +409,11 @@ def test_power_of_the_necromancer_reduces_convertible_will_to_one_third():
         ],
     )
 
-    result = calculate_protective_resources_from_army_profile(
+    fielded_model = army.fielded_models()[0]
+
+    result = calculate_protective_resources_from_fielded_model(
         army=army,
-        profile=profile,
+        fielded_model=fielded_model,
         benchmark_fate=3,
         army_list=army_list,
     )

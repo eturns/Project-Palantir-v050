@@ -19,8 +19,7 @@ from resource_use_permission import ResourceType
 
 def test_competing_uses_can_share_same_finite_source_pool():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     state = OwnedHeroResourceState(
@@ -65,8 +64,7 @@ def test_competing_uses_can_share_same_finite_source_pool():
 
 def test_competing_uses_cannot_overspend_same_source_pool():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     state = OwnedHeroResourceState(
@@ -115,8 +113,7 @@ def test_competing_uses_cannot_overspend_same_source_pool():
 
 def test_allocation_cannot_use_unknown_owner_state():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     allocation = OwnedResourceAllocation(
@@ -140,13 +137,11 @@ def test_allocation_cannot_use_unknown_owner_state():
 
 def test_different_owners_validate_against_their_own_pools():
     necromancer_owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     witch_king_owner = ResourceOwner(
-        profile_id="DG_WK",
-        instance_index=1,
+        fielded_model_id="DG_WK:1:1",
     )
 
     states = (

@@ -3,18 +3,14 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class ResourceOwner:
-    profile_id: str
-    instance_index: int
+    fielded_model_id: str
 
     def __post_init__(self) -> None:
-        if self.instance_index < 1:
+        if not self.fielded_model_id:
             raise ValueError(
-                "Resource owner instance index must be at least 1."
+                "Resource owner fielded model id must not be empty."
             )
 
     @property
     def key(self) -> str:
-        return (
-            f"{self.profile_id}:"
-            f"{self.instance_index}"
-        )
+        return self.fielded_model_id

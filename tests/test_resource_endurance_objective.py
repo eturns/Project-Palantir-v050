@@ -347,8 +347,7 @@ def test_resource_endurance_objective_uses_owned_resource_management(
     owned_states = (
         OwnedHeroResourceState(
             owner=ResourceOwner(
-                profile_id="DG_NEC",
-                instance_index=1,
+                fielded_model_id="DG_NEC:1:1",
             ),
             resources=HeroResourceState(
                 remaining_might=3,
@@ -426,8 +425,7 @@ def test_resource_endurance_objective_initializes_owned_resource_semantics(
     owned_states = (
         OwnedHeroResourceState(
             owner=ResourceOwner(
-                profile_id="DG_NEC",
-                instance_index=1,
+                fielded_model_id="DG_NEC:1:1",
             ),
             resources=HeroResourceState(
                 remaining_might=3,
@@ -526,8 +524,7 @@ def test_resource_endurance_passes_owned_semantics_to_management(
     owned_states = (
         OwnedHeroResourceState(
             owner=ResourceOwner(
-                profile_id="DG_NEC",
-                instance_index=1,
+                fielded_model_id="DG_NEC:1:1",
             ),
             resources=HeroResourceState(
                 remaining_might=3,

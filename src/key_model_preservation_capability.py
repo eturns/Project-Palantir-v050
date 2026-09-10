@@ -22,6 +22,7 @@ from battle_length_assumption import BattleHorizon
 from resource_strategy import ResourceStrategy
 from resource_strategy_budget import calculate_resource_budget
 from army_list import ArmyList
+from fielded_model import FieldedModel
 
 def calculate_key_model_preservation_capability(
     defensive_survivability: int | float,
@@ -61,9 +62,9 @@ def calculate_key_model_preservation_capability(
         value=value,
     )
 
-def calculate_protective_resources_from_army_profile(
+def calculate_protective_resources_from_fielded_model(
     army: Army,
-    profile: Profile,
+    fielded_model: FieldedModel,
     benchmark_fate: int | float,
     army_list: ArmyList | None = None,
 ) -> float:
@@ -72,9 +73,9 @@ def calculate_protective_resources_from_army_profile(
             "army must be an Army."
         )
 
-    if not isinstance(profile, Profile):
+    if not isinstance(fielded_model, FieldedModel):
         raise TypeError(
-            "profile must be a Profile."
+            "fielded_model must be a FieldedModel."
         )
 
     if (
@@ -100,14 +101,17 @@ def calculate_protective_resources_from_army_profile(
         (
             state
             for state in owned_states
-            if state.owner.profile_id == profile.id
+            if (
+                state.owner.fielded_model_id
+                == fielded_model.id
+            )
         ),
         None,
     )
 
     if matching_state is None:
         raise ValueError(
-            "profile must belong to army."
+            "fielded_model must belong to army."
         )
 
     owned_conversions = (
@@ -218,10 +222,27 @@ def calculate_key_model_preservation_from_profile(
             1.0,
         )
     else:
+        fielded_model = next(
+            (
+                model
+                for model in army.fielded_models()
+                if (
+                    model.configured_profile.profile
+                    == profile
+                )
+            ),
+            None,
+        )
+
+        if fielded_model is None:
+            raise ValueError(
+                "profile must belong to army."
+            )
+
         protective_resources = (
-            calculate_protective_resources_from_army_profile(
+            calculate_protective_resources_from_fielded_model(
                 army=army,
-                profile=profile,
+                fielded_model=fielded_model,
                 benchmark_fate=benchmark_fate,
                 army_list=army_list,
             )

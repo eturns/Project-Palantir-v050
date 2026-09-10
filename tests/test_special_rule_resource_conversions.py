@@ -38,8 +38,7 @@ def test_unrelated_special_rule_grants_no_resource_conversion():
 
 def test_unholy_resurrection_grants_will_boost_resurrection_permission():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     result = get_special_rule_resource_permissions(
@@ -60,8 +59,7 @@ def test_unholy_resurrection_grants_will_boost_resurrection_permission():
 
 def test_unrelated_rule_grants_no_special_resource_permission():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     result = get_special_rule_resource_permissions(

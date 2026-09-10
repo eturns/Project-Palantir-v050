@@ -24,8 +24,7 @@ from rule_loader import load_special_rules
 
 def test_necromancer_special_rules_expose_expected_resource_semantics():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     special_rule_ids = (

@@ -13,11 +13,16 @@ def get_initial_owned_resource_conversions(
 ) -> tuple[OwnedResourceConversion, ...]:
     conversions: list[OwnedResourceConversion] = []
 
-    for entry in sorted(
-        army.entries,
-        key=lambda army_entry: army_entry.profile.id,
-    ):
-        profile = entry.profile
+    for fielded_model in army.fielded_models():
+        profile = (
+            fielded_model
+            .configured_profile
+            .profile
+        )
+
+        owner = ResourceOwner(
+            fielded_model_id=fielded_model.id,
+        )
 
         special_rule_ids = tuple(
             assignment.rule.id
@@ -31,21 +36,12 @@ def get_initial_owned_resource_conversions(
             )
         )
 
-        for instance_index in range(
-            1,
-            entry.quantity + 1,
-        ):
-            owner = ResourceOwner(
-                profile_id=profile.id,
-                instance_index=instance_index,
-            )
-
-            for conversion in profile_conversions:
-                conversions.append(
-                    OwnedResourceConversion(
-                        owner=owner,
-                        conversion=conversion,
-                    )
+        for conversion in profile_conversions:
+            conversions.append(
+                OwnedResourceConversion(
+                    owner=owner,
+                    conversion=conversion,
                 )
+            )
 
     return tuple(conversions)

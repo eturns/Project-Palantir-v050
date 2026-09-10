@@ -87,8 +87,7 @@ def test_profile_declared_permission_is_created_for_owner():
     assert result == (
         OwnedResourceUsePermission(
             owner=ResourceOwner(
-                profile_id="DG_NEC",
-                instance_index=1,
+                fielded_model_id="DG_NEC:1:1",
             ),
             resource_type=ResourceType.WILL,
             resource_use=ResourceUse.TAKE_FATE,
@@ -119,16 +118,14 @@ def test_repeated_models_receive_separate_owned_permissions():
     assert result == (
         OwnedResourceUsePermission(
             owner=ResourceOwner(
-                profile_id="DG_SM",
-                instance_index=1,
+                fielded_model_id="DG_SM:1:1",
             ),
             resource_type=ResourceType.WILL,
             resource_use=ResourceUse.TAKE_FATE,
         ),
         OwnedResourceUsePermission(
             owner=ResourceOwner(
-                profile_id="DG_SM",
-                instance_index=2,
+                fielded_model_id="DG_SM:1:2",
             ),
             resource_type=ResourceType.WILL,
             resource_use=ResourceUse.TAKE_FATE,
@@ -164,8 +161,7 @@ def test_initial_permissions_include_profile_special_rule_semantics():
     assert result == (
         OwnedResourceUsePermission(
             owner=ResourceOwner(
-                profile_id="DG_NEC",
-                instance_index=1,
+                fielded_model_id="DG_NEC:1:1",
             ),
             resource_type=ResourceType.WILL,
             resource_use=ResourceUse.BOOST_RESURRECTION,

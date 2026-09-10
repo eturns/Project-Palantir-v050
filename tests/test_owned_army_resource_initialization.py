@@ -76,8 +76,8 @@ def test_repeated_profiles_receive_distinct_deterministic_owner_keys():
         state.owner.key
         for state in owned_states
     ) == (
-        "DG_SM:1",
-        "DG_SM:2",
+        "DG_SM:1:1",
+        "DG_SM:1:2",
     )
 
 

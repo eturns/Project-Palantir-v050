@@ -17,8 +17,7 @@ from resource_use_permission import ResourceType
 
 def test_applies_competing_allocations_to_same_real_source_pool():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     state = OwnedHeroResourceState(
@@ -74,13 +73,11 @@ def test_applies_competing_allocations_to_same_real_source_pool():
 
 def test_applying_allocations_keeps_different_owners_isolated():
     necromancer_owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     witch_king_owner = ResourceOwner(
-        profile_id="DG_WK",
-        instance_index=1,
+        fielded_model_id="DG_WK:1:1",
     )
 
     states = (
@@ -146,8 +143,7 @@ def test_applying_allocations_keeps_different_owners_isolated():
 
 def test_applying_allocations_does_not_mutate_original_states():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     state = OwnedHeroResourceState(

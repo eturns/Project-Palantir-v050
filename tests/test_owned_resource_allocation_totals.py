@@ -11,8 +11,7 @@ from resource_use_permission import ResourceType
 
 def test_allocations_for_same_owner_and_resource_type_are_summed():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     allocations = (
@@ -41,8 +40,7 @@ def test_allocations_for_same_owner_and_resource_type_are_summed():
 
 def test_different_resource_types_are_not_combined():
     owner = ResourceOwner(
-        profile_id="DG_WK",
-        instance_index=1,
+        fielded_model_id="DG_WK:1:1",
     )
 
     allocations = (
@@ -72,13 +70,11 @@ def test_different_resource_types_are_not_combined():
 
 def test_different_owners_are_not_combined():
     first_owner = ResourceOwner(
-        profile_id="DG_SM",
-        instance_index=1,
+        fielded_model_id="DG_SM:1:1",
     )
 
     second_owner = ResourceOwner(
-        profile_id="DG_SM",
-        instance_index=2,
+        fielded_model_id="DG_SM:1:2",
     )
 
     allocations = (

@@ -19,8 +19,7 @@ def test_owned_resource_endurance_scores_each_owner_resource_pool():
     states = (
         OwnedHeroResourceState(
             owner=ResourceOwner(
-                profile_id="DG_NEC",
-                instance_index=1,
+                fielded_model_id="DG_NEC:1:1",
             ),
             resources=HeroResourceState(
                 remaining_might=3,
@@ -30,8 +29,7 @@ def test_owned_resource_endurance_scores_each_owner_resource_pool():
         ),
         OwnedHeroResourceState(
             owner=ResourceOwner(
-                profile_id="DG_WK",
-                instance_index=1,
+                fielded_model_id="DG_WK:1:1",
             ),
             resources=HeroResourceState(
                 remaining_might=2,
@@ -58,8 +56,7 @@ def test_owned_resource_endurance_returns_zero_without_resources():
     states = (
         OwnedHeroResourceState(
             owner=ResourceOwner(
-                profile_id="DG_MGS",
-                instance_index=1,
+                fielded_model_id="DG_MGS:1:1",
             ),
             resources=HeroResourceState(),
         ),
@@ -80,8 +77,7 @@ def test_owned_resource_endurance_returns_zero_without_resources():
 
 def test_extra_legal_uses_do_not_duplicate_same_resource_pool():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     states = (

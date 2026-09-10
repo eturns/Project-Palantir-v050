@@ -8,8 +8,7 @@ from owned_resource_use_permission import (
 
 def test_owned_permission_stores_owner_resource_and_use():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     permission = OwnedResourceUsePermission(
@@ -25,13 +24,11 @@ def test_owned_permission_stores_owner_resource_and_use():
 
 def test_permissions_for_repeated_models_are_distinct():
     first_owner = ResourceOwner(
-        profile_id="DG_SM",
-        instance_index=1,
+        fielded_model_id="DG_SM:1:1",
     )
 
     second_owner = ResourceOwner(
-        profile_id="DG_SM",
-        instance_index=2,
+        fielded_model_id="DG_SM:1:2",
     )
 
     first_permission = OwnedResourceUsePermission(
@@ -52,8 +49,7 @@ def test_permissions_for_repeated_models_are_distinct():
 def test_equivalent_owned_permissions_are_equal():
     permission_a = OwnedResourceUsePermission(
         owner=ResourceOwner(
-            profile_id="DG_WK",
-            instance_index=1,
+            fielded_model_id="DG_WK:1:1",
         ),
         resource_type=ResourceType.WILL,
         resource_use=ResourceUse.RESIST_MAGIC,
@@ -61,8 +57,7 @@ def test_equivalent_owned_permissions_are_equal():
 
     permission_b = OwnedResourceUsePermission(
         owner=ResourceOwner(
-            profile_id="DG_WK",
-            instance_index=1,
+            fielded_model_id="DG_WK:1:1",
         ),
         resource_type=ResourceType.WILL,
         resource_use=ResourceUse.RESIST_MAGIC,

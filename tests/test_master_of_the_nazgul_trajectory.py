@@ -16,8 +16,7 @@ from resource_use_permission import ResourceType
 
 def test_master_aura_changes_when_trajectory_crosses_will_thresholds():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     initial_states = (

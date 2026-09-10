@@ -7,8 +7,7 @@ from resource_owner import ResourceOwner
 def test_spending_one_owners_resources_does_not_change_another_owner():
     necromancer = OwnedHeroResourceState(
         owner=ResourceOwner(
-            profile_id="DG_NEC",
-            instance_index=1,
+            fielded_model_id="DG_NEC:1:1",
         ),
         resources=HeroResourceState(
             remaining_might=3,
@@ -19,8 +18,7 @@ def test_spending_one_owners_resources_does_not_change_another_owner():
 
     witch_king = OwnedHeroResourceState(
         owner=ResourceOwner(
-            profile_id="DG_WK",
-            instance_index=1,
+            fielded_model_id="DG_WK:1:1",
         ),
         resources=HeroResourceState(
             remaining_might=3,

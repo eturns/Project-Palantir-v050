@@ -26,8 +26,7 @@ def test_owned_resource_trajectory_supports_battle_horizons(
     horizon: BattleHorizon,
 ):
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     initial_states = (

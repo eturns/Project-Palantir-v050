@@ -10,8 +10,7 @@ from resource_use_permission import ResourceType
 
 def test_owned_resource_allocation_stores_owner_resource_use_and_amount():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     allocation = OwnedResourceAllocation(
@@ -30,8 +29,7 @@ def test_owned_resource_allocation_stores_owner_resource_use_and_amount():
 def test_equivalent_owned_resource_allocations_are_equal():
     allocation_a = OwnedResourceAllocation(
         owner=ResourceOwner(
-            profile_id="DG_NEC",
-            instance_index=1,
+            fielded_model_id="DG_NEC:1:1",
         ),
         resource_type=ResourceType.WILL,
         resource_use=ResourceUse.CAST_SPELL,
@@ -40,8 +38,7 @@ def test_equivalent_owned_resource_allocations_are_equal():
 
     allocation_b = OwnedResourceAllocation(
         owner=ResourceOwner(
-            profile_id="DG_NEC",
-            instance_index=1,
+            fielded_model_id="DG_NEC:1:1",
         ),
         resource_type=ResourceType.WILL,
         resource_use=ResourceUse.CAST_SPELL,
@@ -54,8 +51,7 @@ def test_equivalent_owned_resource_allocations_are_equal():
 def test_allocation_for_different_owner_is_distinct():
     first = OwnedResourceAllocation(
         owner=ResourceOwner(
-            profile_id="DG_SM",
-            instance_index=1,
+            fielded_model_id="DG_SM:1:1",
         ),
         resource_type=ResourceType.MIGHT,
         resource_use=ResourceUse.MODIFY_DUEL,
@@ -64,8 +60,7 @@ def test_allocation_for_different_owner_is_distinct():
 
     second = OwnedResourceAllocation(
         owner=ResourceOwner(
-            profile_id="DG_SM",
-            instance_index=2,
+            fielded_model_id="DG_SM:1:2",
         ),
         resource_type=ResourceType.MIGHT,
         resource_use=ResourceUse.MODIFY_DUEL,
@@ -82,8 +77,7 @@ def test_owned_resource_allocation_rejects_negative_amount():
     ):
         OwnedResourceAllocation(
             owner=ResourceOwner(
-                profile_id="DG_NEC",
-                instance_index=1,
+                fielded_model_id="DG_NEC:1:1",
             ),
             resource_type=ResourceType.WILL,
             resource_use=ResourceUse.CAST_SPELL,

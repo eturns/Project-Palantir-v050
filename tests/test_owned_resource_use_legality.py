@@ -15,8 +15,7 @@ from profiles import Profile
 
 def test_default_resource_use_is_permitted_for_owner():
     owner = ResourceOwner(
-        profile_id="DG_WK",
-        instance_index=1,
+        fielded_model_id="DG_WK:1:1",
     )
 
     assert is_owned_resource_use_permitted(
@@ -29,8 +28,7 @@ def test_default_resource_use_is_permitted_for_owner():
 
 def test_default_illegal_resource_use_remains_illegal_without_permission():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     assert not is_owned_resource_use_permitted(
@@ -43,8 +41,7 @@ def test_default_illegal_resource_use_remains_illegal_without_permission():
 
 def test_explicit_owner_permission_allows_non_default_resource_use():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     permission = OwnedResourceUsePermission(
@@ -63,13 +60,11 @@ def test_explicit_owner_permission_allows_non_default_resource_use():
 
 def test_permission_for_one_owner_does_not_apply_to_another_owner():
     permitted_owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     other_owner = ResourceOwner(
-        profile_id="DG_WK",
-        instance_index=1,
+        fielded_model_id="DG_WK:1:1",
     )
 
     permission = OwnedResourceUsePermission(
@@ -88,8 +83,7 @@ def test_permission_for_one_owner_does_not_apply_to_another_owner():
 
 def test_permission_must_match_resource_type():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     permission = OwnedResourceUsePermission(
@@ -108,8 +102,7 @@ def test_permission_must_match_resource_type():
 
 def test_permission_must_match_resource_use():
     owner = ResourceOwner(
-        profile_id="DG_NEC",
-        instance_index=1,
+        fielded_model_id="DG_NEC:1:1",
     )
 
     permission = OwnedResourceUsePermission(
@@ -174,8 +167,7 @@ def test_profile_declared_permission_is_legal_for_matching_physical_owner():
 
     assert is_owned_resource_use_permitted(
         owner=ResourceOwner(
-            profile_id="DG_NEC",
-            instance_index=1,
+            fielded_model_id="DG_NEC:1:1",
         ),
         resource_type=ResourceType.WILL,
         resource_use=ResourceUse.TAKE_FATE,

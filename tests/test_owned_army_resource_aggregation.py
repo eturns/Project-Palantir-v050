@@ -43,8 +43,7 @@ def test_aggregates_owned_resource_states_into_army_resource_state():
     owned_states = (
         OwnedHeroResourceState(
             owner=ResourceOwner(
-                profile_id="DG_NEC",
-                instance_index=1,
+                fielded_model_id="DG_NEC:1:1",
             ),
             resources=HeroResourceState(
                 remaining_might=3,
@@ -54,8 +53,7 @@ def test_aggregates_owned_resource_states_into_army_resource_state():
         ),
         OwnedHeroResourceState(
             owner=ResourceOwner(
-                profile_id="DG_WK",
-                instance_index=1,
+                fielded_model_id="DG_NEC:1:1",
             ),
             resources=HeroResourceState(
                 remaining_might=3,
@@ -80,8 +78,7 @@ def test_aggregation_includes_repeated_profile_instances():
     owned_states = (
         OwnedHeroResourceState(
             owner=ResourceOwner(
-                profile_id="DG_SM",
-                instance_index=1,
+                fielded_model_id="DG_SM:1:1",
             ),
             resources=HeroResourceState(
                 remaining_might=1,
@@ -91,8 +88,7 @@ def test_aggregation_includes_repeated_profile_instances():
         ),
         OwnedHeroResourceState(
             owner=ResourceOwner(
-                profile_id="DG_SM",
-                instance_index=2,
+                fielded_model_id="DG_SM:1:2",
             ),
             resources=HeroResourceState(
                 remaining_might=1,
