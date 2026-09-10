@@ -1203,3 +1203,18 @@ def test_build_army_preserves_multiple_configurations_of_same_profile():
 
     assert first_entry.total_points() == 25
     assert second_entry.total_points() == 30
+
+def test_army_entry_preserves_warband_id():
+    profile = create_profile()
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+    )
+
+    entry = ArmyEntry(
+        configured_profile=configured_profile,
+        quantity=1,
+        warband_id="WARBAND_A",
+    )
+
+    assert entry.warband_id == "WARBAND_A"

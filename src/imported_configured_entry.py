@@ -43,6 +43,7 @@ class ImportedConfiguredEntry:
     external_model_id: str
     external_option_ids: tuple[str, ...] = ()
     quantity: int = 1
+    warband_id: str | None = None
 
     def __post_init__(self) -> None:
         if not self.external_model_id.strip():

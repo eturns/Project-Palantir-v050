@@ -14,6 +14,7 @@ class ArmyEntryDefinition:
     profile_id: str
     quantity: int = 1
     external_option_ids: tuple[str, ...] = ()
+    warband_id: str | None = None
 
 
 @dataclass

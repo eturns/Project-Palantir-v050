@@ -40,12 +40,14 @@ class ArmyEntry:
 
     configured_profile: ConfiguredProfile
     quantity: int = 1
+    warband_id: str | None = None
 
     def __init__(
         self,
         configured_profile: ConfiguredProfile | None = None,
         quantity: int = 1,
         profile: Profile | None = None,
+        warband_id: str | None = None,
     ) -> None:
         """
         Creates an ArmyEntry from either an authoritative
@@ -77,6 +79,7 @@ class ArmyEntry:
 
         self.configured_profile = configured_profile
         self.quantity = quantity
+        self.warband_id = warband_id
 
         self.__post_init__()
 

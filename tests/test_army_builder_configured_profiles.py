@@ -220,3 +220,154 @@ def test_build_army_from_definition_rejects_option_from_other_profile():
                 "EXT_WRONG": wrong_option,
             },
         )
+
+def test_build_army_from_definition_preserves_warband_id():
+    profile = create_profile()
+
+    definition = ArmyDefinition(
+        id="TEST_ARMY",
+        name="Configured Army",
+        army_list_id="TEST_LIST",
+        points_limit=700,
+        entries=[
+            ArmyEntryDefinition(
+                profile_id=profile.id,
+                quantity=2,
+                warband_id="WARBAND_A",
+            ),
+        ],
+    )
+
+    faction = Faction(
+        id="TEST_FACTION",
+        name="Test Faction",
+    )
+
+    army_list = ArmyList(
+        id="TEST_LIST",
+        name="Test List",
+        faction=faction,
+    )
+
+    army, _ = build_army_from_definition(
+        definition,
+        profiles_by_id={
+            profile.id: profile,
+        },
+        army_lists_by_id={
+            army_list.id: army_list,
+        },
+    )
+
+    assert len(army.entries) == 1
+    assert army.entries[0].warband_id == (
+        "WARBAND_A"
+    )
+
+def test_build_configured_army_entry_preserves_warband_id():
+    profile = create_profile()
+
+    option = ProfileOption(
+        id="INTERNAL_OPTION",
+        name="Configured Option",
+        points=10,
+        external_id="EXT_OPTION",
+    )
+
+    profile.profile_options.append(option)
+
+    definition = ArmyDefinition(
+        id="TEST_ARMY",
+        name="Configured Army",
+        army_list_id="TEST_LIST",
+        points_limit=700,
+        entries=[
+            ArmyEntryDefinition(
+                profile_id=profile.id,
+                quantity=1,
+                external_option_ids=(
+                    "EXT_OPTION",
+                ),
+                warband_id="WARBAND_A",
+            ),
+        ],
+    )
+
+    faction = Faction(
+        id="TEST_FACTION",
+        name="Test Faction",
+    )
+
+    army_list = ArmyList(
+        id="TEST_LIST",
+        name="Test List",
+        faction=faction,
+    )
+
+    army, _ = build_army_from_definition(
+        definition,
+        profiles_by_id={
+            profile.id: profile,
+        },
+        army_lists_by_id={
+            army_list.id: army_list,
+        },
+        profile_options_by_external_id={
+            "EXT_OPTION": option,
+        },
+    )
+
+    assert len(army.entries) == 1
+    assert army.entries[0].warband_id == (
+        "WARBAND_A"
+    )
+
+def test_built_army_fielded_models_preserve_warband_id():
+    profile = create_profile()
+
+    definition = ArmyDefinition(
+        id="TEST_ARMY",
+        name="Configured Army",
+        army_list_id="TEST_LIST",
+        points_limit=700,
+        entries=[
+            ArmyEntryDefinition(
+                profile_id=profile.id,
+                quantity=2,
+                warband_id="WARBAND_A",
+            ),
+        ],
+    )
+
+    faction = Faction(
+        id="TEST_FACTION",
+        name="Test Faction",
+    )
+
+    army_list = ArmyList(
+        id="TEST_LIST",
+        name="Test List",
+        faction=faction,
+    )
+
+    army, _ = build_army_from_definition(
+        definition,
+        profiles_by_id={
+            profile.id: profile,
+        },
+        army_lists_by_id={
+            army_list.id: army_list,
+        },
+    )
+
+    fielded_models = army.fielded_models()
+
+    assert len(fielded_models) == 2
+
+    assert tuple(
+        model.warband_id
+        for model in fielded_models
+    ) == (
+        "WARBAND_A",
+        "WARBAND_A",
+    )

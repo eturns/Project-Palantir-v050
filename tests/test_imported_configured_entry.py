@@ -57,3 +57,13 @@ def test_imported_configured_entry_rejects_invalid_quantity():
         raise AssertionError(
             "Expected ValueError for quantity below one."
         )
+
+def test_imported_configured_entry_preserves_warband_id():
+    entry = ImportedConfiguredEntry(
+        external_model_id="MODEL_A",
+        external_option_ids=("OPT_A",),
+        quantity=2,
+        warband_id="WARBAND_A",
+    )
+
+    assert entry.warband_id == "WARBAND_A"

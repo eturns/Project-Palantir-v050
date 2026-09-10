@@ -148,3 +148,38 @@ def test_group_mapped_configured_entries_ignores_option_order():
             quantity=5,
         )
     ]
+
+def test_group_mapped_configured_entries_preserves_distinct_warbands():
+    entries = [
+        MappedConfiguredEntry(
+            profile_id="IH_WR",
+            external_option_ids=("OPT0724",),
+            quantity=2,
+            warband_id="WARBAND_A",
+        ),
+        MappedConfiguredEntry(
+            profile_id="IH_WR",
+            external_option_ids=("OPT0724",),
+            quantity=3,
+            warband_id="WARBAND_B",
+        ),
+    ]
+
+    grouped = group_mapped_configured_entries(
+        entries
+    )
+
+    assert grouped == [
+        MappedConfiguredEntry(
+            profile_id="IH_WR",
+            external_option_ids=("OPT0724",),
+            quantity=2,
+            warband_id="WARBAND_A",
+        ),
+        MappedConfiguredEntry(
+            profile_id="IH_WR",
+            external_option_ids=("OPT0724",),
+            quantity=3,
+            warband_id="WARBAND_B",
+        ),
+    ]

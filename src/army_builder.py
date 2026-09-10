@@ -88,12 +88,14 @@ def build_army_from_definition(
             army.add_configured_profile(
                 configured_profile,
                 quantity=entry_definition.quantity,
+                warband_id=entry_definition.warband_id,
             )
 
         else:
             army.add_profile(
                 profile,
                 quantity=entry_definition.quantity,
+                warband_id=entry_definition.warband_id,
             )
 
     return army, army_list

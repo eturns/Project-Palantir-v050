@@ -350,3 +350,36 @@ def test_fielded_model_count_matches_army_model_count():
     assert len(
         army.fielded_models()
     ) == army.model_count()
+
+def test_fielded_model_preserves_warband_id():
+    configured_profile = ConfiguredProfile(
+        profile=make_profile(),
+    )
+
+    model = FieldedModel(
+        id="TEST_PROFILE:1:1",
+        configured_profile=configured_profile,
+        warband_id="WARBAND_A",
+    )
+
+    assert model.warband_id == "WARBAND_A"
+
+def test_army_fielded_models_preserve_warband_id():
+    profile = make_profile()
+
+    army = Army()
+    army.add_profile(
+        profile,
+        quantity=2,
+        warband_id="WARBAND_A",
+    )
+
+    fielded_models = army.fielded_models()
+
+    assert len(fielded_models) == 2
+    assert fielded_models[0].warband_id == (
+        "WARBAND_A"
+    )
+    assert fielded_models[1].warband_id == (
+        "WARBAND_A"
+    )

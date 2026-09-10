@@ -7,3 +7,4 @@ from configured_profile import ConfiguredProfile
 class FieldedModel:
     id: str
     configured_profile: ConfiguredProfile
+    warband_id: str | None = None

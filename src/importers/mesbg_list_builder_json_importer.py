@@ -17,6 +17,15 @@ from imported_configured_entry import (
 from mapped_configured_entry import (
     MappedConfiguredEntry,
 )
+from imported_fielded_structure_definition import (
+    ImportedFieldedStructureDefinition,
+)
+from imported_fielded_structure_expander import (
+    expand_imported_fielded_structure,
+)
+from importers.mesbg_list_builder_fielded_structure_map import (
+    IMPORTED_FIELDED_STRUCTURE_DEFINITIONS,
+)
 
 def load_mesbg_list_builder_json(
     file_path: str,
@@ -100,6 +109,7 @@ def get_imported_configured_entries(
                     external_model_id=hero["model_id"],
                     external_option_ids=hero_option_ids,
                     quantity=1,
+                    warband_id=warband.get("id"),
                 )
             )
 
@@ -122,6 +132,7 @@ def get_imported_configured_entries(
                         "quantity",
                         1,
                     ),
+                    warband_id=warband.get("id"),
                 )
             )
 
@@ -129,6 +140,10 @@ def get_imported_configured_entries(
 
 def map_imported_configured_entries(
     entries: list[ImportedConfiguredEntry],
+    structure_definitions: dict[
+        str,
+        ImportedFieldedStructureDefinition,
+    ] | None = None,
 ) -> list[MappedConfiguredEntry]:
     """
     Maps imported external model IDs to Palantír Profile IDs.
@@ -139,7 +154,26 @@ def map_imported_configured_entries(
 
     mapped_entries: list[MappedConfiguredEntry] = []
 
+    if structure_definitions is None:
+        structure_definitions = (
+            IMPORTED_FIELDED_STRUCTURE_DEFINITIONS
+        )
+
     for entry in entries:
+
+        definition = structure_definitions.get(
+            entry.external_model_id
+        )
+
+        if definition is not None:
+            mapped_entries.extend(
+                expand_imported_fielded_structure(
+                    entry=entry,
+                    definition=definition,
+                )
+            )
+            continue
+
         if (
             entry.external_model_id
             not in EXTERNAL_PROFILE_IDS
@@ -158,6 +192,7 @@ def map_imported_configured_entries(
                     entry.external_option_ids
                 ),
                 quantity=entry.quantity,
+                warband_id=entry.warband_id,
             )
         )
 
@@ -167,14 +202,20 @@ def group_mapped_configured_entries(
     entries: list[MappedConfiguredEntry],
 ) -> list[MappedConfiguredEntry]:
     """
-    Combines identical configured entries.
+    Combines identical configured entries within the same
+    warband.
 
-    Entries are considered identical only when both their
-    Profile ID and selected external option IDs match.
+    Entries are considered identical only when their
+    Profile ID, selected external option IDs and warband
+    ID match.
     """
 
     quantities_by_configuration: dict[
-        tuple[str, tuple[str, ...]],
+        tuple[
+            str,
+            tuple[str, ...],
+            str | None,
+        ],
         int,
     ] = {}
 
@@ -184,6 +225,7 @@ def group_mapped_configured_entries(
             tuple(
                 sorted(entry.external_option_ids)
             ),
+            entry.warband_id,
         )
 
         quantities_by_configuration[key] = (
@@ -199,13 +241,20 @@ def group_mapped_configured_entries(
             profile_id=profile_id,
             external_option_ids=external_option_ids,
             quantity=quantity,
+            warband_id=warband_id,
         )
         for (
             profile_id,
             external_option_ids,
+            warband_id,
         ), quantity
         in sorted(
-            quantities_by_configuration.items()
+            quantities_by_configuration.items(),
+            key=lambda item: (
+                item[0][0],
+                item[0][1],
+                item[0][2] or "",
+            ),
         )
     ]
 
@@ -224,12 +273,17 @@ def build_configured_army_entry_definitions(
             external_option_ids=(
                 entry.external_option_ids
             ),
+            warband_id=entry.warband_id,
         )
         for entry in entries
     ]
 
 def build_configured_army_entry_definitions_from_data(
     data: dict,
+    structure_definitions: dict[
+        str,
+        ImportedFieldedStructureDefinition,
+    ] | None = None,
 ) -> list[ArmyEntryDefinition]:
     """
     Builds configured army-entry definitions directly from
@@ -247,7 +301,8 @@ def build_configured_army_entry_definitions_from_data(
 
     mapped_entries = (
         map_imported_configured_entries(
-            imported_entries
+            imported_entries,
+            structure_definitions=structure_definitions,
         )
     )
 
@@ -330,11 +385,19 @@ def get_imported_army_id(
 
 def get_imported_leader_profile_id(
     data: dict,
+    structure_definitions: dict[
+        str,
+        ImportedFieldedStructureDefinition,
+    ] | None = None,
 ) -> str | None:
     """
     Resolves the imported Leader warband to its
     Palantír Profile ID.
     """
+    if structure_definitions is None:
+        structure_definitions = (
+            IMPORTED_FIELDED_STRUCTURE_DEFINITIONS
+        )
 
     leader_warband_id = data.get(
         "metadata",
@@ -367,6 +430,18 @@ def get_imported_leader_profile_id(
         if external_model_id is None:
             return None
 
+        if structure_definitions is not None:
+            structure_definition = (
+                structure_definitions.get(
+                    external_model_id
+                )
+            )
+
+            if structure_definition is not None:
+                return (
+                    structure_definition.root_profile_id
+                )
+
         return EXTERNAL_PROFILE_IDS[
             external_model_id
         ]
@@ -375,6 +450,10 @@ def get_imported_leader_profile_id(
 
 def build_army_definition_from_data(
     data: dict,
+    structure_definitions: dict[
+        str,
+        ImportedFieldedStructureDefinition,
+    ] | None = None,
 ) -> ArmyDefinition:
     """
     Converts MESBG List Builder JSON data into
@@ -383,7 +462,8 @@ def build_army_definition_from_data(
 
     entries = (
         build_configured_army_entry_definitions_from_data(
-            data
+            data,
+            structure_definitions=structure_definitions,
         )
     )
 
@@ -408,12 +488,17 @@ def build_army_definition_from_data(
         ),
         leader_profile_id=get_imported_leader_profile_id(
             data,
+            structure_definitions=structure_definitions,
         ),
         entries=entries,
             )
 
 def import_army_definition_from_json(
     file_path: str,
+    structure_definitions: dict[
+        str,
+        ImportedFieldedStructureDefinition,
+    ] | None = None,
 ) -> ArmyDefinition:
     """
     Loads an MESBG List Builder JSON export and
@@ -426,6 +511,7 @@ def import_army_definition_from_json(
 
     return build_army_definition_from_data(
         data,
+        structure_definitions=structure_definitions,
     )
 
 def get_imported_points_limit(

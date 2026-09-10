@@ -67,3 +67,13 @@ def test_mapped_configured_entry_is_immutable():
             "Expected MappedConfiguredEntry "
             "to be immutable."
         )
+
+def test_mapped_configured_entry_preserves_warband_id():
+    entry = MappedConfiguredEntry(
+        profile_id="IH_WR",
+        external_option_ids=("OPT_A",),
+        quantity=2,
+        warband_id="WARBAND_A",
+    )
+
+    assert entry.warband_id == "WARBAND_A"

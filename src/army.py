@@ -38,7 +38,12 @@ class Army:
 
         self.entries = []
 
-    def add_profile(self, profile: Profile, quantity: int = 1) -> None:
+    def add_profile(
+        self,
+        profile: Profile,
+        quantity: int = 1,
+        warband_id: str | None = None,
+    ) -> None:
         """
         Adds a profile to the army.
 
@@ -46,13 +51,20 @@ class Army:
             profile:
                 The Profile to add.
         """
-        entry = ArmyEntry(profile=profile, quantity=quantity,)
+
+        entry = ArmyEntry(
+            profile=profile,
+            quantity=quantity,
+            warband_id=warband_id,
+        )
+
         self.entries.append(entry)
 
     def add_configured_profile(
         self,
         configured_profile: ConfiguredProfile,
         quantity: int = 1,
+        warband_id: str | None = None,
     ) -> None:
         """
         Adds a configured profile to the army without
@@ -62,6 +74,7 @@ class Army:
         entry = ArmyEntry(
             configured_profile=configured_profile,
             quantity=quantity,
+            warband_id=warband_id,
         )
 
         self.entries.append(entry)
@@ -490,6 +503,7 @@ class Army:
                         configured_profile=(
                             entry.configured_profile
                         ),
+                        warband_id=entry.warband_id,
                     )
                 )
 

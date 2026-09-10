@@ -145,3 +145,35 @@ def test_get_external_option_ids_rejects_multiple_quantity():
             "Expected ValueError for unsupported "
             "option quantity."
         )
+
+def test_get_imported_configured_entries_preserves_warband_id():
+    data = {
+        "warbands": [
+            {
+                "id": "WARBAND_A",
+                "hero": {
+                    "model_id": "HERO_EXTERNAL",
+                    "options": [],
+                },
+                "units": [
+                    {
+                        "model_id": "UNIT_EXTERNAL",
+                        "options": [],
+                        "quantity": 2,
+                    }
+                ],
+            }
+        ]
+    }
+
+    entries = get_imported_configured_entries(
+        data
+    )
+
+    assert len(entries) == 2
+    assert entries[0].warband_id == (
+        "WARBAND_A"
+    )
+    assert entries[1].warband_id == (
+        "WARBAND_A"
+    )
