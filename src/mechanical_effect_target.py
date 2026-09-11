@@ -1,0 +1,10 @@
+from enum import Enum
+
+
+class MechanicalEffectTarget(Enum):
+    DUEL_ROLL = "DUEL_ROLL"
+    TO_WOUND_ROLL = "TO_WOUND_ROLL"
+    STRIKE_DAMAGE = "STRIKE_DAMAGE"
+    RESOURCE_USE = "RESOURCE_USE"
+    POST_PREVENTION = "POST_PREVENTION"
+    POST_COMBAT_WOUND = "POST_COMBAT_WOUND"
