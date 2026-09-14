@@ -38,7 +38,8 @@ from analysis_loader import (
 from army_loader import (
     load_factions,
     load_army_lists,
-    load_army_rules
+    load_army_rules,
+    load_army_list_profiles,
 )
 
 
@@ -158,6 +159,11 @@ def main(
         factions,
     )
 
+    load_army_list_profiles(
+        army_lists=army_lists,
+        profiles_by_id=profiles_by_id,
+    )
+    
     army_rules = load_army_rules(
         army_lists,
     )

@@ -32,11 +32,6 @@ DOL_GULDUR_SPIDER_IDS = (
     "DG_MGS",
     "DG_MHS",
 )
-DOL_GULDUR_PROFILE_IDS = (
-    DOL_GULDUR_NECROMANCER_ID,
-    *DOL_GULDUR_NAZGUL_IDS,
-    *DOL_GULDUR_SPIDER_IDS,
-)
 
 def dol_guldur_nazgul_profiles(
     profiles: list[Profile],
@@ -152,21 +147,4 @@ def dol_guldur_family_b_spec(
                 selection_size=5,
             ),
         ),
-    )
-
-def dol_guldur_profiles(
-    profiles: list[Profile],
-) -> tuple[Profile, ...]:
-    """
-    Returns the complete canonical Dol Guldur profile pool.
-    """
-
-    profiles_by_id = {
-        profile.id: profile
-        for profile in profiles
-    }
-
-    return tuple(
-        profiles_by_id[profile_id]
-        for profile_id in DOL_GULDUR_PROFILE_IDS
     )

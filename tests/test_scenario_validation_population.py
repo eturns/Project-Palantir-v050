@@ -25,6 +25,32 @@ from scenario_validation_record import (
 from scenario_candidate_profile import (
     build_scenario_capability_profile_from_candidate,
 )
+from army_loader import (
+    load_army_list_profiles,
+    load_army_lists,
+    load_factions,
+)
+
+def _load_rise_of_the_necromancer(
+    profiles,
+):
+    profiles_by_id = {
+        profile.id: profile
+        for profile in profiles
+    }
+
+    factions = load_factions()
+
+    army_lists = load_army_lists(
+        factions,
+    )
+
+    load_army_list_profiles(
+        army_lists=army_lists,
+        profiles_by_id=profiles_by_id,
+    )
+
+    return army_lists["DG_ROTN"]
 
 def _candidate_signature(candidate):
     return tuple(
@@ -40,7 +66,7 @@ def test_scenario_validation_population_contains_490_unique_candidates():
     profiles = load_all_profiles()
 
     family_a_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -51,7 +77,7 @@ def test_scenario_validation_population_contains_490_unique_candidates():
     )
 
     family_b_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -63,12 +89,10 @@ def test_scenario_validation_population_contains_490_unique_candidates():
 
     family_a_candidates = build_request_candidates(
         request=family_a_request,
-        profiles=profiles,
     )
 
     family_b_candidates = build_request_candidates(
         request=family_b_request,
-        profiles=profiles,
     )
 
     candidates = (
@@ -93,7 +117,7 @@ def test_all_490_scenario_candidates_evaluate_successfully():
     profiles = load_all_profiles()
 
     family_a_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -104,7 +128,7 @@ def test_all_490_scenario_candidates_evaluate_successfully():
     )
 
     family_b_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -117,11 +141,9 @@ def test_all_490_scenario_candidates_evaluate_successfully():
     candidates = (
         build_request_candidates(
             request=family_a_request,
-            profiles=profiles,
         )
         + build_request_candidates(
             request=family_b_request,
-            profiles=profiles,
         )
     )
 
@@ -186,7 +208,7 @@ def test_all_490_candidates_build_complete_scenario_validation_records():
     profiles = load_all_profiles()
 
     family_a_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -197,7 +219,7 @@ def test_all_490_candidates_build_complete_scenario_validation_records():
     )
 
     family_b_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -210,11 +232,9 @@ def test_all_490_candidates_build_complete_scenario_validation_records():
     candidates = (
         build_request_candidates(
             request=family_a_request,
-            profiles=profiles,
         )
         + build_request_candidates(
             request=family_b_request,
-            profiles=profiles,
         )
     )
 
@@ -287,7 +307,7 @@ def test_all_490_scenario_validation_records_rank_deterministically():
     profiles = load_all_profiles()
 
     family_a_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -298,7 +318,7 @@ def test_all_490_scenario_validation_records_rank_deterministically():
     )
 
     family_b_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -311,11 +331,9 @@ def test_all_490_scenario_validation_records_rank_deterministically():
     candidates = (
         build_request_candidates(
             request=family_a_request,
-            profiles=profiles,
         )
         + build_request_candidates(
             request=family_b_request,
-            profiles=profiles,
         )
     )
 
@@ -393,7 +411,7 @@ def test_inspect_top_and_bottom_10_scenario_candidates():
     profiles = load_all_profiles()
 
     family_a_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -404,7 +422,7 @@ def test_inspect_top_and_bottom_10_scenario_candidates():
     )
 
     family_b_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -417,11 +435,9 @@ def test_inspect_top_and_bottom_10_scenario_candidates():
     candidates = (
         build_request_candidates(
             request=family_a_request,
-            profiles=profiles,
         )
         + build_request_candidates(
             request=family_b_request,
-            profiles=profiles,
         )
     )
 
@@ -539,7 +555,7 @@ def test_scenario_validation_population_has_meaningful_score_variation():
     profiles = load_all_profiles()
 
     family_a_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -550,7 +566,7 @@ def test_scenario_validation_population_has_meaningful_score_variation():
     )
 
     family_b_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -563,11 +579,9 @@ def test_scenario_validation_population_has_meaningful_score_variation():
     candidates = (
         build_request_candidates(
             request=family_a_request,
-            profiles=profiles,
         )
         + build_request_candidates(
             request=family_b_request,
-            profiles=profiles,
         )
     )
 
@@ -631,7 +645,7 @@ def test_inspect_raw_capabilities_for_contrasting_candidates():
     profiles = load_all_profiles()
 
     family_a_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -642,7 +656,7 @@ def test_inspect_raw_capabilities_for_contrasting_candidates():
     )
 
     family_b_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -655,11 +669,9 @@ def test_inspect_raw_capabilities_for_contrasting_candidates():
     candidates = (
         build_request_candidates(
             request=family_a_request,
-            profiles=profiles,
         )
         + build_request_candidates(
             request=family_b_request,
-            profiles=profiles,
         )
     )
 
@@ -759,7 +771,7 @@ def test_inspect_pool_score_variation_across_490_candidates():
     profiles = load_all_profiles()
 
     family_a_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -770,7 +782,7 @@ def test_inspect_pool_score_variation_across_490_candidates():
     )
 
     family_b_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -783,11 +795,9 @@ def test_inspect_pool_score_variation_across_490_candidates():
     candidates = (
         build_request_candidates(
             request=family_a_request,
-            profiles=profiles,
         )
         + build_request_candidates(
             request=family_b_request,
-            profiles=profiles,
         )
     )
 
@@ -860,7 +870,7 @@ def test_inspect_capability_variation_across_490_candidates():
     profiles = load_all_profiles()
 
     family_a_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -871,7 +881,7 @@ def test_inspect_capability_variation_across_490_candidates():
     )
 
     family_b_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -884,11 +894,9 @@ def test_inspect_capability_variation_across_490_candidates():
     candidates = (
         build_request_candidates(
             request=family_a_request,
-            profiles=profiles,
         )
         + build_request_candidates(
             request=family_b_request,
-            profiles=profiles,
         )
     )
 
@@ -958,7 +966,7 @@ def test_inspect_scenario_score_variation_within_equal_model_counts():
     profiles = load_all_profiles()
 
     family_a_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -969,7 +977,7 @@ def test_inspect_scenario_score_variation_within_equal_model_counts():
     )
 
     family_b_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -982,11 +990,9 @@ def test_inspect_scenario_score_variation_within_equal_model_counts():
     candidates = (
         build_request_candidates(
             request=family_a_request,
-            profiles=profiles,
         )
         + build_request_candidates(
             request=family_b_request,
-            profiles=profiles,
         )
     )
 
@@ -1070,7 +1076,7 @@ def test_inspect_capability_variation_within_equal_model_counts():
     profiles = load_all_profiles()
 
     family_a_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -1081,7 +1087,7 @@ def test_inspect_capability_variation_within_equal_model_counts():
     )
 
     family_b_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -1094,11 +1100,9 @@ def test_inspect_capability_variation_within_equal_model_counts():
     candidates = (
         build_request_candidates(
             request=family_a_request,
-            profiles=profiles,
         )
         + build_request_candidates(
             request=family_b_request,
-            profiles=profiles,
         )
     )
 
@@ -1189,7 +1193,7 @@ def test_inspect_state_resilience_by_composition_within_model_counts():
     profiles = load_all_profiles()
 
     family_a_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -1200,7 +1204,7 @@ def test_inspect_state_resilience_by_composition_within_model_counts():
     )
 
     family_b_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -1213,11 +1217,9 @@ def test_inspect_state_resilience_by_composition_within_model_counts():
     candidates = (
         build_request_candidates(
             request=family_a_request,
-            profiles=profiles,
         )
         + build_request_candidates(
             request=family_b_request,
-            profiles=profiles,
         )
     )
 
@@ -1350,7 +1352,7 @@ def test_inspect_scenario_objective_weighting_alternatives():
     profiles = load_all_profiles()
 
     family_a_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -1361,7 +1363,7 @@ def test_inspect_scenario_objective_weighting_alternatives():
     )
 
     family_b_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -1374,11 +1376,9 @@ def test_inspect_scenario_objective_weighting_alternatives():
     candidates = (
         build_request_candidates(
             request=family_a_request,
-            profiles=profiles,
         )
         + build_request_candidates(
             request=family_b_request,
-            profiles=profiles,
         )
     )
 
@@ -1507,7 +1507,7 @@ def test_inspect_full_ranking_stability_across_weighting_alternatives():
     profiles = load_all_profiles()
 
     family_a_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -1518,7 +1518,7 @@ def test_inspect_full_ranking_stability_across_weighting_alternatives():
     )
 
     family_b_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -1531,11 +1531,9 @@ def test_inspect_full_ranking_stability_across_weighting_alternatives():
     candidates = (
         build_request_candidates(
             request=family_a_request,
-            profiles=profiles,
         )
         + build_request_candidates(
             request=family_b_request,
-            profiles=profiles,
         )
     )
 
@@ -1682,7 +1680,7 @@ def test_final_490_candidate_scenario_validation_is_stable_and_bounded():
     profiles = load_all_profiles()
 
     family_a_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -1693,7 +1691,7 @@ def test_final_490_candidate_scenario_validation_is_stable_and_bounded():
     )
 
     family_b_request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=_load_rise_of_the_necromancer(profiles),
         points_limit=700,
         goals=(
             OptimisationGoal.SCENARIO,
@@ -1706,11 +1704,9 @@ def test_final_490_candidate_scenario_validation_is_stable_and_bounded():
     candidates = (
         build_request_candidates(
             request=family_a_request,
-            profiles=profiles,
         )
         + build_request_candidates(
             request=family_b_request,
-            profiles=profiles,
         )
     )
 

@@ -4,7 +4,17 @@ import main as main_module
 
 from profile_option import ProfileOption
 from profiles import Profile
+import pytest
 
+@pytest.fixture(autouse=True)
+def mock_army_list_profile_loading(
+    monkeypatch,
+):
+    monkeypatch.setattr(
+        main_module,
+        "load_army_list_profiles",
+        lambda *args, **kwargs: None,
+    )
 
 def create_profile() -> Profile:
     return Profile(

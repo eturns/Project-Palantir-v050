@@ -12,6 +12,7 @@ from army_loader import (
     load_army_lists,
     load_army_rules,
     load_factions,
+    load_army_list_profiles,
 )
 from loader import load_all_profiles
 from relationship_loader import (
@@ -398,6 +399,11 @@ def test_real_eddies_choice_matches_main_scenario_pipeline():
         factions,
     )
 
+    load_army_list_profiles(
+        army_lists=army_lists,
+        profiles_by_id=profiles_by_id,
+    )
+    
     army_rules = load_army_rules(
         army_lists,
     )
@@ -572,6 +578,11 @@ def test_real_eddies_choice_runtime_army_contains_necromancer():
 
     army_lists = load_army_lists(
         factions,
+    )
+
+    load_army_list_profiles(
+        army_lists=army_lists,
+        profiles_by_id=profiles_by_id,
     )
 
     definition, army, _ = (

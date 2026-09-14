@@ -14,7 +14,10 @@ Created:
 
 from dataclasses import dataclass
 from enum import Enum
+
+from army_list import ArmyList
 from composition_spec import CompositionSpec
+
 
 class OptimisationGoal(Enum):
     """
@@ -39,7 +42,7 @@ class OptimisationRequest:
     not how those goals are mathematically weighted.
     """
 
-    army: str
+    army_list: ArmyList
     points_limit: int
     goals: tuple[OptimisationGoal, ...]
     composition_spec: CompositionSpec | None = None

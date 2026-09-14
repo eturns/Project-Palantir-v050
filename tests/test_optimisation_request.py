@@ -1,3 +1,5 @@
+from army_list import ArmyList
+from faction import Faction
 from optimisation_request import (
     OptimisationGoal,
     OptimisationRequest,
@@ -8,9 +10,24 @@ from composition_spec import (
 )
 
 
-def test_optimisation_request_stores_army_points_and_multiple_goals():
+def create_army_list() -> ArmyList:
+    faction = Faction(
+        id="DG",
+        name="Dol Guldur",
+    )
+
+    return ArmyList(
+        id="DG_ROTN",
+        name="Rise of the Necromancer",
+        faction=faction,
+    )
+
+
+def test_optimisation_request_stores_army_list_points_and_multiple_goals():
+    army_list = create_army_list()
+
     request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=army_list,
         points_limit=700,
         goals=(
             OptimisationGoal.BOARD_PRESENCE,
@@ -18,7 +35,7 @@ def test_optimisation_request_stores_army_points_and_multiple_goals():
         ),
     )
 
-    assert request.army == "Dol Guldur"
+    assert request.army_list is army_list
     assert request.points_limit == 700
 
     assert request.goals == (
@@ -26,7 +43,10 @@ def test_optimisation_request_stores_army_points_and_multiple_goals():
         OptimisationGoal.MAGIC,
     )
 
+
 def test_optimisation_request_stores_optional_composition_spec():
+    army_list = create_army_list()
+
     spec = CompositionSpec(
         fixed_profiles=(
             ("DG_NEC", 1),
@@ -43,7 +63,7 @@ def test_optimisation_request_stores_optional_composition_spec():
     )
 
     request = OptimisationRequest(
-        army="Dol Guldur",
+        army_list=army_list,
         points_limit=700,
         goals=(
             OptimisationGoal.BALANCED,
@@ -52,6 +72,7 @@ def test_optimisation_request_stores_optional_composition_spec():
     )
 
     assert request.composition_spec is spec
+
 
 def test_optimisation_goal_includes_scenario():
     assert OptimisationGoal.SCENARIO.value == "scenario"
