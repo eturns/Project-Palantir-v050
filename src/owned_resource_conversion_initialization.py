@@ -2,9 +2,15 @@ from army import Army
 from owned_resource_conversion import (
     OwnedResourceConversion,
 )
+from resource_conversion_effect_resolver import (
+    resolved_resource_conversions,
+)
+from resource_conversion_mechanical_effect import (
+    ResourceConversionMechanicalEffect,
+)
 from resource_owner import ResourceOwner
-from special_rule_resource_conversions import (
-    get_special_rule_resource_conversions,
+from special_rule_mechanical_effect_definitions import (
+    get_special_rule_mechanical_effect_definitions,
 )
 
 
@@ -24,19 +30,35 @@ def get_initial_owned_resource_conversions(
             fielded_model_id=fielded_model.id,
         )
 
-        special_rule_ids = tuple(
-            assignment.rule.id
-            for assignment in profile.special_rules
-        )
-
         profile_conversions = (
             profile.special_resource_conversions
-            + get_special_rule_resource_conversions(
-                special_rule_ids=special_rule_ids,
+        )
+
+        special_rule_definitions = (
+            get_special_rule_mechanical_effect_definitions(
+                fielded_model.configured_profile,
             )
         )
 
-        for conversion in profile_conversions:
+        conversion_definitions = tuple(
+            definition
+            for definition in special_rule_definitions
+            if isinstance(
+                definition.effect,
+                ResourceConversionMechanicalEffect,
+            )
+        )
+
+        generic_conversions = (
+            resolved_resource_conversions(
+                conversion_definitions,
+            )
+        )
+
+        for conversion in (
+            tuple(profile_conversions)
+            + tuple(generic_conversions)
+        ):
             conversions.append(
                 OwnedResourceConversion(
                     owner=owner,

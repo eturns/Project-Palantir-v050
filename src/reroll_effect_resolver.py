@@ -5,6 +5,7 @@ from reroll_mechanical_effect import (
     RerollMechanicalEffect,
 )
 from reroll_scope import RerollScope
+from wound_reroll import WoundReroll
 
 
 def resolved_reroll_scopes(
@@ -30,3 +31,26 @@ def resolved_reroll_scopes(
         scopes.add(effect.scope)
 
     return scopes
+
+
+def resolved_wound_reroll(
+    definitions: tuple[
+        MechanicalEffectDefinition,
+        ...,
+    ],
+) -> WoundReroll | None:
+    if not definitions:
+        return None
+
+    scopes = resolved_reroll_scopes(
+        definitions,
+    )
+
+    return WoundReroll(
+        reroll_failed=(
+            RerollScope.FAILED in scopes
+        ),
+        reroll_natural_ones=(
+            RerollScope.NATURAL_ONES in scopes
+        ),
+    )

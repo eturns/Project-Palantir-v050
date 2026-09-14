@@ -17,6 +17,8 @@ from mechanical_effect_type import (
 )
 from roll_modifier_effect_resolver import (
     combined_roll_modifier_value,
+    resolved_duel_modifier,
+    resolved_wound_modifier,
 )
 from roll_modifier_mechanical_effect import (
     RollModifierMechanicalEffect,
@@ -98,3 +100,93 @@ def test_combined_roll_modifier_value_rejects_base_effect():
         combined_roll_modifier_value(
             (definition,),
         )
+
+def test_resolved_duel_modifier_returns_none_for_no_definitions():
+    assert resolved_duel_modifier(()) is None
+
+
+def test_resolved_duel_modifier_preserves_natural_six_exception():
+    definition = MechanicalEffectDefinition(
+        effect=RollModifierMechanicalEffect(
+            effect_type=MechanicalEffectType.ROLL_MODIFIER,
+            target=MechanicalEffectTarget.DUEL_ROLL,
+            source_id="TEST",
+            value=-1,
+            ignored_on_natural_six=True,
+        ),
+        applicability=MechanicalEffectApplicability(
+            MechanicalEffectApplicabilityType.ANY,
+        ),
+    )
+
+    result = resolved_duel_modifier((definition,))
+
+    assert result is not None
+    assert result.value == -1
+    assert result.ignored_on_natural_six is True
+
+
+def test_resolved_duel_modifier_combines_values():
+    first = MechanicalEffectDefinition(
+        effect=RollModifierMechanicalEffect(
+            effect_type=MechanicalEffectType.ROLL_MODIFIER,
+            target=MechanicalEffectTarget.DUEL_ROLL,
+            source_id="FIRST",
+            value=-1,
+        ),
+        applicability=MechanicalEffectApplicability(
+            MechanicalEffectApplicabilityType.ANY,
+        ),
+    )
+
+    second = MechanicalEffectDefinition(
+        effect=RollModifierMechanicalEffect(
+            effect_type=MechanicalEffectType.ROLL_MODIFIER,
+            target=MechanicalEffectTarget.DUEL_ROLL,
+            source_id="SECOND",
+            value=1,
+            ignored_on_natural_six=True,
+        ),
+        applicability=MechanicalEffectApplicability(
+            MechanicalEffectApplicabilityType.ANY,
+        ),
+    )
+
+    result = resolved_duel_modifier(
+        (first, second),
+    )
+
+    assert result is not None
+    assert result.value == 0
+    assert result.ignored_on_natural_six is True
+
+def test_resolved_wound_modifier_combines_values():
+    first = MechanicalEffectDefinition(
+        effect=RollModifierMechanicalEffect(
+            effect_type=MechanicalEffectType.ROLL_MODIFIER,
+            target=MechanicalEffectTarget.TO_WOUND_ROLL,
+            source_id="FIRST",
+            value=1,
+        ),
+        applicability=MechanicalEffectApplicability(
+            MechanicalEffectApplicabilityType.ANY,
+        ),
+    )
+
+    second = MechanicalEffectDefinition(
+        effect=RollModifierMechanicalEffect(
+            effect_type=MechanicalEffectType.ROLL_MODIFIER,
+            target=MechanicalEffectTarget.TO_WOUND_ROLL,
+            source_id="SECOND",
+            value=-1,
+        ),
+        applicability=MechanicalEffectApplicability(
+            MechanicalEffectApplicabilityType.ANY,
+        ),
+    )
+
+    result = resolved_wound_modifier(
+        (first, second),
+    )
+
+    assert result.to_wound == 0

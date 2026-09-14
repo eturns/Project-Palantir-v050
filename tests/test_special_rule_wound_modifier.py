@@ -173,3 +173,54 @@ def test_backstabbers_does_not_apply_when_defender_not_trapped():
     )
 
     assert result == ()
+
+def test_backstabbers_applies_only_once_when_other_special_rules_are_present():
+    attacker_profile = create_test_profile()
+    defender_profile = create_test_profile()
+
+    backstabbers = SpecialRule(
+        id="BACKSTABBERS",
+        name="Backstabbers",
+        category=RuleCategory.SPECIAL,
+    )
+
+    other_rule = SpecialRule(
+        id="OTHER_RULE",
+        name="Other Rule",
+        category=RuleCategory.SPECIAL,
+    )
+
+    attacker_profile.special_rules.extend(
+        (
+            ProfileSpecialRuleAssignment(
+                rule=backstabbers,
+                parameter=None,
+            ),
+            ProfileSpecialRuleAssignment(
+                rule=other_rule,
+                parameter=None,
+            ),
+        )
+    )
+
+    attacker = ConfiguredProfile(
+        profile=attacker_profile,
+    )
+
+    defender = ConfiguredProfile(
+        profile=defender_profile,
+    )
+
+    result = get_special_rule_wound_modifiers(
+        attacker,
+        defender,
+        context=WoundContext(
+            defender_trapped=True,
+        ),
+    )
+
+    assert result == (
+        WoundModifier(
+            to_wound=1,
+        ),
+    )

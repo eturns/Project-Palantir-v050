@@ -97,3 +97,91 @@ def test_resolved_reroll_scopes_rejects_wrong_effect_type():
         resolved_reroll_scopes(
             (definition,),
         )
+
+from mechanical_effect_applicability import (
+    MechanicalEffectApplicability,
+)
+from mechanical_effect_applicability_type import (
+    MechanicalEffectApplicabilityType,
+)
+from mechanical_effect_definition import (
+    MechanicalEffectDefinition,
+)
+from mechanical_effect_target import (
+    MechanicalEffectTarget,
+)
+from mechanical_effect_type import (
+    MechanicalEffectType,
+)
+from reroll_effect_resolver import (
+    resolved_wound_reroll,
+)
+from reroll_mechanical_effect import (
+    RerollMechanicalEffect,
+)
+from reroll_scope import RerollScope
+
+
+def make_reroll_definition(
+    scope: RerollScope,
+) -> MechanicalEffectDefinition:
+    return MechanicalEffectDefinition(
+        effect=RerollMechanicalEffect(
+            effect_type=MechanicalEffectType.REROLL,
+            target=MechanicalEffectTarget.TO_WOUND_ROLL,
+            source_id="TEST",
+            scope=scope,
+        ),
+        applicability=MechanicalEffectApplicability(
+            MechanicalEffectApplicabilityType.ANY,
+        ),
+    )
+
+
+def test_resolved_wound_reroll_returns_none_for_no_definitions():
+    assert resolved_wound_reroll(()) is None
+
+
+def test_resolved_wound_reroll_maps_failed_scope():
+    result = resolved_wound_reroll(
+        (
+            make_reroll_definition(
+                RerollScope.FAILED,
+            ),
+        )
+    )
+
+    assert result is not None
+    assert result.reroll_failed is True
+    assert result.reroll_natural_ones is False
+
+
+def test_resolved_wound_reroll_maps_natural_ones_scope():
+    result = resolved_wound_reroll(
+        (
+            make_reroll_definition(
+                RerollScope.NATURAL_ONES,
+            ),
+        )
+    )
+
+    assert result is not None
+    assert result.reroll_failed is False
+    assert result.reroll_natural_ones is True
+
+
+def test_resolved_wound_reroll_combines_scopes():
+    result = resolved_wound_reroll(
+        (
+            make_reroll_definition(
+                RerollScope.FAILED,
+            ),
+            make_reroll_definition(
+                RerollScope.NATURAL_ONES,
+            ),
+        )
+    )
+
+    assert result is not None
+    assert result.reroll_failed is True
+    assert result.reroll_natural_ones is True

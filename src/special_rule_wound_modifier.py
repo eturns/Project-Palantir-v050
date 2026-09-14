@@ -1,9 +1,11 @@
 from configured_profile import ConfiguredProfile
-from wound_modifier import WoundModifier
 from wound_context import WoundContext
+from wound_modifier import WoundModifier
+
 
 HATRED_RULE_ID = "HATRED"
 BACKSTABBERS_RULE_ID = "BACKSTABBERS"
+
 
 def get_special_rule_wound_modifiers(
     attacker: ConfiguredProfile,
@@ -15,7 +17,7 @@ def get_special_rule_wound_modifiers(
         for keyword in defender.profile.keywords
     }
 
-    modifiers = []
+    modifiers: list[WoundModifier] = []
 
     for assignment in attacker.profile.special_rules:
         if (
@@ -30,18 +32,20 @@ def get_special_rule_wound_modifiers(
                 )
             )
 
-        if (
-        context is not None
-            and context.defender_trapped
-            and any(
-                assignment.rule.id == BACKSTABBERS_RULE_ID
-                for assignment in attacker.profile.special_rules
+    has_backstabbers = any(
+        assignment.rule.id == BACKSTABBERS_RULE_ID
+        for assignment in attacker.profile.special_rules
+    )
+
+    if (
+        has_backstabbers
+        and context is not None
+        and context.defender_trapped
+    ):
+        modifiers.append(
+            WoundModifier(
+                to_wound=1,
             )
-        ):
-            modifiers.append(
-                WoundModifier(
-                    to_wound=1,
-                )
-            )
+        )
 
     return tuple(modifiers)

@@ -4,6 +4,7 @@ from melee_weapon_selection import MeleeWeaponSelection
 from wound_attack_type import WoundAttackType
 from wound_context import WoundContext
 
+
 BANE_OF_KINGS_RULE_ID = "BANE_OF_KINGS"
 VENOM_RULE_ID = "VENOM"
 POISONED_ATTACKS_RULE_ID = "POISONED_ATTACKS"
@@ -11,7 +12,7 @@ ANCIENT_ENEMIES_RULE_ID = "ANCIENT_ENEMIES"
 SLAYER_OF_MEN_RULE_ID = "SLAYER_OF_MEN"
 
 
-def get_special_rule_wound_reroll(
+def get_contextual_special_rule_wound_reroll(
     configured_profile: ConfiguredProfile,
     selection: MeleeWeaponSelection | None = None,
     defender: ConfiguredProfile | None = None,
@@ -37,7 +38,6 @@ def get_special_rule_wound_reroll(
         and assignment.parameter.upper() in defender_keywords
         for assignment in configured_profile.profile.special_rules
     )
-
 
     selected_weapon_rule_ids = set()
 
@@ -72,20 +72,51 @@ def get_special_rule_wound_reroll(
 
     return WoundReroll(
         reroll_failed=(
-            BANE_OF_KINGS_RULE_ID in rule_ids
-            or (
+            (
                 VENOM_RULE_ID in rule_ids
                 and attack_type == WoundAttackType.STRIKE
             )
             or has_slayer_of_men_match
         ),
         reroll_natural_ones=(
-            POISONED_ATTACKS_RULE_ID in rule_ids
-            or (
+            (
                 POISONED_ATTACKS_RULE_ID
                 in selected_weapon_rule_ids
                 and attack_type == WoundAttackType.STRIKE
             )
             or has_ancient_enemies_match
+        ),
+    )
+
+
+def get_special_rule_wound_reroll(
+    configured_profile: ConfiguredProfile,
+    selection: MeleeWeaponSelection | None = None,
+    defender: ConfiguredProfile | None = None,
+    context: WoundContext | None = None,
+) -> WoundReroll:
+    rule_ids = {
+        assignment.rule.id
+        for assignment
+        in configured_profile.profile.special_rules
+    }
+
+    contextual = (
+        get_contextual_special_rule_wound_reroll(
+            configured_profile,
+            selection=selection,
+            defender=defender,
+            context=context,
+        )
+    )
+
+    return WoundReroll(
+        reroll_failed=(
+            BANE_OF_KINGS_RULE_ID in rule_ids
+            or contextual.reroll_failed
+        ),
+        reroll_natural_ones=(
+            POISONED_ATTACKS_RULE_ID in rule_ids
+            or contextual.reroll_natural_ones
         ),
     )
