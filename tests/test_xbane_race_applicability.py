@@ -13,7 +13,16 @@ from special_rule_mechanical_effect_definitions import (
     XBANE_RULE_ID,
     get_special_rule_mechanical_effect_definitions,
 )
+from fielded_strike_damage_resolver import (
+    resolve_strike_damage_for_models,
+)
+from strike_damage import StrikeDamageType
+from fractions import Fraction
 
+from defensive_state import DefensiveState
+from survival_probability import (
+    get_survival_probability_after_strike_damage,
+)
 
 def make_xbane_attacker() -> ConfiguredProfile:
     profile = Profile(
@@ -124,3 +133,114 @@ def test_xbane_does_not_apply_to_keyword_only_match():
         )
         is False
     )
+
+def test_fielded_strike_damage_resolver_returns_xbane_damage():
+    attacker = FieldedModel(
+        id="ATTACKER-1",
+        configured_profile=make_xbane_attacker(),
+    )
+
+    defender = make_defender(
+        races=["ORC"],
+        keywords=[],
+    )
+
+    result = resolve_strike_damage_for_models(
+        attacker,
+        defender,
+    )
+
+    assert len(result) == 1
+    assert result[0].damage_type is StrikeDamageType.D3
+
+def test_fielded_strike_damage_resolver_ignores_keyword_only_xbane_match():
+    attacker = FieldedModel(
+        id="ATTACKER-1",
+        configured_profile=make_xbane_attacker(),
+    )
+
+    defender = make_defender(
+        races=["MAN"],
+        keywords=["ORC"],
+    )
+
+    result = resolve_strike_damage_for_models(
+        attacker,
+        defender,
+    )
+
+    assert result == ()
+
+def test_fielded_strike_damage_resolver_ignores_wrong_race():
+    attacker = FieldedModel(
+        id="ATTACKER-1",
+        configured_profile=make_xbane_attacker(),
+    )
+
+    defender = make_defender(
+        races=["MAN"],
+        keywords=[],
+    )
+
+    result = resolve_strike_damage_for_models(
+        attacker,
+        defender,
+    )
+
+    assert result == ()
+
+def test_xbane_d3_reaches_survival_probability():
+    attacker = FieldedModel(
+        id="ATTACKER-1",
+        configured_profile=make_xbane_attacker(),
+    )
+
+    defender = make_defender(
+        races=["ORC"],
+        keywords=[],
+    )
+
+    damage = resolve_strike_damage_for_models(
+        attacker,
+        defender,
+    )[0]
+
+    state = DefensiveState(
+        remaining_wounds=2,
+        remaining_fate=0,
+    )
+
+    result = get_survival_probability_after_strike_damage(
+        state,
+        damage,
+    )
+
+    assert result == Fraction(1, 3)
+
+def test_xbane_d3_preserves_single_strike_fate_semantics():
+    attacker = FieldedModel(
+        id="ATTACKER-1",
+        configured_profile=make_xbane_attacker(),
+    )
+
+    defender = make_defender(
+        races=["ORC"],
+        keywords=[],
+    )
+
+    damage = resolve_strike_damage_for_models(
+        attacker,
+        defender,
+    )[0]
+
+    state = DefensiveState(
+        remaining_wounds=2,
+        remaining_fate=1,
+    )
+
+    result = get_survival_probability_after_strike_damage(
+        state,
+        damage,
+    )
+
+    assert result == Fraction(2, 3)

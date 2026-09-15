@@ -5,19 +5,14 @@ from scenario_candidate_profile import (
 from scenario_pool_fit import (
     build_official_scenario_pool_fit_summary_from_profile,
 )
-
+from scenario_context import ScenarioContext
+from resurrection_config import ResurrectionConfig
 
 def build_scenario_pool_fit_summary_from_candidate(
     candidate: OptimiserCandidate,
     *,
-    army_list=None,
-    key_profile=None,
-    combat_benchmark=None,
-    benchmark_presence=None,
-    benchmark_manoeuvrability=None,
-    benchmark_combat_capability=None,
-    benchmark_fate=None,
-    resurrection_config=None,
+    context: ScenarioContext | None = None,
+    resurrection_config: ResurrectionConfig | None = None,
     profile_builder=None,
     summary_builder=None,
 ):
@@ -33,13 +28,7 @@ def build_scenario_pool_fit_summary_from_candidate(
 
     capability_profile = profile_builder(
         candidate=candidate,
-        army_list=army_list,
-        key_profile=key_profile,
-        combat_benchmark=combat_benchmark,
-        benchmark_presence=benchmark_presence,
-        benchmark_manoeuvrability=benchmark_manoeuvrability,
-        benchmark_combat_capability=benchmark_combat_capability,
-        benchmark_fate=benchmark_fate,
+        context=context,
         resurrection_config=resurrection_config,
     )
 

@@ -6,7 +6,10 @@ from fate_probability import (
     get_fate_prevention_probability_with_might,
 )
 from defensive_resolution import get_wounds_from_strike_damage
-from strike_damage import StrikeDamage
+from strike_damage import (
+    StrikeDamage,
+    StrikeDamageType,
+)
 from configured_profile import ConfiguredProfile
 from special_rule_defensive_effect import (
     get_available_fate_attempts,
@@ -165,6 +168,34 @@ def get_survival_probability_after_strike_damage(
 
     if state.remaining_wounds == 0:
         return Fraction(0, 1)
+
+    if damage.damage_type is StrikeDamageType.D3:
+        return (
+            get_survival_probability_after_strike_damage(
+                state,
+                StrikeDamage(
+                    wounds_per_successful_strike=1,
+                ),
+                might_points=might_points,
+                required_fate_roll=required_fate_roll,
+            )
+            + get_survival_probability_after_strike_damage(
+                state,
+                StrikeDamage(
+                    wounds_per_successful_strike=2,
+                ),
+                might_points=might_points,
+                required_fate_roll=required_fate_roll,
+            )
+            + get_survival_probability_after_strike_damage(
+                state,
+                StrikeDamage(
+                    wounds_per_successful_strike=3,
+                ),
+                might_points=might_points,
+                required_fate_roll=required_fate_roll,
+            )
+        ) / 3
 
     wounds_from_strike = get_wounds_from_strike_damage(
         damage,

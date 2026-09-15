@@ -9,7 +9,8 @@ from scenario_capability_profile_builder import (
     build_scenario_capability_profile,
 )
 from scenario_demand import StrategicDemand
-
+from scenario_context import ScenarioContext
+from resurrection_config import ResurrectionConfig
 
 def test_builder_returns_all_supported_capabilities_and_omits_object_interaction(
     monkeypatch,
@@ -59,6 +60,16 @@ def test_builder_returns_all_supported_capabilities_and_omits_object_interaction
         defence=6,
         attacks=1,
         wounds=1,
+    )
+
+    context = ScenarioContext(
+        army_list=army_list,
+        key_profile=key_profile,
+        combat_benchmark=benchmark,
+        benchmark_presence=10.0,
+        benchmark_manoeuvrability=1.0,
+        benchmark_combat_capability=0.5,
+        benchmark_fate=4.0,
     )
 
     supported_dimensions = (
@@ -159,13 +170,7 @@ def test_builder_returns_all_supported_capabilities_and_omits_object_interaction
 
     profile = build_scenario_capability_profile(
         army=army,
-        army_list=army_list,
-        key_profile=key_profile,
-        combat_benchmark=benchmark,
-        benchmark_presence=10.0,
-        benchmark_manoeuvrability=1.0,
-        benchmark_combat_capability=0.5,
-        benchmark_fate=4.0,
+        context=context,
     )
 
     assert tuple(
@@ -224,8 +229,7 @@ def test_builder_runs_real_capability_pipeline():
         wounds=1,
     )
 
-    result = build_scenario_capability_profile(
-        army=army,
+    context = ScenarioContext(
         army_list=army_list,
         key_profile=profile,
         combat_benchmark=benchmark,
@@ -233,6 +237,11 @@ def test_builder_runs_real_capability_pipeline():
         benchmark_manoeuvrability=1.0,
         benchmark_combat_capability=0.5,
         benchmark_fate=4.0,
+    )
+
+    result = build_scenario_capability_profile(
+        army=army,
+        context=context,
     )
 
     assert len(result.capabilities) == 9
@@ -295,6 +304,16 @@ def test_builder_can_apply_resurrection_to_state_resilience(
         wounds=1,
     )
 
+    context = ScenarioContext(
+        army_list=army_list,
+        key_profile=key_profile,
+        combat_benchmark=benchmark,
+        benchmark_presence=10.0,
+        benchmark_manoeuvrability=1.0,
+        benchmark_combat_capability=0.5,
+        benchmark_fate=4.0,
+    )
+
     monkeypatch.setattr(
         scenario_capability_profile_builder,
         "calculate_state_resilience_from_army",
@@ -306,18 +325,12 @@ def test_builder_can_apply_resurrection_to_state_resilience(
 
     profile = build_scenario_capability_profile(
         army=army,
-        army_list=army_list,
-        key_profile=key_profile,
-        combat_benchmark=benchmark,
-        benchmark_presence=10.0,
-        benchmark_manoeuvrability=1.0,
-        benchmark_combat_capability=0.5,
-        benchmark_fate=4.0,
-        resurrection_config={
-            "resurrection_capable_models": 1,
-            "starting_models": 2,
-            "resilience_weight": 0.5,
-        },
+        context=context,
+        resurrection_config=ResurrectionConfig(
+            resurrection_capable_models=1,
+            starting_models=2,
+            resilience_weight=0.5,
+        ),
     )
 
     assert profile.get_value(
@@ -377,6 +390,16 @@ def test_builder_uses_modified_state_resilience_for_deployment_recovery(
         wounds=1,
     )
 
+    context = ScenarioContext(
+        army_list=army_list,
+        key_profile=key_profile,
+        combat_benchmark=benchmark,
+        benchmark_presence=10.0,
+        benchmark_manoeuvrability=1.0,
+        benchmark_combat_capability=0.5,
+        benchmark_fate=4.0,
+    )
+
     monkeypatch.setattr(
         scenario_capability_profile_builder,
         "calculate_state_resilience_from_army",
@@ -397,18 +420,12 @@ def test_builder_uses_modified_state_resilience_for_deployment_recovery(
 
     profile = build_scenario_capability_profile(
         army=army,
-        army_list=army_list,
-        key_profile=key_profile,
-        combat_benchmark=benchmark,
-        benchmark_presence=10.0,
-        benchmark_manoeuvrability=1.0,
-        benchmark_combat_capability=0.5,
-        benchmark_fate=4.0,
-        resurrection_config={
-            "resurrection_capable_models": 1,
-            "starting_models": 2,
-            "resilience_weight": 0.5,
-        },
+        context=context,
+        resurrection_config=ResurrectionConfig(
+            resurrection_capable_models=1,
+            starting_models=2,
+            resilience_weight=0.5,
+        ),
     )
 
     modified_resilience = (
@@ -504,6 +521,16 @@ def test_builder_uses_separate_preservation_profile(
         wounds=1,
     )
 
+    context = ScenarioContext(
+        army_list=army_list,
+        key_profile=leader_profile,
+        combat_benchmark=benchmark,
+        benchmark_presence=10.0,
+        benchmark_manoeuvrability=1.0,
+        benchmark_combat_capability=0.5,
+        benchmark_fate=4.0,
+    )
+
     captured = {}
 
     def fake_preservation(
@@ -532,14 +559,8 @@ def test_builder_uses_separate_preservation_profile(
 
     build_scenario_capability_profile(
         army=army,
-        army_list=army_list,
-        key_profile=leader_profile,
+        context=context,
         preservation_profile=preservation_profile,
-        combat_benchmark=benchmark,
-        benchmark_presence=10.0,
-        benchmark_manoeuvrability=1.0,
-        benchmark_combat_capability=0.5,
-        benchmark_fate=4.0,
     )
 
     assert captured["profile"] is preservation_profile

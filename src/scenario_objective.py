@@ -11,7 +11,8 @@ from scenario_candidate_summary import (
     build_scenario_pool_fit_summary_from_candidate,
 )
 from scenario_pool_fit import ScenarioPoolFitSummary
-
+from scenario_context import ScenarioContext
+from resurrection_config import ResurrectionConfig
 
 SCENARIO_MEAN_WEIGHT = 0.75
 SCENARIO_MINIMUM_WEIGHT = 0.25
@@ -19,14 +20,8 @@ SCENARIO_MINIMUM_WEIGHT = 0.25
 
 @dataclass(frozen=True)
 class ScenarioObjective(OptimiserObjective):
-    army_list: object = None
-    key_profile: object = None
-    combat_benchmark: object = None
-    benchmark_presence: int | float | None = None
-    benchmark_manoeuvrability: int | float | None = None
-    benchmark_combat_capability: int | float | None = None
-    benchmark_fate: int | float | None = None
-    resurrection_config: dict | None = None
+    context: ScenarioContext | None = None
+    resurrection_config: ResurrectionConfig | None = None
     summary_builder: (
         Callable[
             [OptimiserCandidate],
@@ -41,21 +36,14 @@ class ScenarioObjective(OptimiserObjective):
     ) -> ObjectiveScore:
         summary_builder = self.summary_builder
 
+        context = self.context
+        resurrection_config = self.resurrection_config
+
         if summary_builder is None:
             summary = build_scenario_pool_fit_summary_from_candidate(
                 candidate=candidate,
-                army_list=self.army_list,
-                key_profile=self.key_profile,
-                combat_benchmark=self.combat_benchmark,
-                benchmark_presence=self.benchmark_presence,
-                benchmark_manoeuvrability=(
-                    self.benchmark_manoeuvrability
-                ),
-                benchmark_combat_capability=(
-                    self.benchmark_combat_capability
-                ),
-                benchmark_fate=self.benchmark_fate,
-                resurrection_config=self.resurrection_config,
+                context=context,
+                resurrection_config=resurrection_config,
             )
         else:
             summary = summary_builder(

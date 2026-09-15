@@ -20,6 +20,7 @@ from scenario_analysis_result import ScenarioAnalysisResult
 from army import Army
 from profiles import Profile
 from profile_classification import ModelType
+from resurrection_config import ResurrectionConfig
 
 def test_build_scenario_analysis_results_returns_all_24_scenarios():
     results = build_scenario_analysis_results(
@@ -174,9 +175,11 @@ def test_build_scenario_analysis_results_from_candidate_uses_candidate_profile_p
         benchmark_manoeuvrability=20,
         benchmark_combat_capability=30,
         benchmark_fate=40,
-        resurrection_config={
-            "test": True,
-        },
+        resurrection_config=ResurrectionConfig(
+            resurrection_capable_models=1,
+            starting_models=2,
+            resilience_weight=0.5,
+        ),
     )
 
     assert result is expected_results
@@ -209,19 +212,32 @@ def test_build_scenario_analysis_results_from_candidate_uses_candidate_profile_p
         },
     }
 
-    assert captured["kwargs"] == {
-        "army_list": "ARMY_LIST",
-        "key_profile": "KEY_PROFILE",
-        "preservation_profile": "PRESERVATION_PROFILE",
-        "combat_benchmark": "COMBAT_BENCHMARK",
-        "benchmark_presence": 10,
-        "benchmark_manoeuvrability": 20,
-        "benchmark_combat_capability": 30,
-        "benchmark_fate": 40,
-        "resurrection_config": {
-            "test": True,
-        },
-    }
+    assert captured["kwargs"]["context"].army_list == "ARMY_LIST"
+    assert captured["kwargs"]["context"].key_profile == "KEY_PROFILE"
+    assert (
+        captured["kwargs"]["context"].combat_benchmark
+        == "COMBAT_BENCHMARK"
+    )
+    assert captured["kwargs"]["context"].benchmark_presence == 10
+    assert (
+        captured["kwargs"]["context"].benchmark_manoeuvrability
+        == 20
+    )
+    assert (
+        captured["kwargs"]["context"].benchmark_combat_capability
+        == 30
+    )
+    assert captured["kwargs"]["context"].benchmark_fate == 40
+
+    assert captured["kwargs"]["preservation_profile"] == (
+        "PRESERVATION_PROFILE"
+    )
+
+    assert captured["kwargs"]["resurrection_config"] == ResurrectionConfig(
+        resurrection_capable_models=1,
+        starting_models=2,
+        resilience_weight=0.5,
+    )
 
 def test_rank_scenario_analysis_results_orders_best_to_worst():
     results = (

@@ -35,19 +35,27 @@ from state_resilience_capability import (
 from resurrection_resilience_calculator import (
     calculate_resurrection_modified_state_resilience,
 )
+from scenario_context import ScenarioContext
+from resurrection_config import ResurrectionConfig
 
 def build_scenario_capability_profile(
     army: Army,
-    army_list: ArmyList,
-    key_profile: Profile,
-    combat_benchmark: CombatBenchmark,
-    benchmark_presence: int | float,
-    benchmark_manoeuvrability: int | float,
-    benchmark_combat_capability: int | float,
-    benchmark_fate: int | float,
+    context: ScenarioContext,
     preservation_profile: Profile | None = None,
-    resurrection_config: dict | None = None,
+    resurrection_config: ResurrectionConfig | None = None,
 ) -> ScenarioCapabilityProfile:
+    army_list = context.army_list
+    key_profile = context.key_profile
+    combat_benchmark = context.combat_benchmark
+    benchmark_presence = context.benchmark_presence
+    benchmark_manoeuvrability = (
+        context.benchmark_manoeuvrability
+    )
+    benchmark_combat_capability = (
+        context.benchmark_combat_capability
+    )
+    benchmark_fate = context.benchmark_fate
+
     profiles = tuple(
         entry.profile
         for entry in army.entries
@@ -128,35 +136,22 @@ def build_scenario_capability_profile(
             calculate_resurrection_modified_state_resilience(
                 state_resilience=state_resilience,
                 resurrection_capable_models=(
-                    resurrection_config[
-                        "resurrection_capable_models"
-                    ]
+                    resurrection_config.resurrection_capable_models
                 ),
                 starting_models=(
-                    resurrection_config[
-                        "starting_models"
-                    ]
+                    resurrection_config.starting_models
                 ),
                 resilience_weight=(
-                    resurrection_config[
-                        "resilience_weight"
-                    ]
+                    resurrection_config.resilience_weight
                 ),
                 necromancer_remaining_will=(
-                    resurrection_config.get(
-                        "necromancer_remaining_will"
-                    )
+                    resurrection_config.necromancer_remaining_will
                 ),
                 distance_inches=(
-                    resurrection_config.get(
-                        "distance_inches"
-                    )
+                    resurrection_config.distance_inches
                 ),
                 will_points_available_to_spend=(
-                    resurrection_config.get(
-                        "will_points_available_to_spend",
-                        0,
-                    )
+                    resurrection_config.will_points_available_to_spend
                 ),
             )
         )

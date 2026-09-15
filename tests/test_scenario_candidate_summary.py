@@ -2,7 +2,8 @@ from optimiser_candidate import OptimiserCandidate
 from scenario_candidate_summary import (
     build_scenario_pool_fit_summary_from_candidate,
 )
-
+from scenario_context import ScenarioContext
+from resurrection_config import ResurrectionConfig
 
 def test_scenario_candidate_summary_builds_profile_then_summary():
     candidate = OptimiserCandidate(
@@ -45,25 +46,13 @@ def test_scenario_candidate_summary_passes_profile_builder_inputs():
     def fake_profile_builder(
         *,
         candidate,
-        army_list,
-        key_profile,
-        combat_benchmark,
-        benchmark_presence,
-        benchmark_manoeuvrability,
-        benchmark_combat_capability,
-        benchmark_fate,
+        context,
         resurrection_config,
     ):
         captured.update(
             {
                 "candidate": candidate,
-                "army_list": army_list,
-                "key_profile": key_profile,
-                "combat_benchmark": combat_benchmark,
-                "benchmark_presence": benchmark_presence,
-                "benchmark_manoeuvrability": benchmark_manoeuvrability,
-                "benchmark_combat_capability": benchmark_combat_capability,
-                "benchmark_fate": benchmark_fate,
+                "context": context,
                 "resurrection_config": resurrection_config,
             }
         )
@@ -75,10 +64,7 @@ def test_scenario_candidate_summary_passes_profile_builder_inputs():
     ):
         return "SCENARIO_SUMMARY"
 
-    result = build_scenario_pool_fit_summary_from_candidate(
-        candidate=candidate,
-        profile_builder=fake_profile_builder,
-        summary_builder=fake_summary_builder,
+    context = ScenarioContext(
         army_list="ARMY_LIST",
         key_profile="KEY_PROFILE",
         combat_benchmark="COMBAT_BENCHMARK",
@@ -86,23 +72,28 @@ def test_scenario_candidate_summary_passes_profile_builder_inputs():
         benchmark_manoeuvrability=20,
         benchmark_combat_capability=30,
         benchmark_fate=40,
-        resurrection_config={
-            "test": True,
-        },
+    )
+
+    result = build_scenario_pool_fit_summary_from_candidate(
+        candidate=candidate,
+        context=context,
+        resurrection_config=ResurrectionConfig(
+            resurrection_capable_models=1,
+            starting_models=2,
+            resilience_weight=0.5,
+        ),
+        profile_builder=fake_profile_builder,
+        summary_builder=fake_summary_builder,
     )
 
     assert captured == {
         "candidate": candidate,
-        "army_list": "ARMY_LIST",
-        "key_profile": "KEY_PROFILE",
-        "combat_benchmark": "COMBAT_BENCHMARK",
-        "benchmark_presence": 10,
-        "benchmark_manoeuvrability": 20,
-        "benchmark_combat_capability": 30,
-        "benchmark_fate": 40,
-        "resurrection_config": {
-            "test": True,
-        },
+        "context": context,
+        "resurrection_config": ResurrectionConfig(
+            resurrection_capable_models=1,
+            starting_models=2,
+            resilience_weight=0.5,
+        ),
     }
 
     assert result == "SCENARIO_SUMMARY"

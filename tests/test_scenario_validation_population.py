@@ -30,6 +30,7 @@ from army_loader import (
     load_army_lists,
     load_factions,
 )
+from scenario_context import ScenarioContext
 
 def _load_rise_of_the_necromancer(
     profiles,
@@ -704,29 +705,27 @@ def test_inspect_raw_capabilities_for_contrasting_candidates():
         wounds=1,
     )
 
+    context = ScenarioContext(
+        army_list=army_list,
+        key_profile=key_profile,
+        combat_benchmark=combat_benchmark,
+        benchmark_presence=10.0,
+        benchmark_manoeuvrability=1.0,
+        benchmark_combat_capability=0.5,
+        benchmark_fate=4.0,
+    )
+
     first_profile = (
         build_scenario_capability_profile_from_candidate(
             candidate=first_candidate,
-            army_list=army_list,
-            key_profile=key_profile,
-            combat_benchmark=combat_benchmark,
-            benchmark_presence=10.0,
-            benchmark_manoeuvrability=1.0,
-            benchmark_combat_capability=0.5,
-            benchmark_fate=4.0,
+            context=context,
         )
     )
 
     last_profile = (
         build_scenario_capability_profile_from_candidate(
             candidate=last_candidate,
-            army_list=army_list,
-            key_profile=key_profile,
-            combat_benchmark=combat_benchmark,
-            benchmark_presence=10.0,
-            benchmark_manoeuvrability=1.0,
-            benchmark_combat_capability=0.5,
-            benchmark_fate=4.0,
+            context=context,
         )
     )
 
@@ -926,19 +925,23 @@ def test_inspect_capability_variation_across_490_candidates():
         wounds=1,
     )
 
+    context = ScenarioContext(
+        army_list=army_list,
+        key_profile=key_profile,
+        combat_benchmark=combat_benchmark,
+        benchmark_presence=10.0,
+        benchmark_manoeuvrability=1.0,
+        benchmark_combat_capability=0.5,
+        benchmark_fate=4.0,
+    )
+
     capability_values = {}
 
     for candidate in candidates:
         capability_profile = (
             build_scenario_capability_profile_from_candidate(
                 candidate=candidate,
-                army_list=army_list,
-                key_profile=key_profile,
-                combat_benchmark=combat_benchmark,
-                benchmark_presence=10.0,
-                benchmark_manoeuvrability=1.0,
-                benchmark_combat_capability=0.5,
-                benchmark_fate=4.0,
+                context=context,
             )
         )
 
@@ -1132,6 +1135,16 @@ def test_inspect_capability_variation_within_equal_model_counts():
         wounds=1,
     )
 
+    context = ScenarioContext(
+        army_list=army_list,
+        key_profile=key_profile,
+        combat_benchmark=combat_benchmark,
+        benchmark_presence=10.0,
+        benchmark_manoeuvrability=1.0,
+        benchmark_combat_capability=0.5,
+        benchmark_fate=4.0,
+    )
+
     values_by_model_count = {}
 
     for candidate in candidates:
@@ -1143,13 +1156,7 @@ def test_inspect_capability_variation_within_equal_model_counts():
         capability_profile = (
             build_scenario_capability_profile_from_candidate(
                 candidate=candidate,
-                army_list=army_list,
-                key_profile=key_profile,
-                combat_benchmark=combat_benchmark,
-                benchmark_presence=10.0,
-                benchmark_manoeuvrability=1.0,
-                benchmark_combat_capability=0.5,
-                benchmark_fate=4.0,
+                context=context,
             )
         )
 
@@ -1249,6 +1256,16 @@ def test_inspect_state_resilience_by_composition_within_model_counts():
         wounds=1,
     )
 
+    context = ScenarioContext(
+        army_list=army_list,
+        key_profile=key_profile,
+        combat_benchmark=combat_benchmark,
+        benchmark_presence=10.0,
+        benchmark_manoeuvrability=1.0,
+        benchmark_combat_capability=0.5,
+        benchmark_fate=4.0,
+    )
+
     records_by_model_count = {}
 
     for candidate in candidates:
@@ -1260,13 +1277,7 @@ def test_inspect_state_resilience_by_composition_within_model_counts():
         capability_profile = (
             build_scenario_capability_profile_from_candidate(
                 candidate=candidate,
-                army_list=army_list,
-                key_profile=key_profile,
-                combat_benchmark=combat_benchmark,
-                benchmark_presence=10.0,
-                benchmark_manoeuvrability=1.0,
-                benchmark_combat_capability=0.5,
-                benchmark_fate=4.0,
+                context=context,
             )
         )
 

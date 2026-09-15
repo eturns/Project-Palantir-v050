@@ -7,7 +7,6 @@ from wound_context import WoundContext
 
 
 MIGHTY_BLOW_RULE_ID = "MIGHTY_BLOW"
-XBANE_RULE_ID = "XBANE"
 EXECUTIONER_RULE_ID = "EXECUTIONER"
 
 
@@ -16,24 +15,6 @@ def get_special_rule_strike_damage(
     defender: ConfiguredProfile | None = None,
     context: WoundContext | None = None,
 ) -> StrikeDamage:
-    if defender is not None:
-        defender_keywords = {
-            keyword.upper()
-            for keyword in defender.profile.keywords
-        }
-
-        has_xbane_match = any(
-            assignment.rule.id == XBANE_RULE_ID
-            and isinstance(assignment.parameter, str)
-            and assignment.parameter.upper() in defender_keywords
-            for assignment in attacker.profile.special_rules
-        )
-
-        if has_xbane_match:
-            return StrikeDamage(
-                damage_type=StrikeDamageType.D3,
-            )
-
 
     has_executioner_trigger = (
         context is not None

@@ -17,15 +17,10 @@ from balanced_objective import BalancedObjective
 from balanced_objective_preset import BALANCED_OBJECTIVE_PRESET
 from battle_length_assumption import BattleHorizon
 from combat_benchmark import DEFAULT_COMBAT_BENCHMARK
-from optimisation_goal_objective_resolver import (
-    resolve_optimisation_goal_objective,
-)
-from optimisation_request import OptimisationGoal
+from resource_strategy import ResourceStrategy
 from resource_endurance_assumption import (
     ResourceEnduranceAssumption,
 )
-from resource_strategy import ResourceStrategy
-
 from scenario_objective import ScenarioObjective
 
 def test_board_presence_goal_resolves_to_board_presence_objective():
@@ -95,6 +90,31 @@ def test_balanced_goal_resolves_to_balanced_objective():
     assert objective.combat_benchmark == DEFAULT_COMBAT_BENCHMARK
     assert objective.resource_assumption == resource_assumption
 
+def test_balanced_goal_requires_combat_benchmark():
+    with pytest.raises(
+        ValueError,
+        match="Balanced optimisation requires a combat benchmark.",
+    ):
+        resolve_optimisation_goal_objective(
+            goal=OptimisationGoal.BALANCED,
+            army_list="ARMY_LIST",
+        )
+
+
+def test_balanced_goal_requires_resource_assumption():
+    with pytest.raises(
+        ValueError,
+        match=(
+            "Balanced optimisation requires a resource "
+            "endurance assumption."
+        ),
+    ):
+        resolve_optimisation_goal_objective(
+            goal=OptimisationGoal.BALANCED,
+            army_list="ARMY_LIST",
+            combat_benchmark=DEFAULT_COMBAT_BENCHMARK,
+        )
+
 def test_scenario_goal_resolves_to_scenario_objective():
     objective = resolve_optimisation_goal_objective(
         goal=OptimisationGoal.SCENARIO,
@@ -112,13 +132,24 @@ def test_scenario_goal_resolves_to_scenario_objective():
         ScenarioObjective,
     )
 
-    assert objective.army_list == "ARMY_LIST"
-    assert objective.combat_benchmark == "COMBAT_BENCHMARK"
-    assert objective.key_profile == "KEY_PROFILE"
-    assert objective.benchmark_presence == 10
-    assert objective.benchmark_manoeuvrability == 20
-    assert objective.benchmark_combat_capability == 30
-    assert objective.benchmark_fate == 40
+    assert objective.context is not None
+
+    assert objective.context.army_list == "ARMY_LIST"
+    assert (
+        objective.context.combat_benchmark
+        == "COMBAT_BENCHMARK"
+    )
+    assert objective.context.key_profile == "KEY_PROFILE"
+    assert objective.context.benchmark_presence == 10
+    assert (
+        objective.context.benchmark_manoeuvrability
+        == 20
+    )
+    assert (
+        objective.context.benchmark_combat_capability
+        == 30
+    )
+    assert objective.context.benchmark_fate == 40
 
 def test_scenario_goal_requires_combat_benchmark():
     with pytest.raises(

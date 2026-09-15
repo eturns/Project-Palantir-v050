@@ -79,6 +79,15 @@ def test_scenario_optimisation_runs_end_to_end():
         ScenarioObjective,
     )
 
+    assert objective.context is not None
+    assert objective.context.army_list is army_list
+    assert objective.context.key_profile is profile
+    assert objective.context.combat_benchmark is combat_benchmark
+    assert objective.context.benchmark_presence == 10.0
+    assert objective.context.benchmark_manoeuvrability == 1.0
+    assert objective.context.benchmark_combat_capability == 0.5
+    assert objective.context.benchmark_fate == 4.0
+
     evaluation = evaluate_candidate(
         candidate=candidate,
         objective=objective,

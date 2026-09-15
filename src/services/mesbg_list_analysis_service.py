@@ -11,6 +11,7 @@ from services.army_analysis_service import (
 from scenario_analysis_context import (
     build_default_scenario_analysis_context,
 )
+from resurrection_config import ResurrectionConfig
 
 def analyse_mesbg_list_builder_file(
     file_path: str,
@@ -25,7 +26,7 @@ def analyse_mesbg_list_builder_file(
     benchmark_manoeuvrability=None,
     benchmark_combat_capability=None,
     benchmark_fate=None,
-    resurrection_config=None,
+    resurrection_config: ResurrectionConfig | None = None,
 ) -> dict:
     """
     Imports an MESBG List Builder file and runs the complete

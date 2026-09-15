@@ -2,7 +2,8 @@ from optimiser_candidate import OptimiserCandidate
 from scenario_candidate_profile import (
     build_scenario_capability_profile_from_candidate,
 )
-
+from scenario_context import ScenarioContext
+from resurrection_config import ResurrectionConfig
 
 def test_scenario_candidate_profile_uses_candidate_army():
     candidate = OptimiserCandidate(
@@ -35,65 +36,55 @@ def test_scenario_candidate_profile_passes_builder_inputs():
 
     captured = {}
 
-    def fake_builder(
+    def fake_profile_builder(
         *,
         army,
-        army_list,
-        key_profile,
+        context,
         preservation_profile,
-        combat_benchmark,
-        benchmark_presence,
-        benchmark_manoeuvrability,
-        benchmark_combat_capability,
-        benchmark_fate,
         resurrection_config,
     ):
         captured.update(
             {
                 "army": army,
-                "army_list": army_list,
-                "key_profile": key_profile,
-                "combat_benchmark": combat_benchmark,
-                "benchmark_presence": benchmark_presence,
-                "benchmark_manoeuvrability": benchmark_manoeuvrability,
-                "benchmark_combat_capability": benchmark_combat_capability,
-                "benchmark_fate": benchmark_fate,
-                "resurrection_config": resurrection_config,
+                "context": context,
                 "preservation_profile": preservation_profile,
+                "resurrection_config": resurrection_config,
             }
         )
 
         return "SCENARIO_PROFILE"
 
-    result = build_scenario_capability_profile_from_candidate(
-        candidate=candidate,
-        profile_builder=fake_builder,
+    context = ScenarioContext(
         army_list="ARMY_LIST",
         key_profile="KEY_PROFILE",
-        preservation_profile="PRESERVATION_PROFILE",
         combat_benchmark="COMBAT_BENCHMARK",
         benchmark_presence=10,
         benchmark_manoeuvrability=20,
         benchmark_combat_capability=30,
         benchmark_fate=40,
-        resurrection_config={
-            "test": True,
-        },
+    )
+
+    result = build_scenario_capability_profile_from_candidate(
+        candidate=candidate,
+        context=context,
+        preservation_profile="PRESERVATION_PROFILE",
+        resurrection_config=ResurrectionConfig(
+            resurrection_capable_models=1,
+            starting_models=2,
+            resilience_weight=0.5,
+        ),
+        profile_builder=fake_profile_builder,
     )
 
     assert captured == {
-        "army": "TEST_ARMY",
-        "army_list": "ARMY_LIST",
-        "key_profile": "KEY_PROFILE",
+        "army": candidate.army,
+        "context": context,
         "preservation_profile": "PRESERVATION_PROFILE",
-        "combat_benchmark": "COMBAT_BENCHMARK",
-        "benchmark_presence": 10,
-        "benchmark_manoeuvrability": 20,
-        "benchmark_combat_capability": 30,
-        "benchmark_fate": 40,
-        "resurrection_config": {
-            "test": True,
-        },
+        "resurrection_config": ResurrectionConfig(
+            resurrection_capable_models=1,
+            starting_models=2,
+            resilience_weight=0.5,
+        ),
     }
 
     assert result == "SCENARIO_PROFILE"
@@ -108,17 +99,12 @@ def test_scenario_candidate_profile_uses_default_builder(monkeypatch):
     def fake_default_builder(
         *,
         army,
-        army_list,
-        key_profile,
+        context,
         preservation_profile,
-        combat_benchmark,
-        benchmark_presence,
-        benchmark_manoeuvrability,
-        benchmark_combat_capability,
-        benchmark_fate,
         resurrection_config,
     ):
         captured["army"] = army
+        captured["context"] = context
         return "DEFAULT_PROFILE"
 
     monkeypatch.setattr(
@@ -126,8 +112,7 @@ def test_scenario_candidate_profile_uses_default_builder(monkeypatch):
         fake_default_builder,
     )
 
-    result = build_scenario_capability_profile_from_candidate(
-        candidate=candidate,
+    context = ScenarioContext(
         army_list="ARMY_LIST",
         key_profile="KEY_PROFILE",
         combat_benchmark="COMBAT_BENCHMARK",
@@ -135,7 +120,11 @@ def test_scenario_candidate_profile_uses_default_builder(monkeypatch):
         benchmark_manoeuvrability=20,
         benchmark_combat_capability=30,
         benchmark_fate=40,
-        resurrection_config=None,
+    )
+
+    result = build_scenario_capability_profile_from_candidate(
+        candidate=candidate,
+        context=context,
     )
 
     assert captured["army"] == "TEST_ARMY"

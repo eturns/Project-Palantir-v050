@@ -8,10 +8,7 @@ from special_rule import SpecialRule
 from special_rule_strike_damage import (
     get_special_rule_strike_damage,
 )
-from strike_damage import (
-    StrikeDamage,
-    StrikeDamageType,
-)
+from strike_damage import StrikeDamage
 from wound_context import WoundContext
 
 def create_test_profile() -> Profile:
@@ -70,40 +67,6 @@ def test_profile_without_mighty_blow_causes_one_wound_per_strike():
     assert get_special_rule_strike_damage(
         attacker,
     ) == StrikeDamage()
-
-def test_xbane_causes_d3_wounds_against_matching_keyword():
-    attacker_profile = create_test_profile()
-    defender_profile = create_test_profile()
-
-    xbane = SpecialRule(
-        id="XBANE",
-        name="Xbane",
-        category=RuleCategory.SPECIAL,
-    )
-
-    attacker_profile.special_rules.append(
-        ProfileSpecialRuleAssignment(
-            rule=xbane,
-            parameter="ORC",
-        )
-    )
-
-    defender_profile.keywords.add("ORC")
-
-    attacker = ConfiguredProfile(
-        profile=attacker_profile,
-    )
-
-    defender = ConfiguredProfile(
-        profile=defender_profile,
-    )
-
-    assert get_special_rule_strike_damage(
-        attacker,
-        defender,
-    ) == StrikeDamage(
-        damage_type=StrikeDamageType.D3,
-    )
 
 def test_xbane_does_not_apply_against_nonmatching_keyword():
     attacker_profile = create_test_profile()
