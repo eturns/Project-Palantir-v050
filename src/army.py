@@ -38,6 +38,7 @@ class Army:
         """
 
         self.entries = []
+        self.purchase_points = 0
 
     def add_profile(
         self,
@@ -148,15 +149,29 @@ class Army:
 
         return lowest_entry  
 
+
+    def add_purchase_points(
+        self,
+        points: int,
+    ) -> None:
+        if points < 0:
+            raise ValueError(
+                "Purchase points must not be negative."
+            )
+
+        self.purchase_points += points
     
     def total_points(self) -> int:
         """
         Returns the total configured points value of the army.
         """
 
-        return sum(
-            entry.total_points()
-            for entry in self.entries
+        return (
+            sum(
+                entry.total_points()
+                for entry in self.entries
+            )
+            + self.purchase_points
         )
     
     def total_might(self) -> int:

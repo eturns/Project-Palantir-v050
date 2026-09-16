@@ -4,6 +4,7 @@ from imported_configured_entry import (
 from importers.mesbg_list_builder_json_importer import (
     map_imported_configured_entries,
     group_mapped_configured_entries,
+    get_imported_configured_entries,
 )
 from importers.mesbg_list_builder_profile_id_map import (
     EXTERNAL_PROFILE_IDS,
@@ -13,6 +14,12 @@ from imported_fielded_structure_definition import (
 )
 from imported_fielded_structure_member import (
     ImportedFieldedStructureMember,
+)
+from imported_profile_package_definition import (
+    ImportedProfilePackageDefinition,
+)
+from imported_profile_package_member import (
+    ImportedProfilePackageMember,
 )
 
 def get_known_external_model_id() -> str:
@@ -288,3 +295,170 @@ def test_ballista_structure_groups_three_crew_and_one_veteran():
         "SIEGE_VETERAN",
     )
     assert grouped_entries[2].quantity == 1
+
+def test_map_imported_package_expands_to_peer_profiles():
+    entries = [
+        ImportedConfiguredEntry(
+            external_model_id=(
+                "[army-of-lake-town] bard's-family"
+            ),
+            quantity=1,
+            warband_id="BARD_WARBAND",
+        )
+    ]
+
+    package_definition = (
+        ImportedProfilePackageDefinition(
+            external_model_id=(
+                "[army-of-lake-town] bard's-family"
+            ),
+            points=60,
+            members=(
+                ImportedProfilePackageMember(
+                    profile_id="BAIN",
+                ),
+                ImportedProfilePackageMember(
+                    profile_id="SIGRID",
+                ),
+                ImportedProfilePackageMember(
+                    profile_id="TILDA",
+                ),
+            ),
+        )
+    )
+
+    mapped = map_imported_configured_entries(
+        entries,
+        structure_definitions={},
+        package_definitions={
+            (
+                "[army-of-lake-town] "
+                "bard's-family"
+            ): package_definition,
+        },
+    )
+
+    assert tuple(
+        entry.profile_id
+        for entry in mapped
+    ) == (
+        "BAIN",
+        "SIGRID",
+        "TILDA",
+    )
+
+    assert all(
+        entry.warband_id == "BARD_WARBAND"
+        for entry in mapped
+    )
+
+def test_bards_family_export_shape_maps_to_three_peer_profiles():
+    data = {
+        "warbands": [
+            {
+                "id": "BARD_WARBAND",
+                "units": [
+                    {
+                        "model_id": (
+                            "[army-of-lake-town] bard's-family"
+                        ),
+                        "MWFW": [
+                            [
+                                "Bain, Son of Bard",
+                                "1:3:2:2",
+                            ],
+                            [
+                                "Sigrid",
+                                "0:1:2:1",
+                            ],
+                            [
+                                "Tilda",
+                                "0:1:2:1",
+                            ],
+                        ],
+                        "options": [],
+                        "quantity": 1,
+                    }
+                ],
+            }
+        ],
+    }
+
+    imported = get_imported_configured_entries(
+        data
+    )
+
+    package_definition = (
+        ImportedProfilePackageDefinition(
+            external_model_id=(
+                "[army-of-lake-town] bard's-family"
+            ),
+            points=60,
+            members=(
+                ImportedProfilePackageMember(
+                    profile_id="BAIN",
+                ),
+                ImportedProfilePackageMember(
+                    profile_id="SIGRID",
+                ),
+                ImportedProfilePackageMember(
+                    profile_id="TILDA",
+                ),
+            ),
+        )
+    )
+
+    mapped = map_imported_configured_entries(
+        imported,
+        structure_definitions={},
+        package_definitions={
+            (
+                "[army-of-lake-town] "
+                "bard's-family"
+            ): package_definition,
+        },
+    )
+
+    assert tuple(
+        entry.profile_id
+        for entry in mapped
+    ) == (
+        "BAIN",
+        "SIGRID",
+        "TILDA",
+    )
+
+    assert all(
+        entry.quantity == 1
+        for entry in mapped
+    )
+
+    assert all(
+        entry.warband_id == "BARD_WARBAND"
+        for entry in mapped
+    )
+
+def test_bards_family_uses_production_package_map_by_default():
+    entries = [
+        ImportedConfiguredEntry(
+            external_model_id=(
+                "[army-of-lake-town] bard's-family"
+            ),
+            quantity=1,
+            warband_id="BARD_WARBAND",
+        )
+    ]
+
+    mapped = map_imported_configured_entries(
+        entries,
+        structure_definitions={},
+    )
+
+    assert tuple(
+        entry.profile_id
+        for entry in mapped
+    ) == (
+        "BAIN",
+        "SIGRID",
+        "TILDA",
+    )

@@ -38,6 +38,7 @@ from profile_classification import (
 PROFILE_FILES = (
     "data/profiles/dol_guldur_profiles.csv",
     "data/profiles/iron_hills_profiles.csv",
+    "data/profiles/lake_town_profiles.csv",
 )
 
 

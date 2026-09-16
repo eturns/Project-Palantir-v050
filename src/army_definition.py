@@ -1,5 +1,7 @@
 from dataclasses import dataclass, field
-
+from army_purchase_definition import (
+    ArmyPurchaseDefinition,
+)
 
 @dataclass(frozen=True)
 class ArmyEntryDefinition:
@@ -31,5 +33,9 @@ class ArmyDefinition:
     leader_profile_id: str | None = None
 
     entries: list[ArmyEntryDefinition] = field(
+        default_factory=list,
+    )
+
+    purchases: list[ArmyPurchaseDefinition] = field(
         default_factory=list,
     )

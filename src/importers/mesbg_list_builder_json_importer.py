@@ -26,6 +26,18 @@ from imported_fielded_structure_expander import (
 from importers.mesbg_list_builder_fielded_structure_map import (
     IMPORTED_FIELDED_STRUCTURE_DEFINITIONS,
 )
+from imported_profile_package_definition import (
+    ImportedProfilePackageDefinition,
+)
+from imported_profile_package_expander import (
+    expand_imported_profile_package,
+)
+from importers.mesbg_list_builder_profile_package_map import (
+    IMPORTED_PROFILE_PACKAGE_DEFINITIONS,
+)
+from army_purchase_definition import (
+    ArmyPurchaseDefinition,
+)
 
 def load_mesbg_list_builder_json(
     file_path: str,
@@ -138,11 +150,48 @@ def get_imported_configured_entries(
 
     return entries
 
+def build_imported_army_purchase_definitions(
+    entries: list[ImportedConfiguredEntry],
+    package_definitions: dict[
+        str,
+        ImportedProfilePackageDefinition,
+    ] | None = None,
+) -> list[ArmyPurchaseDefinition]:
+    if package_definitions is None:
+        package_definitions = (
+            IMPORTED_PROFILE_PACKAGE_DEFINITIONS
+        )
+
+    purchases: list[ArmyPurchaseDefinition] = []
+
+    for entry in entries:
+        package_definition = package_definitions.get(
+            entry.external_model_id
+        )
+
+        if package_definition is None:
+            continue
+
+        purchases.append(
+            ArmyPurchaseDefinition(
+                id=entry.external_model_id,
+                points=package_definition.points,
+                quantity=entry.quantity,
+                warband_id=entry.warband_id,
+            )
+        )
+
+    return purchases
+
 def map_imported_configured_entries(
     entries: list[ImportedConfiguredEntry],
     structure_definitions: dict[
         str,
         ImportedFieldedStructureDefinition,
+    ] | None = None,
+    package_definitions: dict[
+        str,
+        ImportedProfilePackageDefinition,
     ] | None = None,
 ) -> list[MappedConfiguredEntry]:
     """
@@ -159,7 +208,27 @@ def map_imported_configured_entries(
             IMPORTED_FIELDED_STRUCTURE_DEFINITIONS
         )
 
+    if package_definitions is None:
+        package_definitions = (
+            IMPORTED_PROFILE_PACKAGE_DEFINITIONS
+        )
+
     for entry in entries:
+
+        package_definition = (
+            package_definitions.get(
+                entry.external_model_id
+            )
+        )
+
+        if package_definition is not None:
+            mapped_entries.extend(
+                expand_imported_profile_package(
+                    entry=entry,
+                    definition=package_definition,
+                )
+            )
+            continue
 
         definition = structure_definitions.get(
             entry.external_model_id
@@ -467,6 +536,18 @@ def build_army_definition_from_data(
         )
     )
 
+    imported_entries = (
+        get_imported_configured_entries(
+            data
+        )
+    )
+
+    purchases = (
+        build_imported_army_purchase_definitions(
+            imported_entries
+        )
+    )
+
     return ArmyDefinition(
         id=get_imported_army_id(
             data,
@@ -491,6 +572,7 @@ def build_army_definition_from_data(
             structure_definitions=structure_definitions,
         ),
         entries=entries,
+        purchases=purchases,
             )
 
 def import_army_definition_from_json(

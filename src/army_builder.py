@@ -37,6 +37,11 @@ def build_army_from_definition(
 
     army = Army()
 
+    for purchase in definition.purchases:
+        army.add_purchase_points(
+            purchase.total_points()
+        )
+
     for entry_definition in definition.entries:
 
         profile_id = entry_definition.profile_id
