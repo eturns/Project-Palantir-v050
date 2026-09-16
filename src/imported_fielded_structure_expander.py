@@ -24,15 +24,28 @@ def expand_imported_fielded_structure(
         )
     ]
 
-    for member_profile_id in (
-        definition.member_profile_ids
-    ):
-        expanded_entries.append(
-            MappedConfiguredEntry(
-                profile_id=member_profile_id,
-                quantity=entry.quantity,
-                warband_id=entry.warband_id,
+    if definition.members:
+        for member in definition.members:
+            expanded_entries.append(
+                MappedConfiguredEntry(
+                    profile_id=member.profile_id,
+                    external_option_ids=(
+                        member.option_ids
+                    ),
+                    quantity=entry.quantity,
+                    warband_id=entry.warband_id,
+                )
             )
-        )
+    else:
+        for member_profile_id in (
+            definition.member_profile_ids
+        ):
+            expanded_entries.append(
+                MappedConfiguredEntry(
+                    profile_id=member_profile_id,
+                    quantity=entry.quantity,
+                    warband_id=entry.warband_id,
+                )
+            )
 
     return expanded_entries

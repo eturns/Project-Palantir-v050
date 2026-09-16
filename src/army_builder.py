@@ -4,6 +4,7 @@ from army_list import ArmyList
 from profiles import Profile
 from configured_profile import ConfiguredProfile
 from profile_option import ProfileOption
+from siege_engine_profile import SiegeEngineProfile
 
 def build_army_from_definition(
     definition: ArmyDefinition,
@@ -12,6 +13,10 @@ def build_army_from_definition(
     profile_options_by_external_id: dict[
         str,
         ProfileOption,
+    ] | None = None,
+    siege_engine_profiles_by_id: dict[
+        str,
+        SiegeEngineProfile,
     ] | None = None,
 ) -> tuple[Army, ArmyList]:
     """
@@ -36,7 +41,14 @@ def build_army_from_definition(
 
         profile_id = entry_definition.profile_id
 
-        if profile_id not in profiles_by_id:
+        if (
+            profile_id not in profiles_by_id
+            and (
+                siege_engine_profiles_by_id is None
+                or profile_id
+                not in siege_engine_profiles_by_id
+            )
+        ):
             raise ValueError(
                 f"Unknown Profile ID '{profile_id}' "
                 f"for army '{definition.name}'."
@@ -48,6 +60,19 @@ def build_army_from_definition(
                 f"'{definition.name}' must have a "
                 "positive quantity."
             )
+
+        if (
+            siege_engine_profiles_by_id is not None
+            and profile_id in siege_engine_profiles_by_id
+        ):
+            army.add_siege_engine_profile(
+                siege_engine_profiles_by_id[
+                    profile_id
+                ],
+                quantity=entry_definition.quantity,
+                warband_id=entry_definition.warband_id,
+            )
+            continue
 
         profile = profiles_by_id[profile_id]
 

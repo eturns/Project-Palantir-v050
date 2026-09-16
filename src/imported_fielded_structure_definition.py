@@ -1,11 +1,18 @@
 from dataclasses import dataclass
 
+from imported_fielded_structure_member import (
+    ImportedFieldedStructureMember,
+)
+
 
 @dataclass(frozen=True)
 class ImportedFieldedStructureDefinition:
     external_model_id: str
     root_profile_id: str
-    member_profile_ids: tuple[str, ...]
+    member_profile_ids: tuple[str, ...] = ()
+    members: tuple[
+        ImportedFieldedStructureMember, ...
+    ] = ()
 
     def __post_init__(self) -> None:
         if not self.external_model_id:
@@ -18,7 +25,17 @@ class ImportedFieldedStructureDefinition:
                 "Root profile id must not be empty."
             )
 
-        if not self.member_profile_ids:
+        if self.member_profile_ids and self.members:
+            raise ValueError(
+                "Imported fielded structure must use "
+                "either member_profile_ids or members, "
+                "not both."
+            )
+
+        if (
+            not self.member_profile_ids
+            and not self.members
+        ):
             raise ValueError(
                 "Imported fielded structure must contain "
                 "at least one member profile id."

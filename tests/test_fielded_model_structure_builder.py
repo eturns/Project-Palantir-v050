@@ -521,3 +521,84 @@ def test_mumak_registry_builds_commander_and_howdah_relationships():
 
     assert len(commander_relationships) == 1
     assert len(howdah_relationships) == 6
+
+def test_structure_builder_links_repeated_same_profile_members():
+    ballista = make_profile(
+        "IRON_HILLS_BALLISTA",
+        "Iron Hills Ballista",
+    )
+    siege_crew = make_profile(
+        "IRON_HILLS_SIEGE_CREW",
+        "Iron Hills Siege Crew",
+    )
+
+    root_model = FieldedModel(
+        id="IRON_HILLS_BALLISTA:1:1",
+        configured_profile=ConfiguredProfile(
+            profile=ballista,
+        ),
+        warband_id="WARBAND_A",
+    )
+
+    crew_models = tuple(
+        FieldedModel(
+            id=f"IRON_HILLS_SIEGE_CREW:2:{index}",
+            configured_profile=ConfiguredProfile(
+                profile=siege_crew,
+            ),
+            warband_id="WARBAND_A",
+        )
+        for index in range(1, 5)
+    )
+
+    definition = FieldedModelStructureDefinition(
+        root_profile_id="IRON_HILLS_BALLISTA",
+        members=tuple(
+            FieldedModelStructureMember(
+                profile_id="IRON_HILLS_SIEGE_CREW",
+                relationship_type=(
+                    FieldedModelRelationshipType
+                    .CREW_OF
+                ),
+            )
+            for _ in range(4)
+        ),
+    )
+
+    result = build_fielded_model_structures(
+        fielded_models=(
+            root_model,
+            *crew_models,
+        ),
+        structure_definitions={
+            "IRON_HILLS_BALLISTA": definition,
+        },
+        profiles_by_id={
+            "IRON_HILLS_BALLISTA": ballista,
+            "IRON_HILLS_SIEGE_CREW": siege_crew,
+        },
+    )
+
+    assert len(result.relationships) == 4
+
+    assert {
+        relationship.source_fielded_model_id
+        for relationship in result.relationships
+    } == {
+        crew.id
+        for crew in crew_models
+    }
+
+    assert {
+        relationship.target_fielded_model_id
+        for relationship in result.relationships
+    } == {
+        root_model.id
+    }
+
+    assert {
+        relationship.relationship_type
+        for relationship in result.relationships
+    } == {
+        FieldedModelRelationshipType.CREW_OF
+    }

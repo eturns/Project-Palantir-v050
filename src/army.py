@@ -25,6 +25,7 @@ from metrics import AnalysisMetrics
 from analysis import ArmyAnalysis
 from configured_profile import ConfiguredProfile
 from fielded_model import FieldedModel
+from siege_engine_profile import SiegeEngineProfile
 
 class Army:
     """
@@ -73,6 +74,20 @@ class Army:
 
         entry = ArmyEntry(
             configured_profile=configured_profile,
+            quantity=quantity,
+            warband_id=warband_id,
+        )
+
+        self.entries.append(entry)
+
+    def add_siege_engine_profile(
+        self,
+        siege_engine_profile: SiegeEngineProfile,
+        quantity: int = 1,
+        warband_id: str | None = None,
+    ) -> None:
+        entry = ArmyEntry(
+            siege_engine_profile=siege_engine_profile,
             quantity=quantity,
             warband_id=warband_id,
         )
@@ -456,7 +471,8 @@ class Army:
         total = 0
 
         for entry in self.entries:
-            total += entry.quantity
+            if entry.counts_as_model:
+                total += entry.quantity
 
         return total
     
@@ -493,19 +509,34 @@ class Army:
                 1,
                 entry.quantity + 1,
             ):
-                fielded_models.append(
-                    FieldedModel(
-                        id=(
-                            f"{entry.profile.id}:"
-                            f"{configuration_index}:"
-                            f"{instance_index}"
-                        ),
-                        configured_profile=(
-                            entry.configured_profile
-                        ),
-                        warband_id=entry.warband_id,
+                if entry.siege_engine_profile is not None:
+                    fielded_models.append(
+                        FieldedModel(
+                            id=(
+                                f"{entry.siege_engine_profile.id}:"
+                                f"{configuration_index}:"
+                                f"{instance_index}"
+                            ),
+                            siege_engine_profile=(
+                                entry.siege_engine_profile
+                            ),
+                            warband_id=entry.warband_id,
+                        )
                     )
-                )
+                else:
+                    fielded_models.append(
+                        FieldedModel(
+                            id=(
+                                f"{entry.profile.id}:"
+                                f"{configuration_index}:"
+                                f"{instance_index}"
+                            ),
+                            configured_profile=(
+                                entry.configured_profile
+                            ),
+                            warband_id=entry.warband_id,
+                        )
+                    )
 
         return tuple(fielded_models)
 

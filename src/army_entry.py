@@ -24,6 +24,7 @@ from configured_profile import ConfiguredProfile
 from profiles import Profile
 from profile_metrics_entity import ProfileMetrics
 from profile_metrics import calculate_profile_metrics
+from siege_engine_profile import SiegeEngineProfile
 
 @dataclass(init=False)
 class ArmyEntry:
@@ -38,7 +39,8 @@ class ArmyEntry:
             Number of this profile included.
     """
 
-    configured_profile: ConfiguredProfile
+    configured_profile: ConfiguredProfile | None
+    siege_engine_profile: SiegeEngineProfile | None
     quantity: int = 1
     warband_id: str | None = None
 
@@ -48,6 +50,7 @@ class ArmyEntry:
         quantity: int = 1,
         profile: Profile | None = None,
         warband_id: str | None = None,
+        siege_engine_profile: SiegeEngineProfile | None = None,
     ) -> None:
         """
         Creates an ArmyEntry from either an authoritative
@@ -57,31 +60,35 @@ class ArmyEntry:
         ConfiguredProfile for backward compatibility.
         """
 
-        if (
-            configured_profile is not None
-            and profile is not None
-        ):
+        profile_sources = sum(
+            source is not None
+            for source in (
+                configured_profile,
+                profile,
+                siege_engine_profile,
+            )
+        )
+
+        if profile_sources != 1:
             raise ValueError(
-                "ArmyEntry cannot receive both "
-                "configured_profile and profile."
+                "ArmyEntry requires exactly one profile source."
             )
 
-        if configured_profile is None:
-            if profile is None:
-                raise ValueError(
-                    "ArmyEntry requires either a "
-                    "ConfiguredProfile or Profile."
-                )
-
+        if profile is not None:
             configured_profile = ConfiguredProfile(
                 profile=profile,
             )
 
         self.configured_profile = configured_profile
+        self.siege_engine_profile = siege_engine_profile
         self.quantity = quantity
         self.warband_id = warband_id
 
         self.__post_init__()
+
+    @property
+    def counts_as_model(self) -> bool:
+        return self.siege_engine_profile is None
 
     def __post_init__(self):
         """
@@ -103,15 +110,17 @@ class ArmyEntry:
         return self.configured_profile.profile
     
     def total_points(self) -> int:
-        """
-        Returns the total configured points value of this army entry.
-        """
+        if self.siege_engine_profile is not None:
+            return (
+                self.siege_engine_profile.points
+                * self.quantity
+            )
 
         return (
             self.configured_profile.points
             * self.quantity
         )
-
+    
     def get_attribute(
         self,
         attribute: str,

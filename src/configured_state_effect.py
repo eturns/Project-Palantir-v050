@@ -14,7 +14,10 @@ Created:
 """
 
 from dataclasses import dataclass
-from profile_classification import ModelType
+from profile_classification import (
+    HeroicStatus,
+    ModelType,
+)
 from profile_special_rule_assignment import (
     ProfileSpecialRuleAssignment,
 )
@@ -31,6 +34,10 @@ class ConfiguredStateEffect:
     movement_override: int | None = None
     defence_modifier: int = 0
     model_type_override: ModelType | None = None
+    heroic_status_override: HeroicStatus | None = None
+    might_override: int | None = None
+    will_override: int | None = None
+    fate_override: int | None = None
     shooting_override: str | None = None
     granted_special_rules: tuple[
         ProfileSpecialRuleAssignment,
@@ -54,3 +61,15 @@ class ConfiguredStateEffect:
             raise ValueError(
                 "Base-size override must be greater than zero."
             )
+        for resource_name, resource_value in (
+            ("Might", self.might_override),
+            ("Will", self.will_override),
+            ("Fate", self.fate_override),
+        ):
+            if (
+                resource_value is not None
+                and resource_value < 0
+            ):
+                raise ValueError(
+                    f"{resource_name} override must not be negative."
+                )

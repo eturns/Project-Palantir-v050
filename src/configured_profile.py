@@ -24,7 +24,10 @@ Created:
 # ============================================================================
 
 from dataclasses import dataclass
-from profile_classification import ModelType
+from profile_classification import (
+    HeroicStatus,
+    ModelType,
+)
 from profile_option import ProfileOption
 from profiles import Profile
 from profile_option_wargear_assignment import (
@@ -322,6 +325,89 @@ class ConfiguredProfile:
                 )
 
         return effective_rules
+
+    @property
+    def effective_heroic_status(self) -> HeroicStatus:
+        heroic_status_overrides = [
+            effect.heroic_status_override
+            for option in self.selected_options
+            for effect in option.configured_state_effects
+            if effect.heroic_status_override is not None
+        ]
+
+        if len(heroic_status_overrides) > 1:
+            raise ValueError(
+                "Configured Profile cannot have more than "
+                "one Heroic Status override."
+            )
+
+        if heroic_status_overrides:
+            return heroic_status_overrides[0]
+
+        return self.profile.heroic_status
+
+
+    @property
+    def effective_might(self) -> int:
+        might_overrides = [
+            effect.might_override
+            for option in self.selected_options
+            for effect in option.configured_state_effects
+            if effect.might_override is not None
+        ]
+
+        if len(might_overrides) > 1:
+            raise ValueError(
+                "Configured Profile cannot have more than "
+                "one Might override."
+            )
+
+        if might_overrides:
+            return might_overrides[0]
+
+        return self.profile.might
+
+
+    @property
+    def effective_will(self) -> int:
+        will_overrides = [
+            effect.will_override
+            for option in self.selected_options
+            for effect in option.configured_state_effects
+            if effect.will_override is not None
+        ]
+
+        if len(will_overrides) > 1:
+            raise ValueError(
+                "Configured Profile cannot have more than "
+                "one Will override."
+            )
+
+        if will_overrides:
+            return will_overrides[0]
+
+        return self.profile.will
+
+
+    @property
+    def effective_fate(self) -> int:
+        fate_overrides = [
+            effect.fate_override
+            for option in self.selected_options
+            for effect in option.configured_state_effects
+            if effect.fate_override is not None
+        ]
+
+        if len(fate_overrides) > 1:
+            raise ValueError(
+                "Configured Profile cannot have more than "
+                "one Fate override."
+            )
+
+        if fate_overrides:
+            return fate_overrides[0]
+
+        return self.profile.fate
 
 def create_configured_profile_from_external_options(
     profile: Profile,

@@ -15,7 +15,10 @@ Created:
 import csv
 
 from configured_state_effect import ConfiguredStateEffect
-from profile_classification import ModelType
+from profile_classification import (
+    HeroicStatus,
+    ModelType,
+)
 from profile_option import ProfileOption
 
 
@@ -50,6 +53,22 @@ def _optional_model_type(
     except KeyError as error:
         raise ValueError(
             "Unknown model type override: "
+            f"{text}"
+        ) from error
+
+def _optional_heroic_status(
+    value: str | None,
+) -> HeroicStatus | None:
+    text = (value or "").strip()
+
+    if not text:
+        return None
+
+    try:
+        return HeroicStatus[text.upper()]
+    except KeyError as error:
+        raise ValueError(
+            "Unknown heroic status override: "
             f"{text}"
         ) from error
 
@@ -112,6 +131,18 @@ def load_profile_option_state_effects(
                 ),
                 base_size_override_mm=_optional_int(
                     row.get("base_size_override_mm")
+                ),
+                heroic_status_override=_optional_heroic_status(
+                    row.get("heroic_status_override")
+                ),
+                might_override=_optional_int(
+                    row.get("might_override")
+                ),
+                will_override=_optional_int(
+                    row.get("will_override")
+                ),
+                fate_override=_optional_int(
+                    row.get("fate_override")
                 ),
             )
 

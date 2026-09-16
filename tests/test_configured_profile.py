@@ -19,6 +19,12 @@ from mount import Mount
 from profile_option_mount_assignment import (
     ProfileOptionMountAssignment,
 )
+from configured_state_effect import ConfiguredStateEffect
+from profile_classification import (
+    HeroicStatus,
+    ModelType,
+)
+from profile_option import ProfileOption
 
 def create_test_profile(
     profile_id: str = "IH_WR",
@@ -1660,3 +1666,40 @@ def test_effective_base_size_rejects_duplicate_identical_overrides():
             "Expected ValueError for duplicate "
             "base-size overrides."
         )
+
+def test_configured_profile_can_override_heroic_status_and_resources():
+    profile = create_test_profile(
+        profile_id="IH_SIEGE_CREW",
+    )
+    profile.name = "Iron Hills Siege Crew"
+
+    profile.heroic_status = HeroicStatus.WARRIOR
+    profile.might = 0
+    profile.will = 0
+    profile.fate = 0
+
+    effect = ConfiguredStateEffect(
+        heroic_status_override=HeroicStatus.HERO,
+        might_override=1,
+        will_override=1,
+        fate_override=1,
+    )
+
+    option = ProfileOption(
+        id="SIEGE_VETERAN",
+        name="Siege Veteran",
+        points=0,
+        configured_state_effects=(effect,),
+    )
+
+    profile.profile_options.append(option)
+
+    configured = ConfiguredProfile(
+        profile=profile,
+        selected_options=(option,),
+    )
+
+    assert configured.effective_heroic_status is HeroicStatus.HERO
+    assert configured.effective_might == 1
+    assert configured.effective_will == 1
+    assert configured.effective_fate == 1

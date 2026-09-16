@@ -1,7 +1,10 @@
 from pathlib import Path
 
 from profile_option import ProfileOption
-from profile_classification import ModelType
+from profile_classification import (
+    HeroicStatus,
+    ModelType,
+)
 
 def create_profile_options() -> dict[str, ProfileOption]:
     return {
@@ -329,3 +332,44 @@ def test_loader_rejects_zero_base_size_override(tmp_path):
             "Expected ValueError for zero "
             "base-size override."
         )
+
+def test_loader_parses_heroic_status_and_resource_overrides(
+    tmp_path,
+):
+    from profile_option_state_effect_loader import (
+        load_profile_option_state_effects,
+    )
+
+    profile_options = create_profile_options()
+
+    file_path = write_csv(
+        tmp_path,
+        (
+            "option_id,movement_override,"
+            "defence_modifier,model_type_override,"
+            "heroic_status_override,might_override,"
+            "will_override,fate_override,"
+            "shooting_override,base_size_override_mm\n"
+            "OPTION_MOUNTED,,,," 
+            "HERO,1,1,1,,\n"
+        ),
+    )
+
+    load_profile_option_state_effects(
+        profile_options,
+        file_path=str(file_path),
+    )
+
+    effect = (
+        profile_options[
+            "OPTION_MOUNTED"
+        ].configured_state_effects[0]
+    )
+
+    assert (
+        effect.heroic_status_override
+        is HeroicStatus.HERO
+    )
+    assert effect.might_override == 1
+    assert effect.will_override == 1
+    assert effect.fate_override == 1

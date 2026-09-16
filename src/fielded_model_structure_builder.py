@@ -22,12 +22,7 @@ def build_fielded_model_structures(
     relationships = []
 
     for root_model in fielded_models:
-        root_profile_id = (
-            root_model
-            .configured_profile
-            .profile
-            .id
-        )
+        root_profile_id = root_model.profile_id
 
         definition = structure_definitions.get(
             root_profile_id
@@ -50,18 +45,16 @@ def build_fielded_model_structures(
                 for model in fielded_models
                 if (
                     model.id != root_model.id
+                    and model.id not in structural_member_ids
                     and model.warband_id
                     == root_model.warband_id
-                    and (
-                        model.configured_profile.profile.id
-                        == member.profile_id
-                    )
+                    and model.profile_id == member.profile_id
                 )
             )
 
-            if len(matching_models) != 1:
+            if not matching_models:
                 raise ValueError(
-                    "Expected exactly one fielded structure "
+                    "Expected an available fielded structure "
                     f"member with Profile ID "
                     f"'{member.profile_id}' in warband "
                     f"'{root_model.warband_id}'."

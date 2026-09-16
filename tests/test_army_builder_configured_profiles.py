@@ -8,6 +8,9 @@ from army_list import ArmyList
 from profile_option import ProfileOption
 from profiles import Profile
 from faction import Faction
+from siege_engine_profile import SiegeEngineProfile
+from configured_state_effect import ConfiguredStateEffect
+from profile_classification import HeroicStatus
 
 def create_profile() -> Profile:
     return Profile(
@@ -371,3 +374,151 @@ def test_built_army_fielded_models_preserve_warband_id():
         "WARBAND_A",
         "WARBAND_A",
     )
+
+def test_build_army_from_definition_accepts_siege_engine_profile():
+    ballista = SiegeEngineProfile(
+        id="IH_BALLISTA",
+        name="Iron Hills Ballista",
+        points=130,
+        range_min=12,
+        range_max=60,
+        strength=8,
+        defence=10,
+        wounds=4,
+        base_size_mm=100,
+        size="LARGE",
+    )
+
+    definition = ArmyDefinition(
+        id="TEST_ARMY",
+        name="Siege Army",
+        army_list_id="TEST_LIST",
+        points_limit=700,
+        entries=[
+            ArmyEntryDefinition(
+                profile_id="IH_BALLISTA",
+                quantity=1,
+                warband_id="WARBAND_A",
+            ),
+        ],
+    )
+
+    faction = Faction(
+        id="TEST_FACTION",
+        name="Test Faction",
+    )
+
+    army_list = ArmyList(
+        id="TEST_LIST",
+        name="Test List",
+        faction=faction,
+    )
+
+    army, _ = build_army_from_definition(
+        definition,
+        profiles_by_id={},
+        siege_engine_profiles_by_id={
+            ballista.id: ballista,
+        },
+        army_lists_by_id={
+            army_list.id: army_list,
+        },
+    )
+
+    assert len(army.entries) == 1
+    assert (
+        army.entries[0].siege_engine_profile
+        is ballista
+    )
+    assert army.entries[0].total_points() == 130
+
+def test_build_army_from_definition_applies_siege_veteran_option():
+    crew = Profile(
+        id="IH_SIEGE_CREW",
+        name="Iron Hills Siege Crew",
+        points=0,
+        movement=5,
+        fight=4,
+        shooting="4+",
+        strength=4,
+        defence=6,
+        attacks=1,
+        wounds=1,
+        courage="6+",
+        intelligence="6+",
+        might=0,
+        will=0,
+        fate=0,
+        max_in_army=0,
+    )
+
+    veteran_option = ProfileOption(
+        id="SIEGE_VETERAN",
+        name="Siege Veteran",
+        points=0,
+        external_id="SIEGE_VETERAN",
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                heroic_status_override=HeroicStatus.HERO,
+                might_override=1,
+                will_override=1,
+                fate_override=1,
+            ),
+        ),
+    )
+
+    crew.profile_options.append(
+        veteran_option
+    )
+
+    definition = ArmyDefinition(
+        id="TEST_ARMY",
+        name="Siege Army",
+        army_list_id="TEST_LIST",
+        points_limit=700,
+        entries=[
+            ArmyEntryDefinition(
+                profile_id="IH_SIEGE_CREW",
+                quantity=1,
+                external_option_ids=(
+                    "SIEGE_VETERAN",
+                ),
+                warband_id="WARBAND_A",
+            ),
+        ],
+    )
+
+    faction = Faction(
+        id="TEST_FACTION",
+        name="Test Faction",
+    )
+
+    army_list = ArmyList(
+        id="TEST_LIST",
+        name="Test List",
+        faction=faction,
+    )
+
+    army, _ = build_army_from_definition(
+        definition,
+        profiles_by_id={
+            crew.id: crew,
+        },
+        army_lists_by_id={
+            army_list.id: army_list,
+        },
+        profile_options_by_external_id={
+            "SIEGE_VETERAN": veteran_option,
+        },
+    )
+
+    configured = (
+        army.entries[0].configured_profile
+    )
+
+    assert configured.effective_heroic_status == (
+        HeroicStatus.HERO
+    )
+    assert configured.effective_might == 1
+    assert configured.effective_will == 1
+    assert configured.effective_fate == 1

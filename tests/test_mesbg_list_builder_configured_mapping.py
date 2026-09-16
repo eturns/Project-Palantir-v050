@@ -3,12 +3,16 @@ from imported_configured_entry import (
 )
 from importers.mesbg_list_builder_json_importer import (
     map_imported_configured_entries,
+    group_mapped_configured_entries,
 )
 from importers.mesbg_list_builder_profile_id_map import (
     EXTERNAL_PROFILE_IDS,
 )
 from imported_fielded_structure_definition import (
     ImportedFieldedStructureDefinition,
+)
+from imported_fielded_structure_member import (
+    ImportedFieldedStructureMember,
 )
 
 def get_known_external_model_id() -> str:
@@ -173,3 +177,114 @@ def test_map_imported_configured_entries_expands_structure():
     assert mapped_entries[1].warband_id == (
         "WARBAND_A"
     )
+
+def test_map_imported_structure_preserves_member_specific_options():
+    entries = [
+        ImportedConfiguredEntry(
+            external_model_id="EXT_BALLISTA",
+            quantity=1,
+            warband_id="WARBAND_A",
+        )
+    ]
+
+    structure_definition = (
+        ImportedFieldedStructureDefinition(
+            external_model_id="EXT_BALLISTA",
+            root_profile_id="IH_BALLISTA",
+            members=(
+                ImportedFieldedStructureMember(
+                    profile_id="IH_SIEGE_CREW",
+                ),
+                ImportedFieldedStructureMember(
+                    profile_id="IH_SIEGE_CREW",
+                ),
+                ImportedFieldedStructureMember(
+                    profile_id="IH_SIEGE_CREW",
+                ),
+                ImportedFieldedStructureMember(
+                    profile_id="IH_SIEGE_CREW",
+                    option_ids=("SIEGE_VETERAN",),
+                ),
+            ),
+        )
+    )
+
+    mapped_entries = map_imported_configured_entries(
+        entries,
+        structure_definitions={
+            "EXT_BALLISTA": structure_definition,
+        },
+    )
+
+    assert len(mapped_entries) == 5
+
+    assert mapped_entries[4].profile_id == (
+        "IH_SIEGE_CREW"
+    )
+
+    assert mapped_entries[4].external_option_ids == (
+        "SIEGE_VETERAN",
+    )
+
+def test_ballista_structure_groups_three_crew_and_one_veteran():
+    entries = [
+        ImportedConfiguredEntry(
+            external_model_id="EXT_BALLISTA",
+            quantity=1,
+            warband_id="WARBAND_A",
+        )
+    ]
+
+    structure_definition = (
+        ImportedFieldedStructureDefinition(
+            external_model_id="EXT_BALLISTA",
+            root_profile_id="IH_BALLISTA",
+            members=(
+                ImportedFieldedStructureMember(
+                    profile_id="IH_SIEGE_CREW",
+                ),
+                ImportedFieldedStructureMember(
+                    profile_id="IH_SIEGE_CREW",
+                ),
+                ImportedFieldedStructureMember(
+                    profile_id="IH_SIEGE_CREW",
+                ),
+                ImportedFieldedStructureMember(
+                    profile_id="IH_SIEGE_CREW",
+                    option_ids=("SIEGE_VETERAN",),
+                ),
+            ),
+        )
+    )
+
+    mapped_entries = map_imported_configured_entries(
+        entries,
+        structure_definitions={
+            "EXT_BALLISTA": structure_definition,
+        },
+    )
+
+    grouped_entries = group_mapped_configured_entries(
+        mapped_entries
+    )
+
+    assert len(grouped_entries) == 3
+
+    assert grouped_entries[0].profile_id == (
+        "IH_BALLISTA"
+    )
+    assert grouped_entries[0].quantity == 1
+
+    assert grouped_entries[1].profile_id == (
+        "IH_SIEGE_CREW"
+    )
+    assert grouped_entries[1].external_option_ids == ()
+    assert grouped_entries[1].quantity == 3
+
+    assert grouped_entries[2].profile_id == (
+        "IH_SIEGE_CREW"
+    )
+    assert grouped_entries[2].external_option_ids == (
+        "SIEGE_VETERAN",
+    )
+    assert grouped_entries[2].quantity == 1

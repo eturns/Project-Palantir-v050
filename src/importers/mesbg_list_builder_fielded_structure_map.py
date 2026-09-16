@@ -10,6 +10,9 @@ from fielded_model_structure_member import (
 from imported_fielded_structure_definition import (
     ImportedFieldedStructureDefinition,
 )
+from imported_fielded_structure_member import (
+    ImportedFieldedStructureMember,
+)
 
 
 IMPORTED_FIELDED_STRUCTURE_DEFINITIONS = {
@@ -22,6 +25,32 @@ IMPORTED_FIELDED_STRUCTURE_DEFINITIONS = {
             root_profile_id="WAR_MUMAK",
             member_profile_ids=(
                 "HARADRIM_COMMANDER",
+            ),
+        )
+    ),
+    "[the-iron-hills] iron-hills-ballista": (
+        ImportedFieldedStructureDefinition(
+            external_model_id=(
+                "[the-iron-hills] "
+                "iron-hills-ballista"
+            ),
+            root_profile_id="IH_BALLISTA",
+            members=(
+                ImportedFieldedStructureMember(
+                    profile_id="IH_SIEGE_CREW",
+                ),
+                ImportedFieldedStructureMember(
+                    profile_id="IH_SIEGE_CREW",
+                ),
+                ImportedFieldedStructureMember(
+                    profile_id="IH_SIEGE_CREW",
+                ),
+                ImportedFieldedStructureMember(
+                    profile_id="IH_SIEGE_CREW",
+                    option_ids=(
+                        "SIEGE_VETERAN",
+                    ),
+                ),
             ),
         )
     ),
@@ -46,6 +75,21 @@ FIELDED_MODEL_STRUCTURE_DEFINITIONS = {
             warband_member_relationship_type=(
                 FieldedModelRelationshipType
                 .HOWDAH_OCCUPANT_OF
+            ),
+        )
+    ),
+    "IH_BALLISTA": (
+        FieldedModelStructureDefinition(
+            root_profile_id="IH_BALLISTA",
+            members=tuple(
+                FieldedModelStructureMember(
+                    profile_id="IH_SIEGE_CREW",
+                    relationship_type=(
+                        FieldedModelRelationshipType
+                        .CREW_OF
+                    ),
+                )
+                for _ in range(4)
             ),
         )
     ),
