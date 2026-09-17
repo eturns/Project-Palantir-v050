@@ -78,5 +78,9 @@ EXTERNAL_PROFILE_IDS = {
     (
         "[the-iron-hills] "
         "iron-hills-chariot"
-    ): "IH_CHARIOT",    
-}
+    ): "IH_CHARIOT",
+    (
+        "[army-of-gundabad] "
+        "gundabad-catapult-troll"
+    ): "GUNDABAD_CATAPULT_TROLL",
+    }

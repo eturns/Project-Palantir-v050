@@ -30,3 +30,18 @@ def test_real_dol_guldur_profiles_load_classifications():
     assert giant_spider.races == {
         "SPIDER",
     }
+
+def test_gundabad_catapult_troll_has_combined_model_types():
+    profile = load_profile("GUNDABAD_CATAPULT_TROLL")
+
+    assert profile.points == 180
+    assert profile.wounds == 5
+    assert profile.heroic_status is HeroicStatus.HERO
+
+    assert profile.model_types == {
+        ModelType.INFANTRY,
+        ModelType.MONSTER,
+        ModelType.SIEGE_ENGINE,
+    }
+
+    assert profile.races == {"TROLL"}

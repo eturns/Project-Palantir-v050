@@ -11,3 +11,4 @@ class ModelType(Enum):
     CAVALRY = "CAVALRY"
     BEAST = "BEAST"
     MONSTER = "MONSTER"
+    SIEGE_ENGINE = "SIEGE_ENGINE"

@@ -462,3 +462,28 @@ def test_bards_family_uses_production_package_map_by_default():
         "SIGRID",
         "TILDA",
     )
+
+def test_gundabad_catapult_troll_maps_to_canonical_profile():
+    entries = [
+        ImportedConfiguredEntry(
+            external_model_id=(
+                "[army-of-gundabad] "
+                "gundabad-catapult-troll"
+            ),
+            quantity=1,
+            warband_id="CATAPULT_WARBAND",
+        )
+    ]
+
+    mapped_entries = map_imported_configured_entries(
+        entries
+    )
+
+    assert len(mapped_entries) == 1
+    assert mapped_entries[0].profile_id == (
+        "GUNDABAD_CATAPULT_TROLL"
+    )
+    assert mapped_entries[0].quantity == 1
+    assert mapped_entries[0].warband_id == (
+        "CATAPULT_WARBAND"
+    )

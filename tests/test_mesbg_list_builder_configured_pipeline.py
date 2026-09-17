@@ -22,7 +22,10 @@ from imported_fielded_structure_member import (
     ImportedFieldedStructureMember,
 )
 from configured_state_effect import ConfiguredStateEffect
-from profile_classification import HeroicStatus
+from profile_classification import (
+    HeroicStatus,
+    ModelType,
+)
 from siege_engine_profile import SiegeEngineProfile
 from fielded_model_relationship_type import (
     FieldedModelRelationshipType,
@@ -36,6 +39,7 @@ from fielded_model_structure_definition import (
 from fielded_model_structure_member import (
     FieldedModelStructureMember,
 )
+from loader import load_profile
 
 def get_known_external_model_id() -> str:
     return next(
@@ -667,3 +671,91 @@ def test_ballista_import_builds_runtime_engine_crew_and_veteran():
     } == {
         ballista_model.id
     }
+
+def test_gundabad_catapult_troll_builds_as_one_combined_runtime_model():
+    data = {
+        "id": "catapult-troll-runtime-test",
+        "name": "Catapult Troll Runtime Test",
+        "armyList": "Army of Gundabad",
+        "metadata": {
+            "maxPoints": 700,
+        },
+        "warbands": [
+            {
+                "id": "WARBAND_A",
+                "hero": {
+                    "model_id": (
+                        "[army-of-gundabad] "
+                        "gundabad-catapult-troll"
+                    ),
+                    "options": [],
+                },
+                "units": [],
+            }
+        ],
+    }
+
+    definition = build_army_definition_from_data(
+        data
+    )
+
+    catapult_troll = load_profile(
+        "GUNDABAD_CATAPULT_TROLL"
+    )
+
+    faction = Faction(
+        id="GUNDABAD",
+        name="Gundabad",
+    )
+
+    army_list = ArmyList(
+        id="GUNDABAD",
+        name="Army of Gundabad",
+        faction=faction,
+    )
+
+    army, _ = build_army_from_definition(
+        definition,
+        profiles_by_id={
+            catapult_troll.id: catapult_troll,
+        },
+        army_lists_by_id={
+            army_list.id: army_list,
+        },
+    )
+
+    assert len(army.entries) == 1
+    assert army.total_points() == 180
+    assert army.model_count() == 1
+
+    fielded_models = army.fielded_models()
+
+    assert len(fielded_models) == 1
+
+    fielded_model = fielded_models[0]
+
+    assert fielded_model.configured_profile is not None
+    assert fielded_model.siege_engine_profile is None
+
+    assert (
+        fielded_model.configured_profile.profile
+        is catapult_troll
+    )
+    assert (
+        fielded_model.configured_profile.effective_model_types
+        == {
+            ModelType.INFANTRY,
+            ModelType.MONSTER,
+            ModelType.SIEGE_ENGINE,
+        }
+    )
+
+    assert (
+        fielded_model.configured_profile.profile.wounds
+        == 5
+    )
+
+    assert (
+        fielded_model.configured_profile.effective_heroic_status
+        is HeroicStatus.HERO
+    )
