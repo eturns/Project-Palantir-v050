@@ -122,6 +122,7 @@ def get_imported_configured_entries(
                     external_option_ids=hero_option_ids,
                     quantity=1,
                     warband_id=warband.get("id"),
+                    is_warband_leader=True,
                 )
             )
 
@@ -262,6 +263,9 @@ def map_imported_configured_entries(
                 ),
                 quantity=entry.quantity,
                 warband_id=entry.warband_id,
+                is_warband_leader=(
+                    entry.is_warband_leader
+                ),
             )
         )
 
@@ -284,6 +288,7 @@ def group_mapped_configured_entries(
             str,
             tuple[str, ...],
             str | None,
+            bool,
         ],
         int,
     ] = {}
@@ -295,6 +300,7 @@ def group_mapped_configured_entries(
                 sorted(entry.external_option_ids)
             ),
             entry.warband_id,
+            entry.is_warband_leader,
         )
 
         quantities_by_configuration[key] = (
@@ -311,11 +317,13 @@ def group_mapped_configured_entries(
             external_option_ids=external_option_ids,
             quantity=quantity,
             warband_id=warband_id,
+            is_warband_leader=is_warband_leader,
         )
         for (
             profile_id,
             external_option_ids,
             warband_id,
+            is_warband_leader,
         ), quantity
         in sorted(
             quantities_by_configuration.items(),
@@ -343,6 +351,9 @@ def build_configured_army_entry_definitions(
                 entry.external_option_ids
             ),
             warband_id=entry.warband_id,
+            is_warband_leader=(
+                entry.is_warband_leader
+            ),
         )
         for entry in entries
     ]

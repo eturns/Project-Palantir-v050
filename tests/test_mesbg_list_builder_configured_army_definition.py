@@ -197,3 +197,32 @@ def test_build_army_definition_without_leader_keeps_leader_profile_none():
 
     assert army.leader_warband_id is None
     assert army.leader_profile_id is None
+
+def test_build_army_definition_marks_warband_hero_as_leader():
+    external_model_id = get_known_external_model_id()
+
+    data = {
+        "id": "test-army",
+        "name": "Test Army",
+        "armyList": "Rise of the Necromancer",
+        "metadata": {
+            "maxPoints": 700,
+        },
+        "warbands": [
+            {
+                "id": "WAR-BAND-ONE",
+                "hero": {
+                    "model_id": external_model_id,
+                    "options": [],
+                },
+                "units": [],
+            }
+        ],
+    }
+
+    army = build_army_definition_from_data(
+        data,
+    )
+
+    assert len(army.entries) == 1
+    assert army.entries[0].is_warband_leader

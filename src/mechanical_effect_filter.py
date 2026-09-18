@@ -8,6 +8,7 @@ from mechanical_effect_definition_matcher import (
 from mechanical_effect_target import (
     MechanicalEffectTarget,
 )
+from profiles import Profile
 
 
 def applicable_mechanical_effect_definitions(
@@ -17,6 +18,8 @@ def applicable_mechanical_effect_definitions(
     ],
     fielded_model: FieldedModel,
     target: MechanicalEffectTarget | None = None,
+    related_models: tuple[FieldedModel, ...] = (),
+    related_profiles: tuple[Profile, ...] = (),
 ) -> tuple[
     MechanicalEffectDefinition,
     ...,
@@ -28,6 +31,8 @@ def applicable_mechanical_effect_definitions(
             mechanical_effect_definition_applies_to_fielded_model(
                 definition,
                 fielded_model,
+                related_models=related_models,
+                related_profiles=related_profiles,
             )
             and (
                 target is None

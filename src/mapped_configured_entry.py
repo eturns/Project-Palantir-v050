@@ -44,6 +44,7 @@ class MappedConfiguredEntry:
     external_option_ids: tuple[str, ...] = ()
     quantity: int = 1
     warband_id: str | None = None
+    is_warband_leader: bool = False
 
     def __post_init__(self) -> None:
         if not self.profile_id.strip():

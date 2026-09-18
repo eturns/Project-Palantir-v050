@@ -17,6 +17,7 @@ class ArmyEntryDefinition:
     quantity: int = 1
     external_option_ids: tuple[str, ...] = ()
     warband_id: str | None = None
+    is_warband_leader: bool = False
 
 
 @dataclass

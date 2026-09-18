@@ -5,6 +5,16 @@ from profiles import Profile
 from configured_profile import ConfiguredProfile
 from profile_option import ProfileOption
 from siege_engine_profile import SiegeEngineProfile
+from warband_composition_rule_matcher import (
+    warband_composition_rule_allows,
+)
+from profile_quantity_relation_rule_matcher import (
+    profile_quantity_relation_rule_allows,
+)
+from warband_composition_rule_matcher import (
+    warband_composition_rule_allows,
+    warband_composition_rule_applies_to_member,
+)
 
 def build_army_from_definition(
     definition: ArmyDefinition,
@@ -34,6 +44,114 @@ def build_army_from_definition(
     army_list = army_lists_by_id[
         definition.army_list_id
     ]
+
+    warband_composition_rules = getattr(
+        army_list,
+        "warband_composition_rules",
+        (),
+    )
+
+    profile_factions_by_id = getattr(
+        army_list,
+        "profile_factions_by_id",
+        {},
+    )
+
+    if warband_composition_rules:
+        leaders_by_warband = {
+            entry.warband_id: entry
+            for entry in definition.entries
+            if (
+                entry.is_warband_leader
+                and entry.warband_id is not None
+            )
+        }
+
+        for entry in definition.entries:
+            if entry.warband_id is None:
+                continue
+
+            leader_entry = leaders_by_warband.get(
+                entry.warband_id
+            )
+
+            if leader_entry is None:
+                member = profiles_by_id[
+                    entry.profile_id
+                ]
+
+                member_factions = (
+                    profile_factions_by_id.get(
+                        entry.profile_id,
+                        (),
+                    )
+                )
+
+                if any(
+                    warband_composition_rule_applies_to_member(
+                        rule,
+                        member,
+                        member_factions=member_factions,
+                    )
+                    for rule in (
+                        warband_composition_rules
+                    )
+                ):
+                    raise ValueError(
+                        "Restricted warband member "
+                        f"'{entry.profile_id}' has no "
+                        "warband leader."
+                    )
+
+                continue
+
+            member = profiles_by_id[
+                entry.profile_id
+            ]
+            leader = profiles_by_id[
+                leader_entry.profile_id
+            ]
+
+            for rule in (
+                warband_composition_rules
+            ):
+                if not warband_composition_rule_allows(
+                    rule,
+                    member=member,
+                    leader=leader,
+                    member_factions=(
+                        profile_factions_by_id.get(
+                            entry.profile_id,
+                            (),
+                        )
+                    ),
+                    leader_factions=(
+                        profile_factions_by_id.get(
+                            leader_entry.profile_id,
+                            (),
+                        )
+                    ),
+                ):
+                    raise ValueError(
+                        "Invalid warband composition for "
+                        f"'{entry.profile_id}' in warband "
+                        f"'{entry.warband_id}'."
+                    )
+
+    for rule in getattr(
+        army_list,
+        "profile_quantity_relation_rules",
+        (),
+    ):
+        if not profile_quantity_relation_rule_allows(
+            rule,
+            definition,
+        ):
+            raise ValueError(
+                "Invalid profile quantity relation: "
+                f"'{rule.limited_profile_id}' may not "
+                f"exceed '{rule.reference_profile_id}'."
+            )
 
     army = Army()
 
