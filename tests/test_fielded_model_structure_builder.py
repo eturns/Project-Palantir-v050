@@ -18,6 +18,10 @@ from profiles import Profile
 from importers.mesbg_list_builder_fielded_structure_map import (
     FIELDED_MODEL_STRUCTURE_DEFINITIONS,
 )
+from profile_option import ProfileOption
+from profile_option_profile_assignment import (
+    ProfileOptionProfileAssignment,
+)
 
 def make_profile(
     profile_id: str,
@@ -602,3 +606,155 @@ def test_structure_builder_links_repeated_same_profile_members():
     } == {
         FieldedModelRelationshipType.CREW_OF
     }
+
+def test_troll_brute_structure_can_use_bofur_as_replacement_commander():
+    troll_brute = FieldedModel(
+        id="TROLL_BRUTE:1",
+        configured_profile=ConfiguredProfile(
+            profile=make_profile(
+                "TROLL_BRUTE",
+                "Troll Brute",
+            ),
+        ),
+        warband_id="BOFUR_WARBAND",
+    )
+
+    bofur = FieldedModel(
+        id="BOFUR:1",
+        configured_profile=ConfiguredProfile(
+            profile=make_profile(
+                "BOFUR_CHAMPION_OF_EREBOR",
+                "Bofur the Dwarf, Champion of Erebor",
+            ),
+        ),
+        warband_id="BOFUR_WARBAND",
+    )
+
+    result = build_fielded_model_structures(
+        fielded_models=(
+            troll_brute,
+            bofur,
+        ),
+        structure_definitions={
+            "TROLL_BRUTE": FieldedModelStructureDefinition(
+                root_profile_id="TROLL_BRUTE",
+                members=(
+                    FieldedModelStructureMember(
+                        profile_id="BOFUR_CHAMPION_OF_EREBOR",
+                        relationship_type=(
+                            FieldedModelRelationshipType
+                            .WAR_BEAST_COMMANDER_OF
+                        ),
+                    ),
+                ),
+            ),
+        },
+        profiles_by_id={
+            "TROLL_BRUTE": troll_brute.configured_profile.profile,
+            "BOFUR_CHAMPION_OF_EREBOR": bofur.configured_profile.profile,
+        },
+    )
+
+    assert len(result.relationships) == 1
+    assert (
+        result.relationships[0].relationship_type
+        == FieldedModelRelationshipType.WAR_BEAST_COMMANDER_OF
+    )
+    assert (
+        result.relationships[0].source_fielded_model_id
+        == bofur.id
+    )
+    assert (
+        result.relationships[0].target_fielded_model_id
+        == troll_brute.id
+    )
+
+def test_option_assignment_relationship_overrides_default_structure():
+    troll_profile = make_profile(
+        "TROLL_BRUTE",
+        "Troll Brute",
+    )
+
+    bofur_profile = make_profile(
+        "BOFUR_CHAMPION_OF_EREBOR",
+        "Bofur",
+    )
+
+    option = ProfileOption(
+        id="BOFUR_TROLL_BRUTE",
+        name="Troll Brute",
+        points=100,
+        profile_assignments=(
+            ProfileOptionProfileAssignment(
+                profile_id="TROLL_BRUTE",
+                relationship_type=(
+                    FieldedModelRelationshipType
+                    .WAR_BEAST_COMMANDER_OF
+                ),
+            ),
+        ),
+    )
+
+    bofur_profile.profile_options.append(
+        option
+    )
+
+    bofur = FieldedModel(
+        id="BOFUR_1",
+        configured_profile=ConfiguredProfile(
+            profile=bofur_profile,
+            selected_options=(option,),
+        ),
+        warband_id="WARBAND_A",
+    )
+
+    troll_brute = FieldedModel(
+        id="TROLL_BRUTE_1",
+        configured_profile=ConfiguredProfile(
+            profile=troll_profile,
+        ),
+        warband_id="WARBAND_A",
+    )
+
+    relationships = build_fielded_model_structures(
+        fielded_models=(
+            bofur,
+            troll_brute,
+        ),
+        structure_definitions={
+            "TROLL_BRUTE": (
+                FieldedModelStructureDefinition(
+                    root_profile_id="TROLL_BRUTE",
+                    members=(
+                        FieldedModelStructureMember(
+                            profile_id="ORC_COMMANDER",
+                            relationship_type=(
+                                FieldedModelRelationshipType
+                                .WAR_BEAST_COMMANDER_OF
+                            ),
+                        ),
+                    ),
+                )
+            ),
+        },
+        profiles_by_id={
+            "BOFUR_CHAMPION_OF_EREBOR": bofur_profile,
+            "TROLL_BRUTE": troll_profile,
+            "ORC_COMMANDER": make_profile(
+                "ORC_COMMANDER",
+                "Orc Commander",
+            ),
+        },
+    )
+
+    assert len(relationships.relationships) == 1
+
+    relationship = relationships.relationships[0]
+
+    assert relationship.source_fielded_model_id == "BOFUR_1"
+    assert relationship.target_fielded_model_id == "TROLL_BRUTE_1"
+    assert (
+        relationship.relationship_type
+        is FieldedModelRelationshipType
+        .WAR_BEAST_COMMANDER_OF
+    )

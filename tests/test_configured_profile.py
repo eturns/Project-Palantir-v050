@@ -25,6 +25,9 @@ from profile_classification import (
     ModelType,
 )
 from profile_option import ProfileOption
+from profile_option_profile_assignment import (
+    ProfileOptionProfileAssignment,
+)
 
 def create_test_profile(
     profile_id: str = "IH_WR",
@@ -1703,3 +1706,36 @@ def test_configured_profile_can_override_heroic_status_and_resources():
     assert configured.effective_might == 1
     assert configured.effective_will == 1
     assert configured.effective_fate == 1
+
+def test_configured_profile_exposes_selected_option_profile_assignments():
+    assigned_profile = (
+        ProfileOptionProfileAssignment(
+            profile_id="TROLL_BRUTE",
+        )
+    )
+
+    troll_brute_option = ProfileOption(
+        id="TROLL_BRUTE_OPTION",
+        name="Troll Brute",
+        points=100,
+        profile_assignments=(
+            assigned_profile,
+        ),
+    )
+
+    profile = create_test_profile()
+
+    profile.profile_options.append(
+        troll_brute_option
+    )
+
+    configured = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            troll_brute_option,
+        ),
+    )
+
+    assert configured.assigned_profile_ids == (
+        "TROLL_BRUTE",
+    )

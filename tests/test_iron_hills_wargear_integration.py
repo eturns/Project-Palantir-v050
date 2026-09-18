@@ -48,6 +48,7 @@ def test_iron_hills_warrior_shield_and_spear_configuration():
 
     options = load_profile_options(
         profiles=profiles,
+        skip_unknown_profiles=True,
     )
 
     load_profile_default_wargear(
@@ -89,6 +90,7 @@ def test_iron_hills_captain_mattock_configuration():
 
     options = load_profile_options(
         profiles=profiles,
+        skip_unknown_profiles=True,
     )
 
     load_profile_default_wargear(
@@ -128,6 +130,7 @@ def test_iron_hills_goat_rider_mattock_configuration():
 
     options = load_profile_options(
         profiles=profiles,
+        skip_unknown_profiles=True,
     )
 
     load_profile_default_wargear(

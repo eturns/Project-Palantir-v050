@@ -40,6 +40,12 @@ from fielded_model_structure_member import (
     FieldedModelStructureMember,
 )
 from loader import load_profile
+from importers.mesbg_list_builder_fielded_structure_map import (
+    FIELDED_MODEL_STRUCTURE_DEFINITIONS,
+)
+from profile_option_profile_assignment import (
+    ProfileOptionProfileAssignment,
+)
 
 def get_known_external_model_id() -> str:
     return next(
@@ -758,4 +764,255 @@ def test_gundabad_catapult_troll_builds_as_one_combined_runtime_model():
     assert (
         fielded_model.configured_profile.effective_heroic_status
         is HeroicStatus.HERO
+    )
+
+def test_troll_brute_builds_as_two_related_runtime_models_for_one_purchase():
+    data = {
+        "id": "troll-brute-runtime-test",
+        "name": "Troll Brute Runtime Test",
+        "armyList": "Army of Gundabad",
+        "metadata": {
+            "maxPoints": 700,
+        },
+        "warbands": [
+            {
+                "id": "TROLL_BRUTE_WARBAND",
+                "units": [
+                    {
+                        "model_id": (
+                            "[army-of-gundabad] troll-brute"
+                        ),
+                        "options": [],
+                        "quantity": 1,
+                    }
+                ],
+            }
+        ],
+    }
+
+    definition = build_army_definition_from_data(
+        data
+    )
+
+    troll_brute = load_profile("TROLL_BRUTE")
+    orc_commander = load_profile("ORC_COMMANDER")
+
+    faction = Faction(
+        id="GUNDABAD_FACTION",
+        name="Gundabad",
+    )
+
+    army_list = ArmyList(
+        id=definition.army_list_id,
+        name="Army of Gundabad",
+        faction=faction,
+    )
+
+    army, _ = build_army_from_definition(
+        definition,
+        profiles_by_id={
+            troll_brute.id: troll_brute,
+            orc_commander.id: orc_commander,
+        },
+        army_lists_by_id={
+            army_list.id: army_list,
+        },
+    )
+
+    assert army.total_points() == 120
+    assert army.model_count() == 2
+
+    fielded_models = army.fielded_models()
+
+    assert len(fielded_models) == 2
+
+    assert {
+        model.profile_id
+        for model in fielded_models
+    } == {
+        "TROLL_BRUTE",
+        "ORC_COMMANDER",
+    }
+
+    relationships = build_fielded_model_structures(
+        fielded_models=fielded_models,
+        structure_definitions={
+            "TROLL_BRUTE": (
+                FIELDED_MODEL_STRUCTURE_DEFINITIONS[
+                    "TROLL_BRUTE"
+                ]
+            ),
+        },
+        profiles_by_id={
+            troll_brute.id: troll_brute,
+            orc_commander.id: orc_commander,
+        },
+    )
+
+    assert len(relationships.relationships) == 1
+
+    relationship = relationships.relationships[0]
+
+    assert (
+        relationship.relationship_type
+        == FieldedModelRelationshipType
+        .WAR_BEAST_COMMANDER_OF
+    )
+
+    source = next(
+        model
+        for model in fielded_models
+        if model.id
+        == relationship.source_fielded_model_id
+    )
+
+    target = next(
+        model
+        for model in fielded_models
+        if model.id
+        == relationship.target_fielded_model_id
+    )
+
+    assert source.profile_id == "ORC_COMMANDER"
+    assert target.profile_id == "TROLL_BRUTE"
+
+def test_bofur_troll_brute_option_builds_two_runtime_models():
+    data = {
+        "id": "bofur-troll-brute-test",
+        "name": "Bofur Troll Brute Test",
+        "armyList": "Erebor Reclaimed",
+        "metadata": {
+            "maxPoints": 700,
+        },
+        "warbands": [
+            {
+                "id": "WARBAND_A",
+                "hero": {
+                    "model_id": (
+                        "[erebor-reclaimed] "
+                        "bofur-the-dwarf"
+                    ),
+                    "options": [
+                        {
+                            "id": "OPT0734",
+                            "quantity": 1,
+                        }
+                    ],
+                },
+                "units": [],
+            }
+        ],
+    }
+
+    definition = build_army_definition_from_data(
+        data
+    )
+
+    bofur = load_profile(
+        "BOFUR_CHAMPION_OF_EREBOR"
+    )
+    troll_brute = load_profile(
+        "TROLL_BRUTE"
+    )
+
+    option = ProfileOption(
+        id="BOFUR_TROLL_BRUTE",
+        name="Troll Brute",
+        points=100,
+        external_id="OPT0734",
+        profile_assignments=(
+            ProfileOptionProfileAssignment(
+                profile_id="TROLL_BRUTE",
+                relationship_type=(
+                    FieldedModelRelationshipType
+                    .WAR_BEAST_COMMANDER_OF
+                ),
+            ),
+        ),
+    )
+
+    bofur.profile_options.append(
+        option
+    )
+
+    faction = Faction(
+        id="EREBOR",
+        name="Erebor",
+    )
+
+    army_list = ArmyList(
+        id=definition.army_list_id,
+        name="Erebor Reclaimed",
+        faction=faction,
+    )
+
+    army, _ = build_army_from_definition(
+        definition,
+        profiles_by_id={
+            bofur.id: bofur,
+            troll_brute.id: troll_brute,
+        },
+        army_lists_by_id={
+            army_list.id: army_list,
+        },
+        profile_options_by_external_id={
+            "OPT0734": option,
+        },
+    )
+
+    assert army.total_points() == 165
+    assert army.model_count() == 2
+
+    fielded_models = army.fielded_models()
+
+    assert {
+        model.profile_id
+        for model in fielded_models
+    } == {
+        "BOFUR_CHAMPION_OF_EREBOR",
+        "TROLL_BRUTE",
+    }
+
+    relationships = build_fielded_model_structures(
+        fielded_models=fielded_models,
+        structure_definitions=(
+            FIELDED_MODEL_STRUCTURE_DEFINITIONS
+        ),
+        profiles_by_id={
+            bofur.id: bofur,
+            troll_brute.id: troll_brute,
+        },
+    )
+
+    assert len(relationships.relationships) == 1
+
+    relationship = relationships.relationships[0]
+
+    bofur_model = next(
+        model
+        for model in fielded_models
+        if (
+            model.profile_id
+            == "BOFUR_CHAMPION_OF_EREBOR"
+        )
+    )
+
+    troll_model = next(
+        model
+        for model in fielded_models
+        if model.profile_id == "TROLL_BRUTE"
+    )
+
+    assert (
+        relationship.source_fielded_model_id
+        == bofur_model.id
+    )
+    assert (
+        relationship.target_fielded_model_id
+        == troll_model.id
+    )
+    assert (
+        relationship.relationship_type
+        is FieldedModelRelationshipType
+        .WAR_BEAST_COMMANDER_OF
     )

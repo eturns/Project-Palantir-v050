@@ -36,6 +36,7 @@ def load_validation_dataset():
 
     options = load_profile_options(
         profiles=profiles,
+        skip_unknown_profiles=True,
     )
 
     load_profile_default_wargear(

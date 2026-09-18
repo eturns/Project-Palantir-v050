@@ -55,6 +55,7 @@ def load_profiles_and_options():
 
     options = load_profile_options(
         profiles=profiles,
+        skip_unknown_profiles=True,
     )
 
     options_by_external_id = {

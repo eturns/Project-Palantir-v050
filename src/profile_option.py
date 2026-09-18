@@ -34,6 +34,9 @@ from profile_option_platform_assignment import (
     ProfileOptionPlatformAssignment,
 )
 from configured_state_effect import ConfiguredStateEffect
+from profile_option_profile_assignment import (
+    ProfileOptionProfileAssignment,
+)
 # ============================================================================
 # Classes
 # ============================================================================
@@ -61,11 +64,15 @@ class ProfileOption:
     ] = ()
     mount_assignments: tuple[
         ProfileOptionMountAssignment,
-        ...
+        ...,
     ] = ()
     platform_assignments: tuple[
         ProfileOptionPlatformAssignment,
-        ...
+        ...,
+    ] = ()
+    profile_assignments: tuple[
+        ProfileOptionProfileAssignment,
+        ...,
     ] = ()
 
     def __post_init__(self) -> None:

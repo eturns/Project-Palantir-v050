@@ -83,4 +83,8 @@ EXTERNAL_PROFILE_IDS = {
         "[army-of-gundabad] "
         "gundabad-catapult-troll"
     ): "GUNDABAD_CATAPULT_TROLL",
-    }
+    (
+        "[erebor-reclaimed] "
+        "bofur-the-dwarf"
+    ): "BOFUR_CHAMPION_OF_EREBOR",
+}

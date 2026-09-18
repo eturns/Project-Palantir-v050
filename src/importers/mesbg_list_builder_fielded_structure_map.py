@@ -93,4 +93,18 @@ FIELDED_MODEL_STRUCTURE_DEFINITIONS = {
             ),
         )
     ),
+    "TROLL_BRUTE": (
+        FieldedModelStructureDefinition(
+            root_profile_id="TROLL_BRUTE",
+            members=(
+                FieldedModelStructureMember(
+                    profile_id="ORC_COMMANDER",
+                    relationship_type=(
+                        FieldedModelRelationshipType
+                        .WAR_BEAST_COMMANDER_OF
+                    ),
+                ),
+            ),
+        )
+    ),
 }

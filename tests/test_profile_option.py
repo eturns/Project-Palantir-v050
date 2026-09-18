@@ -14,6 +14,9 @@ from profile_option_platform_assignment import (
 )
 from configured_state_effect import ConfiguredStateEffect
 from profile_option import ProfileOption
+from profile_option_profile_assignment import (
+    ProfileOptionProfileAssignment,
+)
 
 def test_profile_option_stores_identity_and_points():
     option = ProfileOption(
@@ -322,4 +325,31 @@ def test_profile_option_accepts_configured_state_effects():
 
     assert option.configured_state_effects == (
         movement_effect,
+    )
+
+def test_profile_option_defaults_profile_assignments_to_empty():
+    option = ProfileOption(
+        id="TEST_OPTION",
+        name="Test Option",
+        points=10,
+    )
+
+    assert option.profile_assignments == ()
+
+def test_profile_option_can_store_profile_assignments():
+    assignment = ProfileOptionProfileAssignment(
+        profile_id="TROLL_BRUTE",
+    )
+
+    option = ProfileOption(
+        id="TROLL_BRUTE_OPTION",
+        name="Troll Brute",
+        points=100,
+        profile_assignments=(
+            assignment,
+        ),
+    )
+
+    assert option.profile_assignments == (
+        assignment,
     )

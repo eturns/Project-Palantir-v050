@@ -40,6 +40,7 @@ PROFILE_FILES = (
     "data/profiles/iron_hills_profiles.csv",
     "data/profiles/lake_town_profiles.csv",
     "data/profiles/gundabad_profiles.csv",
+    "data/profiles/erebor_profiles.csv",
 )
 
 

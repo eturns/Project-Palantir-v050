@@ -11,6 +11,9 @@ from faction import Faction
 from siege_engine_profile import SiegeEngineProfile
 from configured_state_effect import ConfiguredStateEffect
 from profile_classification import HeroicStatus
+from profile_option_profile_assignment import (
+    ProfileOptionProfileAssignment,
+)
 
 def create_profile() -> Profile:
     return Profile(
@@ -522,3 +525,81 @@ def test_build_army_from_definition_applies_siege_veteran_option():
     assert configured.effective_might == 1
     assert configured.effective_will == 1
     assert configured.effective_fate == 1
+
+def test_selected_option_can_add_assigned_profile_to_army():
+    root_profile = create_profile()
+    root_profile.id = "BOFUR_CHAMPION_OF_EREBOR"
+    root_profile.name = "Bofur the Dwarf, Champion of Erebor"
+    root_profile.points = 65
+
+    troll_brute = create_profile()
+    troll_brute.id = "TROLL_BRUTE"
+    troll_brute.name = "Troll Brute"
+    troll_brute.points = 0
+
+    troll_brute_option = ProfileOption(
+        id="BOFUR_TROLL_BRUTE",
+        name="Troll Brute",
+        points=100,
+        external_id="OPT0734",
+        profile_assignments=(
+            ProfileOptionProfileAssignment(
+                profile_id="TROLL_BRUTE",
+            ),
+        ),
+    )
+
+    root_profile.profile_options.append(
+        troll_brute_option
+    )
+
+    definition = ArmyDefinition(
+        id="TEST_ARMY",
+        name="Test Army",
+        army_list_id="TEST_LIST",
+        points_limit=700,
+        entries=[
+            ArmyEntryDefinition(
+                profile_id="BOFUR_CHAMPION_OF_EREBOR",
+                quantity=1,
+                external_option_ids=("OPT0734",),
+                warband_id="BOFUR_WARBAND",
+            ),
+        ],
+    )
+
+    faction = Faction(
+        id="TEST_FACTION",
+        name="Test Faction",
+    )
+
+    army_list = ArmyList(
+        id="TEST_LIST",
+        name="Test List",
+        faction=faction,
+    )
+
+    army, _ = build_army_from_definition(
+        definition=definition,
+        profiles_by_id={
+            root_profile.id: root_profile,
+            troll_brute.id: troll_brute,
+        },
+        army_lists_by_id={
+            army_list.id: army_list,
+        },
+        profile_options_by_external_id={
+            "OPT0734": troll_brute_option,
+        },
+    )
+
+    assert army.total_points() == 165
+    assert army.model_count() == 2
+
+    assert {
+        model.profile_id
+        for model in army.fielded_models()
+    } == {
+        "BOFUR_CHAMPION_OF_EREBOR",
+        "TROLL_BRUTE",
+    }

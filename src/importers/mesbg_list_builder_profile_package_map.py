@@ -26,4 +26,20 @@ IMPORTED_PROFILE_PACKAGE_DEFINITIONS = {
             ),
         )
     ),
+    "[army-of-gundabad] troll-brute": (
+        ImportedProfilePackageDefinition(
+            external_model_id=(
+                "[army-of-gundabad] troll-brute"
+            ),
+            points=120,
+            members=(
+                ImportedProfilePackageMember(
+                    profile_id="TROLL_BRUTE",
+                ),
+                ImportedProfilePackageMember(
+                    profile_id="ORC_COMMANDER",
+                ),
+            ),
+        )
+    ),
 }

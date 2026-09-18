@@ -55,6 +55,7 @@ def test_load_option_wargear_assignments():
 
     options = load_profile_options(
         profiles=profiles,
+        skip_unknown_profiles=True,
     )
 
     wargear = load_wargear()
@@ -94,6 +95,7 @@ def test_load_option_wargear_assignments_supports_packages():
 
     options = load_profile_options(
         profiles=profiles,
+        skip_unknown_profiles=True,
     )
 
     wargear = load_wargear()
@@ -150,6 +152,7 @@ def test_load_option_wargear_rejects_unknown_wargear(
 
     options = load_profile_options(
         profiles=profiles,
+        skip_unknown_profiles=True,
     )
 
     file_path = tmp_path / "unknown_wargear.csv"
@@ -185,6 +188,7 @@ def test_load_option_wargear_rejects_unknown_action(
 
     options = load_profile_options(
         profiles=profiles,
+        skip_unknown_profiles=True,
     )
 
     wargear = load_wargear()

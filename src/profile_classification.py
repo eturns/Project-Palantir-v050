@@ -12,3 +12,4 @@ class ModelType(Enum):
     BEAST = "BEAST"
     MONSTER = "MONSTER"
     SIEGE_ENGINE = "SIEGE_ENGINE"
+    WAR_BEAST = "WAR_BEAST"

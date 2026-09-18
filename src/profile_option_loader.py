@@ -27,7 +27,12 @@ import csv
 
 from profile_option import ProfileOption
 from profiles import Profile
-
+from profile_option_profile_assignment import (
+    ProfileOptionProfileAssignment,
+)
+from fielded_model_relationship_type import (
+    FieldedModelRelationshipType,
+)
 
 # ============================================================================
 # Functions
@@ -36,6 +41,7 @@ from profiles import Profile
 def load_profile_options(
     profiles: dict[str, Profile],
     file_path: str = "data/profiles/profile_options.csv",
+    skip_unknown_profiles: bool = False,
 ) -> dict[str, ProfileOption]:
     """
     Loads Profile Options and attaches each option to its legal Profile.
@@ -55,6 +61,9 @@ def load_profile_options(
             profile_id = row["profile_id"]
 
             if profile_id not in profiles:
+                if skip_unknown_profiles:
+                    continue
+
                 raise ValueError(
                     f"Unknown Profile ID in profile_options.csv: "
                     f"{profile_id}"
@@ -66,11 +75,51 @@ def load_profile_options(
                 else None
             )
 
+            assigned_profile_ids = tuple(
+                profile_id.strip()
+                for profile_id in (
+                    row.get(
+                        "assigned_profile_ids",
+                        "",
+                    )
+                    or ""
+                ).split("|")
+                if profile_id.strip()
+            )
+
+            assigned_relationship_types = tuple(
+                relationship_type.strip()
+                for relationship_type in (
+                    row.get(
+                        "assigned_relationship_types",
+                        "",
+                    )
+                    or ""
+                ).split("|")
+            )
+
             option = ProfileOption(
                 id=row["id"],
                 name=row["name"],
                 points=int(row["points"]),
                 external_id=external_id,
+                profile_assignments=tuple(
+                    ProfileOptionProfileAssignment(
+                        profile_id=assigned_profile_id,
+                        relationship_type=(
+                            FieldedModelRelationshipType(
+                                assigned_relationship_types[index]
+                            )
+                            if (
+                                index < len(assigned_relationship_types)
+                                and assigned_relationship_types[index]
+                            )
+                            else None
+                        ),
+                    )
+                    for index, assigned_profile_id
+                    in enumerate(assigned_profile_ids)
+                ),
             )
 
             if option.id in options_by_id:

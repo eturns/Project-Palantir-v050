@@ -409,6 +409,14 @@ class ConfiguredProfile:
 
         return self.profile.fate
 
+    @property
+    def assigned_profile_ids(self) -> tuple[str, ...]:
+        return tuple(
+            assignment.profile_id
+            for option in self.selected_options
+            for assignment in option.profile_assignments
+        )
+
 def create_configured_profile_from_external_options(
     profile: Profile,
     external_option_ids: tuple[str, ...],

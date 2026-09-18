@@ -9,6 +9,10 @@ from profiles import Profile
 from iron_hills_test_helpers import (
     load_iron_hills_test_profiles,
 )
+from loader import load_all_profiles, load_profile
+from fielded_model_relationship_type import (
+    FieldedModelRelationshipType,
+)
 
 def create_test_profile(
     profile_id: str = "IH_WR",
@@ -38,6 +42,12 @@ def create_iron_hills_profiles(
         profile.id: profile
         for profile in load_iron_hills_test_profiles()
     }
+
+    profiles["BOFUR_CHAMPION_OF_EREBOR"] = (
+        create_test_profile(
+            profile_id="BOFUR_CHAMPION_OF_EREBOR",
+        )
+    )
 
     if warrior is not None:
         profiles["IH_WR"] = warrior
@@ -254,10 +264,7 @@ def test_external_option_lookup_rejects_duplicate_external_ids():
         )
 
 def test_loads_remaining_iron_hills_options():
-    profiles = {
-        profile.id: profile
-        for profile in load_iron_hills_test_profiles()
-    }
+    profiles = create_iron_hills_profiles()
 
     options = load_profile_options(
         profiles=profiles,
@@ -285,4 +292,133 @@ def test_loads_remaining_iron_hills_options():
     assert goat_rider_mattock.external_id == "OPT0726"
     assert goat_rider_mattock in (
         profiles["IH_GR"].profile_options
+    )
+
+def test_load_profile_options_loads_assigned_profile_ids(
+    tmp_path: Path,
+):
+    root_profile = create_test_profile(
+        profile_id="BOFUR_CHAMPION_OF_EREBOR",
+    )
+
+    assigned_profile = create_test_profile(
+        profile_id="TROLL_BRUTE",
+    )
+
+    file_path = tmp_path / "profile_options.csv"
+
+    file_path.write_text(
+        (
+            "id,profile_id,name,points,external_id,"
+            "assigned_profile_ids\n"
+            "BOFUR_TROLL_BRUTE,"
+            "BOFUR_CHAMPION_OF_EREBOR,"
+            "Troll Brute,100,OPT0734,TROLL_BRUTE\n"
+        ),
+        encoding="utf-8",
+    )
+
+    options = load_profile_options(
+        profiles={
+            root_profile.id: root_profile,
+            assigned_profile.id: assigned_profile,
+        },
+        file_path=str(file_path),
+    )
+
+    option = options["BOFUR_TROLL_BRUTE"]
+
+    assert len(option.profile_assignments) == 1
+    assert (
+        option.profile_assignments[0].profile_id
+        == "TROLL_BRUTE"
+    )
+
+def test_loads_bofur_troll_brute_option_from_production_data():
+    profiles = {
+        profile.id: profile
+        for profile in load_all_profiles()
+    }
+
+    options = load_profile_options(
+        profiles=profiles,
+    )
+
+    option = options["BOFUR_TROLL_BRUTE"]
+
+    assert option.points == 100
+    assert option.external_id == "OPT0734"
+    assert len(option.profile_assignments) == 1
+    assert (
+        option.profile_assignments[0].profile_id
+        == "TROLL_BRUTE"
+    )
+    assert (
+        option.profile_assignments[0].relationship_type
+        is FieldedModelRelationshipType
+        .WAR_BEAST_COMMANDER_OF
+    )
+
+def test_load_profile_options_can_skip_profiles_outside_loaded_subset(
+    tmp_path,
+):
+    options_file = tmp_path / "profile_options.csv"
+    options_file.write_text(
+        "id,profile_id,name,points,external_id\n"
+        "KNOWN_OPTION,KNOWN,Known Option,5,OPT001\n"
+        "OTHER_OPTION,OTHER,Other Option,10,OPT002\n",
+        encoding="utf-8",
+    )
+
+    known = create_test_profile(
+        profile_id="KNOWN",
+    )
+
+    options = load_profile_options(
+        profiles={
+            known.id: known,
+        },
+        file_path=str(options_file),
+        skip_unknown_profiles=True,
+    )
+
+    assert set(options) == {
+        "KNOWN_OPTION",
+    }
+
+def test_load_profile_options_preserves_relationship_positions(
+    tmp_path,
+):
+    options_file = tmp_path / "profile_options.csv"
+    options_file.write_text(
+        "id,profile_id,name,points,external_id,"
+        "assigned_profile_ids,assigned_relationship_types\n"
+        "TEST_OPTION,OWNER,Test Option,10,OPT_TEST,"
+        "TARGET_A|TARGET_B,|WAR_BEAST_COMMANDER_OF\n",
+        encoding="utf-8",
+    )
+
+    owner = create_test_profile(
+        profile_id="OWNER",
+    )
+
+    options = load_profile_options(
+        profiles={
+            "OWNER": owner,
+        },
+        file_path=str(options_file),
+    )
+
+    assignments = options[
+        "TEST_OPTION"
+    ].profile_assignments
+
+    assert assignments[0].profile_id == "TARGET_A"
+    assert assignments[0].relationship_type is None
+
+    assert assignments[1].profile_id == "TARGET_B"
+    assert (
+        assignments[1].relationship_type
+        is FieldedModelRelationshipType
+        .WAR_BEAST_COMMANDER_OF
     )

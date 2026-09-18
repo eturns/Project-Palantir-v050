@@ -3,4 +3,5 @@ EXTERNAL_ARMY_LIST_IDS = {
     "The Iron Hills": "IH_IRON_HILLS",
     "Army of Lake-town": "LAKE_TOWN",
     "Army of Gundabad": "GUNDABAD",
+    "Erebor Reclaimed": "EREBOR_RECLAIMED",
 }
