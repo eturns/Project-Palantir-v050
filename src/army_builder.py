@@ -5,9 +5,6 @@ from profiles import Profile
 from configured_profile import ConfiguredProfile
 from profile_option import ProfileOption
 from siege_engine_profile import SiegeEngineProfile
-from warband_composition_rule_matcher import (
-    warband_composition_rule_allows,
-)
 from profile_quantity_relation_rule_matcher import (
     profile_quantity_relation_rule_allows,
 )

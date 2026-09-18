@@ -54,25 +54,12 @@ def warband_composition_rule_allows(
     member_factions: tuple[str, ...] = (),
     leader_factions: tuple[str, ...] = (),
 ) -> bool:
-    member_matches = True
-
-    if rule.member_keywords:
-        member_matches = (
-            member_matches
-            and any(
-                keyword in member.keywords
-                for keyword in rule.member_keywords
-            )
-        )
 
     if not warband_composition_rule_applies_to_member(
         rule,
         member,
         member_factions=member_factions,
     ):
-        return True
-
-    if not member_matches:
         return True
 
     if leader.id in rule.allowed_leader_profile_ids:
