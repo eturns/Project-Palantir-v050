@@ -7,6 +7,7 @@ from hero_resource_state import HeroResourceState
 from owned_hero_resource_state import OwnedHeroResourceState
 from resource_owner import ResourceOwner
 from profile_classification import ModelType
+import pytest
 
 def make_profile(
     profile_id: str,
@@ -45,6 +46,11 @@ def test_fielded_model_form_state_preserves_fielded_identity():
         fielded_model=fielded_model,
         active_configured_profile=(
             fielded_model.configured_profile
+        ),
+        allowed_alternate_profile_ids=frozenset(
+            {
+                "BEORN_THE_BEAR",
+            }
         ),
     )
 
@@ -91,11 +97,16 @@ def test_change_fielded_model_form_preserves_fielded_model_identity():
     )
 
     man_state = FieldedModelFormState(
-        fielded_model=fielded_model,
-        active_configured_profile=(
-            fielded_model.configured_profile
-        ),
-    )
+    fielded_model=fielded_model,
+    active_configured_profile=(
+        fielded_model.configured_profile
+    ),
+    allowed_alternate_profile_ids=frozenset(
+        {
+            "BEORN_THE_BEAR",
+        }
+    ),
+)
 
     bear_state = change_fielded_model_form(
         man_state,
@@ -137,6 +148,11 @@ def test_form_change_preserves_resources_owned_by_fielded_identity():
         fielded_model=fielded_model,
         active_configured_profile=(
             fielded_model.configured_profile
+        ),
+        allowed_alternate_profile_ids=frozenset(
+            {
+                "BEORN_THE_BEAR",
+            }
         ),
     )
 
@@ -190,6 +206,11 @@ def test_form_change_changes_effective_profile_without_mutating_base():
         active_configured_profile=(
             fielded_model.configured_profile
         ),
+        allowed_alternate_profile_ids=frozenset(
+            {
+                "BEORN_THE_BEAR",
+            }
+        ),
     )
 
     bear_state = change_fielded_model_form(
@@ -236,6 +257,11 @@ def test_fielded_model_can_change_form_back_to_original_profile():
         fielded_model=fielded_model,
         active_configured_profile=(
             fielded_model.configured_profile
+        ),
+        allowed_alternate_profile_ids=frozenset(
+            {
+                "BEORN_THE_BEAR",
+            }
         ),
     )
 
@@ -318,6 +344,11 @@ def test_form_change_updates_base_size_and_model_types():
         active_configured_profile=(
             fielded_model.configured_profile
         ),
+        allowed_alternate_profile_ids=frozenset(
+            {
+                "BEORN_THE_BEAR",
+            }
+        ),
     )
 
     bear_state = change_fielded_model_form(
@@ -368,6 +399,11 @@ def test_form_change_updates_active_race():
         active_configured_profile=(
             fielded_model.configured_profile
         ),
+        allowed_alternate_profile_ids=frozenset(
+            {
+                "BEORN_THE_BEAR",
+            }
+        ),
     )
 
     bear_state = change_fielded_model_form(
@@ -402,6 +438,11 @@ def test_active_form_does_not_replace_roster_profile_identity():
         active_configured_profile=(
             fielded_model.configured_profile
         ),
+        allowed_alternate_profile_ids=frozenset(
+            {
+                "BEORN_THE_BEAR",
+            }
+        ),
     )
 
     bear_state = change_fielded_model_form(
@@ -416,4 +457,268 @@ def test_active_form_does_not_replace_roster_profile_identity():
     assert (
         bear_state.active_configured_profile.profile.id
         == "BEORN_THE_BEAR"
+    )
+
+def test_form_change_rejects_unrelated_profile():
+    man_profile = make_profile("BEORN")
+    bear_profile = make_profile("BEORN_THE_BEAR")
+    unrelated_profile = make_profile("SARUMAN")
+
+    fielded_model = FieldedModel(
+        id="BEORN:1:1",
+        configured_profile=ConfiguredProfile(
+            profile=man_profile,
+        ),
+    )
+
+    state = FieldedModelFormState(
+        fielded_model=fielded_model,
+        active_configured_profile=(
+            fielded_model.configured_profile
+        ),
+    )
+
+    state = FieldedModelFormState(
+        fielded_model=fielded_model,
+        active_configured_profile=(
+            fielded_model.configured_profile
+        ),
+        allowed_alternate_profile_ids=frozenset(
+            {
+                "BEORN_THE_BEAR",
+            }
+        ),
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="Profile 'SARUMAN' is not an allowed alternate form",
+    ):
+        change_fielded_model_form(
+            state,
+            ConfiguredProfile(
+                profile=unrelated_profile,
+            ),
+        )
+
+def test_form_change_allows_registered_alternate_profile():
+    man_profile = make_profile("BEORN")
+    bear_profile = make_profile("BEORN_THE_BEAR")
+
+    fielded_model = FieldedModel(
+        id="BEORN:1:1",
+        configured_profile=ConfiguredProfile(
+            profile=man_profile,
+        ),
+    )
+
+    state = FieldedModelFormState(
+        fielded_model=fielded_model,
+        active_configured_profile=(
+            fielded_model.configured_profile
+        ),
+        allowed_alternate_profile_ids=frozenset(
+            {
+                "BEORN_THE_BEAR",
+            }
+        ),
+    )
+
+    bear_state = change_fielded_model_form(
+        state,
+        ConfiguredProfile(
+            profile=bear_profile,
+        ),
+    )
+
+    assert bear_state.fielded_model is fielded_model
+    assert bear_state.fielded_model_id == "BEORN:1:1"
+    assert (
+        bear_state.active_configured_profile.profile.id
+        == "BEORN_THE_BEAR"
+    )
+
+def test_form_change_allows_return_to_base_profile():
+    man_profile = make_profile("BEORN")
+    bear_profile = make_profile("BEORN_THE_BEAR")
+
+    fielded_model = FieldedModel(
+        id="BEORN:1:1",
+        configured_profile=ConfiguredProfile(
+            profile=man_profile,
+        ),
+    )
+
+    man_state = FieldedModelFormState(
+        fielded_model=fielded_model,
+        active_configured_profile=(
+            fielded_model.configured_profile
+        ),
+        allowed_alternate_profile_ids=frozenset(
+            {
+                "BEORN_THE_BEAR",
+            }
+        ),
+    )
+
+    bear_state = change_fielded_model_form(
+        man_state,
+        ConfiguredProfile(
+            profile=bear_profile,
+        ),
+    )
+
+    returned_man_state = change_fielded_model_form(
+        bear_state,
+        fielded_model.configured_profile,
+    )
+
+    assert returned_man_state.fielded_model is fielded_model
+    assert returned_man_state.fielded_model_id == "BEORN:1:1"
+    assert (
+        returned_man_state.active_configured_profile.profile.id
+        == "BEORN"
+    )
+
+def test_form_state_preserves_allowed_alternate_profile_ids():
+    man_profile = make_profile("BEORN")
+
+    fielded_model = FieldedModel(
+        id="BEORN:1:1",
+        configured_profile=ConfiguredProfile(
+            profile=man_profile,
+        ),
+    )
+
+    state = FieldedModelFormState(
+        fielded_model=fielded_model,
+        active_configured_profile=(
+            fielded_model.configured_profile
+        ),
+        allowed_alternate_profile_ids=frozenset(
+            {
+                "BEORN_THE_BEAR",
+            }
+        ),
+    )
+
+    assert state.allowed_alternate_profile_ids == frozenset(
+        {
+            "BEORN_THE_BEAR",
+        }
+    )
+
+def test_form_change_uses_allowed_alternates_from_state():
+    man_profile = make_profile("BEORN")
+    bear_profile = make_profile("BEORN_THE_BEAR")
+    unrelated_profile = make_profile("SARUMAN")
+
+    fielded_model = FieldedModel(
+        id="BEORN:1:1",
+        configured_profile=ConfiguredProfile(
+            profile=man_profile,
+        ),
+    )
+
+    state = FieldedModelFormState(
+        fielded_model=fielded_model,
+        active_configured_profile=(
+            fielded_model.configured_profile
+        ),
+        allowed_alternate_profile_ids=frozenset(
+            {
+                "BEORN_THE_BEAR",
+            }
+        ),
+    )
+
+    bear_state = change_fielded_model_form(
+        state,
+        ConfiguredProfile(
+            profile=bear_profile,
+        ),
+    )
+
+    assert (
+        bear_state.active_configured_profile.profile.id
+        == "BEORN_THE_BEAR"
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="Profile 'SARUMAN' is not an allowed alternate form",
+    ):
+        change_fielded_model_form(
+            state,
+            ConfiguredProfile(
+                profile=unrelated_profile,
+            ),
+        )
+
+def test_form_change_rejects_alternate_when_none_are_registered():
+    base_profile = make_profile("ORDINARY_HERO")
+    unrelated_profile = make_profile("SARUMAN")
+
+    fielded_model = FieldedModel(
+        id="ORDINARY_HERO:1:1",
+        configured_profile=ConfiguredProfile(
+            profile=base_profile,
+        ),
+    )
+
+    state = FieldedModelFormState(
+        fielded_model=fielded_model,
+        active_configured_profile=(
+            fielded_model.configured_profile
+        ),
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="Profile 'SARUMAN' is not an allowed alternate form",
+    ):
+        change_fielded_model_form(
+            state,
+            ConfiguredProfile(
+                profile=unrelated_profile,
+            ),
+        )
+
+def test_form_change_preserves_allowed_alternate_profile_ids():
+    man_profile = make_profile("BEORN")
+    bear_profile = make_profile("BEORN_THE_BEAR")
+
+    fielded_model = FieldedModel(
+        id="BEORN:1:1",
+        configured_profile=ConfiguredProfile(
+            profile=man_profile,
+        ),
+    )
+
+    state = FieldedModelFormState(
+        fielded_model=fielded_model,
+        active_configured_profile=(
+            fielded_model.configured_profile
+        ),
+        allowed_alternate_profile_ids=frozenset(
+            {
+                "BEORN_THE_BEAR",
+            }
+        ),
+    )
+
+    bear_state = change_fielded_model_form(
+        state,
+        ConfiguredProfile(
+            profile=bear_profile,
+        ),
+    )
+
+    assert (
+        bear_state.allowed_alternate_profile_ids
+        == frozenset(
+            {
+                "BEORN_THE_BEAR",
+            }
+        )
     )
