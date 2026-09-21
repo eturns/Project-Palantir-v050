@@ -45,6 +45,7 @@ class ImportedConfiguredEntry:
     quantity: int = 1
     warband_id: str | None = None
     is_warband_leader: bool = False
+    is_compulsory: bool = False
 
     def __post_init__(self) -> None:
         if not self.external_model_id.strip():

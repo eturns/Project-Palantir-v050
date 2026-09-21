@@ -87,4 +87,16 @@ EXTERNAL_PROFILE_IDS = {
         "[erebor-reclaimed] "
         "bofur-the-dwarf"
     ): "BOFUR_CHAMPION_OF_EREBOR",
+    (
+        "[garrison-of-dale] "
+        "girion-lord-of-dale"
+    ): "DALE_GIRION",
+    (
+        "[garrison-of-dale] "
+        "warrior-of-dale"
+    ): "DALE_WARRIOR",
+    (
+        "[garrison-of-dale] "
+        "captain-of-dale"
+    ): "DALE_CAPTAIN",
 }

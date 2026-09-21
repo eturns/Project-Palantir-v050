@@ -18,6 +18,7 @@ class ArmyEntryDefinition:
     external_option_ids: tuple[str, ...] = ()
     warband_id: str | None = None
     is_warband_leader: bool = False
+    is_compulsory: bool = False
 
 
 @dataclass
@@ -32,6 +33,7 @@ class ArmyDefinition:
     points_limit: int | None
     leader_warband_id: str | None = None
     leader_profile_id: str | None = None
+    leader_compulsory: bool = False
 
     entries: list[ArmyEntryDefinition] = field(
         default_factory=list,

@@ -1,0 +1,79 @@
+{
+ "metadata": {
+  "leader": "c495f6e4-7b60-447c-8ff7-9e024c04069e",
+  "leaderCompulsory": true,
+  "tags": []
+ },
+ "warbands": [
+  {
+   "id": "c495f6e4-7b60-447c-8ff7-9e024c04069e",
+   "hero": {
+    "model_id": "[garrison-of-dale] girion-lord-of-dale",
+    "MWFW": [
+     [
+      "",
+      "3:2:1:2"
+     ]
+    ],
+    "options": [],
+    "compulsory": true
+   },
+   "units": [
+    {
+     "model_id": "[garrison-of-dale] warrior-of-dale",
+     "MWFW": [],
+     "options": [],
+     "quantity": 3
+    }
+   ],
+   "meta": {
+    "num": 1,
+    "points": 101,
+    "units": 3,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 3,
+    "throwLimit": 3,
+    "maxUnits": 18
+   }
+  },
+  {
+   "id": "082d075c-2f99-4222-b842-93525d940ac8",
+   "hero": {
+    "model_id": "[garrison-of-dale] captain-of-dale",
+    "MWFW": [
+     [
+      "",
+      "2:1:1:2"
+     ]
+    ],
+    "options": []
+   },
+   "units": [
+    {
+     "model_id": "[garrison-of-dale] warrior-of-dale",
+     "MWFW": [],
+     "options": [],
+     "quantity": 3
+    }
+   ],
+   "meta": {
+    "num": 2,
+    "points": 76,
+    "units": 3,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 3,
+    "throwLimit": 3,
+    "maxUnits": 12
+   }
+  }
+ ],
+ "id": "garrison-of-dale-q4gilzpm",
+ "version": "1.42.17",
+ "name": "Garrison of Dale",
+ "armyList": "Garrison of Dale",
+ "edition": "v2024"
+}

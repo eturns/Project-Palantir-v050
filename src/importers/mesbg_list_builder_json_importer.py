@@ -26,14 +26,14 @@ from imported_fielded_structure_expander import (
 from importers.mesbg_list_builder_fielded_structure_map import (
     IMPORTED_FIELDED_STRUCTURE_DEFINITIONS,
 )
+from importers.mesbg_list_builder_profile_package_map import (
+    IMPORTED_PROFILE_PACKAGE_DEFINITIONS,
+)
 from imported_profile_package_definition import (
     ImportedProfilePackageDefinition,
 )
 from imported_profile_package_expander import (
     expand_imported_profile_package,
-)
-from importers.mesbg_list_builder_profile_package_map import (
-    IMPORTED_PROFILE_PACKAGE_DEFINITIONS,
 )
 from army_purchase_definition import (
     ArmyPurchaseDefinition,
@@ -123,6 +123,10 @@ def get_imported_configured_entries(
                     quantity=1,
                     warband_id=warband.get("id"),
                     is_warband_leader=True,
+                     is_compulsory=hero.get(
+                        "compulsory",
+                        False,
+                    ),
                 )
             )
 
@@ -266,6 +270,9 @@ def map_imported_configured_entries(
                 is_warband_leader=(
                     entry.is_warband_leader
                 ),
+                is_compulsory=(
+                entry.is_compulsory
+            ),
             )
         )
 
@@ -289,6 +296,7 @@ def group_mapped_configured_entries(
             tuple[str, ...],
             str | None,
             bool,
+            bool,
         ],
         int,
     ] = {}
@@ -301,6 +309,7 @@ def group_mapped_configured_entries(
             ),
             entry.warband_id,
             entry.is_warband_leader,
+            entry.is_compulsory,
         )
 
         quantities_by_configuration[key] = (
@@ -318,12 +327,14 @@ def group_mapped_configured_entries(
             quantity=quantity,
             warband_id=warband_id,
             is_warband_leader=is_warband_leader,
+            is_compulsory=is_compulsory,
         )
         for (
             profile_id,
             external_option_ids,
             warband_id,
             is_warband_leader,
+            is_compulsory,
         ), quantity
         in sorted(
             quantities_by_configuration.items(),
@@ -353,6 +364,9 @@ def build_configured_army_entry_definitions(
             warband_id=entry.warband_id,
             is_warband_leader=(
                 entry.is_warband_leader
+            ),
+            is_compulsory=(
+                entry.is_compulsory
             ),
         )
         for entry in entries
@@ -581,6 +595,12 @@ def build_army_definition_from_data(
         leader_profile_id=get_imported_leader_profile_id(
             data,
             structure_definitions=structure_definitions,
+        ),
+        leader_compulsory = bool(
+            data.get("metadata", {}).get(
+                "leaderCompulsory",
+                False,
+            )
         ),
         entries=entries,
         purchases=purchases,
