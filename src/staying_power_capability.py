@@ -111,6 +111,9 @@ def calculate_army_staying_power(
     weighted_total = 0.0
 
     for entry in army.entries:
+        if not entry.counts_as_model:
+            continue
+
         profile_staying_power = (
             calculate_staying_power_from_profile(
                 profile=entry.configured_profile,

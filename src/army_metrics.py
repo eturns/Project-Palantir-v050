@@ -148,6 +148,9 @@ def calculate_army_metrics(
     
     for entry in army.entries:
 
+        if not entry.counts_as_model:
+            continue
+
         profile_metrics = calculate_profile_metrics(
             entry.configured_profile,
             context,

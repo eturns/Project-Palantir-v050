@@ -21,12 +21,12 @@ from profile_option_wargear_loader import (
     load_profile_option_wargear_assignments,
 )
 from wargear_loader import load_wargear
-
+from loader import load_all_profiles
 
 def load_complete_iron_hills_configuration():
     profiles = {
         profile.id: profile
-        for profile in load_iron_hills_test_profiles()
+        for profile in load_all_profiles()
     }
 
     wargear = load_wargear()

@@ -44,7 +44,15 @@ class FakeFieldedModel:
     def __init__(self, profile):
         self.configured_profile = SimpleNamespace(
             profile=profile,
+            selected_options=(),
         )
+        self.id = f"{profile.id}:1:1"
+        self.warband_id = None
+        self.siege_engine_profile = None
+
+    @property
+    def profile_id(self):
+        return self.configured_profile.profile.id
 
 
 class FakeArmy:
@@ -60,7 +68,7 @@ def test_mesbg_list_analysis_service_returns_scenario_analysis_results(
     definition = SimpleNamespace(
     points_limit=777,
 )
-    army = object()
+    army = FakeArmy(())
     army_list = object()
     analysis_result = object()
 
@@ -144,6 +152,7 @@ def test_analysis_service_passes_imported_leader_profile_to_scenario_builder(
         profiles_by_id,
         army_lists_by_id,
         profile_options_by_external_id=None,
+        siege_engine_profiles_by_id=None,
     ):
         return (
             definition,
@@ -237,6 +246,7 @@ def test_analysis_service_builds_default_scenario_context_when_not_supplied(
         profiles_by_id,
         army_lists_by_id,
         profile_options_by_external_id=None,
+        siege_engine_profiles_by_id=None,
     ):
         return (
             definition,
@@ -326,6 +336,7 @@ def test_analysis_service_runs_scenario_analysis_without_manual_context(
         profiles_by_id,
         army_lists_by_id,
         profile_options_by_external_id=None,
+        siege_engine_profiles_by_id=None,
     ):
         return (
             definition,
@@ -512,7 +523,7 @@ def test_analysis_service_passes_external_option_lookup_to_import_service(
         leader_profile_id=None,
     )
 
-    army = object()
+    army = FakeArmy(())
     army_list = object()
 
     profile_options_by_external_id = {
@@ -526,6 +537,7 @@ def test_analysis_service_passes_external_option_lookup_to_import_service(
         profiles_by_id,
         army_lists_by_id,
         profile_options_by_external_id=None,
+        siege_engine_profiles_by_id=None,
     ):
         captured["options"] = (
             profile_options_by_external_id
@@ -604,3 +616,66 @@ def test_real_eddies_choice_runtime_army_contains_necromancer():
 
     assert definition.leader_profile_id == "DG_NEC"
     assert "DG_NEC" in runtime_profile_ids
+
+def test_analysis_service_passes_siege_engine_lookup_to_import_service(
+    monkeypatch,
+):
+    definition = SimpleNamespace(
+        points_limit=700,
+        leader_profile_id=None,
+    )
+
+    army = FakeArmy(())
+    army_list = object()
+
+    siege_engine_profiles_by_id = {
+        "TEST_SIEGE_ENGINE": object(),
+    }
+
+    captured = {}
+
+    def fake_import(
+        file_path,
+        profiles_by_id,
+        army_lists_by_id,
+        profile_options_by_external_id=None,
+        siege_engine_profiles_by_id=None,
+    ):
+        captured["siege_engines"] = (
+            siege_engine_profiles_by_id
+        )
+
+        return (
+            definition,
+            army,
+            army_list,
+        )
+
+    monkeypatch.setattr(
+        mesbg_list_analysis_service,
+        "import_army_from_mesbg_list_builder",
+        fake_import,
+    )
+
+    monkeypatch.setattr(
+        mesbg_list_analysis_service,
+        "analyse_imported_army",
+        lambda *args, **kwargs: "ANALYSIS",
+    )
+
+    result = analyse_mesbg_list_builder_file(
+        "army.json",
+        profiles_by_id={},
+        army_lists_by_id={},
+        metric_thresholds={},
+        siege_engine_profiles_by_id=(
+            siege_engine_profiles_by_id
+        ),
+    )
+
+    assert (
+        captured["siege_engines"]
+        is siege_engine_profiles_by_id
+    )
+
+    assert result["analysis"] == "ANALYSIS"

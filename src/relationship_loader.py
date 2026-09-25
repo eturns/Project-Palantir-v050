@@ -45,16 +45,32 @@ from profile_special_rule_assignment import (
 # Functions
 # ============================================================================
 
+def _optional_parameter(
+    value: str | None,
+) -> int | str | None:
+    text = (value or "").strip()
+
+    if not text:
+        return None
+
+    try:
+        return int(text)
+    except ValueError:
+        return text
+
 def load_profile_special_rules(
     profiles: dict[str, Profile],
     special_rules: dict[str, SpecialRule],
+    file_path: str = (
+        "data/profiles/profile_special_rules.csv"
+    ),
 ) -> None:
     """
     Loads special rule relationships for every Profile.
     """
 
     with open(
-        "data/profiles/profile_special_rules.csv",
+        file_path,
         newline="",
         encoding="utf-8",
     ) as csv_file:
@@ -77,12 +93,8 @@ def load_profile_special_rules(
                 "profile_special_rules.csv",
             )
 
-            parameter_text = (row.get("parameter") or "").strip()
-
-            parameter = (
-                int(parameter_text)
-                if parameter_text
-                else None
+            parameter = _optional_parameter(
+                row.get("parameter")
             )
 
             profile.special_rules.append(

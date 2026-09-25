@@ -99,4 +99,20 @@ EXTERNAL_PROFILE_IDS = {
         "[garrison-of-dale] "
         "captain-of-dale"
     ): "DALE_CAPTAIN",
+    (
+        "[army-of-lake-town] "
+        "bard-the-bowman"
+    ): "BARD",
+    (
+        "[the-beornings] "
+        "beorn"
+    ): "BEORN",
+    (
+        "[the-beornings] "
+        "grimbeorn"
+    ): "GRIMBEORN",
+    (
+        "[the-beornings] "
+        "beorning"
+    ): "BEORNING",
 }

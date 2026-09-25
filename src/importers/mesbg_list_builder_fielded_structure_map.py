@@ -48,7 +48,7 @@ IMPORTED_FIELDED_STRUCTURE_DEFINITIONS = {
                 ImportedFieldedStructureMember(
                     profile_id="IH_SIEGE_CREW",
                     option_ids=(
-                        "SIEGE_VETERAN",
+                        "IH_SIEGE_VETERAN",
                     ),
                 ),
             ),

@@ -12,6 +12,7 @@ from wargear_loader import load_wargear
 from iron_hills_test_helpers import (
     load_iron_hills_test_profiles,
 )
+from loader import load_all_profiles
 
 
 def create_test_profile() -> Profile:
@@ -39,7 +40,7 @@ def create_iron_hills_profiles(
 ) -> dict[str, Profile]:
     profiles = {
         profile.id: profile
-        for profile in load_iron_hills_test_profiles()
+        for profile in load_all_profiles()
     }
 
     if warrior is not None:

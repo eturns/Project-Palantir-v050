@@ -12,6 +12,9 @@ def get_initial_owned_hero_resource_states(
     owned_states: list[OwnedHeroResourceState] = []
 
     for fielded_model in army.fielded_models():
+        if fielded_model.configured_profile is None:
+            continue
+
         profile = (
             fielded_model
             .configured_profile

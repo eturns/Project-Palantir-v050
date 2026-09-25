@@ -1,0 +1,65 @@
+{
+ "metadata": {
+  "leader": "63e40864-ed80-484b-a035-97ec269ebd0b",
+  "leaderCompulsory": true,
+  "tags": []
+ },
+ "warbands": [
+  {
+   "id": "63e40864-ed80-484b-a035-97ec269ebd0b",
+   "hero": {
+    "model_id": "[the-iron-hills] dain-ironfoot-lord-of-the-iron-hills",
+    "MWFW": [
+     [
+      "",
+      "3:3:3:3"
+     ]
+    ],
+    "options": [],
+    "compulsory": true
+   },
+   "units": [],
+   "meta": {
+    "num": 1,
+    "points": 160,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 18
+   }
+  },
+  {
+   "id": "e70890ec-72a9-42c6-9230-eced3fda5430",
+   "hero": {
+    "model_id": "[the-iron-hills] iron-hills-ballista",
+    "MWFW": [
+     [
+      "Iron Hills Ballista - Siege Veteran",
+      "1:1:1:1"
+     ]
+    ],
+    "options": []
+   },
+   "units": [],
+   "meta": {
+    "num": 2,
+    "points": 130,
+    "units": 3,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 3,
+    "throwLimit": 3,
+    "maxUnits": 6
+   }
+  }
+ ],
+ "id": "ih-ballista-erk5ueis",
+ "version": "1.42.17",
+ "name": "IH ballista",
+ "armyList": "The Iron Hills",
+ "edition": "v2024"
+}

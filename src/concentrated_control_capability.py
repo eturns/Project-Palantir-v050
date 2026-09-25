@@ -70,6 +70,7 @@ def calculate_concentrated_control_from_army(
     profiles = tuple(
         entry.configured_profile
         for entry in army.entries
+        if entry.counts_as_model
         for _ in range(entry.quantity)
     )
 

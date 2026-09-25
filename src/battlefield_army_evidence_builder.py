@@ -45,6 +45,9 @@ def build_army_battlefield_evidence(
     evidence = BattlefieldEvidence()
 
     for entry in army.entries:
+        if not entry.counts_as_model:
+            continue
+
         profile_evidence = build_profile_battlefield_evidence(
             entry.configured_profile,
         )

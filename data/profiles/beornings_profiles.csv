@@ -1,0 +1,3 @@
+id,name,points,movement,base_size_mm,fight,shooting,strength,defence,attacks,wounds,courage,intelligence,might,will,fate,max_in_army,heroic_status,model_types,races
+BEORN,Beorn,200,"6""",25,6,4+,5,5,3,3,3+,4+,3,3,3,1,HERO,INFANTRY,MAN
+BEORN_THE_BEAR,Beorn the Bear,0,"8""",60,8,4+,8,8,3,3,3+,6+,3,3,3,1,HERO,INFANTRY|MONSTER,BEAR

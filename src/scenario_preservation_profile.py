@@ -19,6 +19,9 @@ def get_fog_of_war_preservation_models(
         if fielded_model.id == leader_model.id:
             continue
 
+        if fielded_model.configured_profile is None:
+            continue
+
         profile = (
             fielded_model
             .configured_profile

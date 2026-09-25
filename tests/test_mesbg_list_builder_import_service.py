@@ -47,12 +47,16 @@ def test_import_service_passes_external_option_lookup_to_builder(
         received_profiles,
         received_army_lists,
         profile_options_by_external_id=None,
+        siege_engine_profiles_by_id=None,
     ):
         received["definition"] = received_definition
         received["profiles"] = received_profiles
         received["army_lists"] = received_army_lists
         received["options"] = (
             profile_options_by_external_id
+        )
+        received["siege_engine_profiles"] = (
+            siege_engine_profiles_by_id
         )
 
         return expected_army, expected_army_list
@@ -90,3 +94,4 @@ def test_import_service_passes_external_option_lookup_to_builder(
         received["options"]
         is profile_options_by_external_id
     )
+    assert received["siege_engine_profiles"] is None

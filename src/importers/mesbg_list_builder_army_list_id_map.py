@@ -5,4 +5,5 @@ EXTERNAL_ARMY_LIST_IDS = {
     "Army of Gundabad": "GUNDABAD",
     "Erebor Reclaimed": "EREBOR_RECLAIMED",
     "Garrison of Dale": "GARRISON_OF_DALE",
+    "The Beornings": "THE_BEORNINGS",
 }

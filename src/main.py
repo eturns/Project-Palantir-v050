@@ -84,6 +84,10 @@ from profile_option_special_rule_loader import (
     load_profile_option_special_rules,
 )
 
+from siege_engine_profile_loader import (
+    load_siege_engine_profiles,
+)
+
 def main(
     file_path: str,
 ):
@@ -182,6 +186,11 @@ def main(
             profile_options,
         )
     )
+
+    siege_engine_profiles_by_id = (
+            load_siege_engine_profiles()
+        )
+
     heroic_actions = load_heroic_actions()
     spells = load_spells()
     ability_tags = load_ability_tags()
@@ -258,6 +267,9 @@ def main(
             metric_thresholds,
             profile_options_by_external_id=(
                 profile_options_by_external_id
+            ),
+            siege_engine_profiles_by_id=(
+                siege_engine_profiles_by_id
             ),
         )
     except json.JSONDecodeError:

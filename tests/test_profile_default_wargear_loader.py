@@ -8,6 +8,7 @@ from wargear_loader import load_wargear
 from iron_hills_test_helpers import (
     load_iron_hills_test_profiles,
 )
+from loader import load_all_profiles
 
 def create_test_profile(
     profile_id: str = "IH_WR",
@@ -38,8 +39,7 @@ def test_load_profile_default_wargear():
 
     profiles = {
         loaded_profile.id: loaded_profile
-        for loaded_profile
-        in load_iron_hills_test_profiles()
+        for loaded_profile in load_all_profiles()
     }
     profiles["IH_WR"] = profile
 
@@ -63,8 +63,7 @@ def test_load_profile_default_wargear_uses_master_entities():
 
     profiles = {
         loaded_profile.id: loaded_profile
-        for loaded_profile
-        in load_iron_hills_test_profiles()
+        for loaded_profile in load_all_profiles()
     }
     profiles["IH_WR"] = profile
 

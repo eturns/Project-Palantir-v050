@@ -17,6 +17,9 @@ def calculate_army_combat_capability(
     weighted_score = 0.0
 
     for entry in army.entries:
+        if not entry.counts_as_model:
+            continue
+
         profile_score = (
             calculate_profile_combat_capability(
                 entry.configured_profile,

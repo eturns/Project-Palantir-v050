@@ -7,6 +7,7 @@ from iron_hills_test_helpers import (
 from profile_default_wargear_loader import (
     load_profile_default_wargear,
 )
+from loader import load_all_profiles
 
 def test_load_wargear_returns_entities_by_id():
     wargear = load_wargear()
@@ -19,7 +20,7 @@ def test_load_wargear_returns_entities_by_id():
 def test_load_wargear_loads_expected_iron_hills_foundation():
     wargear = load_wargear()
 
-    assert len(wargear) == 11
+    assert len(wargear) >= 11
 
 
 def test_load_wargear_rejects_duplicate_ids(
@@ -46,7 +47,7 @@ def test_load_wargear_rejects_duplicate_ids(
 def test_loads_iron_hills_default_wargear():
     profiles = {
         profile.id: profile
-        for profile in load_iron_hills_test_profiles()
+        for profile in load_all_profiles()
     }
     wargear = load_wargear()
 

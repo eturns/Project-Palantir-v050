@@ -27,7 +27,7 @@ from wargear_loader import load_wargear
 def load_validation_dataset():
     profiles = {
         profile.id: profile
-        for profile in load_iron_hills_test_profiles()
+        for profile in load_all_profiles()
     }
 
     wargear = load_wargear()

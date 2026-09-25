@@ -49,16 +49,22 @@ def count_models_with_special_rule(
     rule_id: str,
 ) -> int:
     """
-    Counts how many models in an Army possess a given Special Rule.
+    Counts how many ordinary models in an Army
+    possess a given Special Rule.
     """
 
     total = 0
 
     for entry in army.entries:
 
+        if not entry.counts_as_model:
+            continue
+
         has_rule = any(
             assignment.rule.id == rule_id
-            for assignment in entry.configured_profile.effective_special_rules
+            for assignment in (
+                entry.configured_profile.effective_special_rules
+            )
         )
 
         if has_rule:
@@ -73,12 +79,15 @@ def highest_special_rule_parameter(
 ) -> int | None:
     """
     Returns the highest parameter for a Special Rule
-    possessed by any model in the Army.
+    possessed by any ordinary model in the Army.
     """
 
     highest_parameter = None
 
     for entry in army.entries:
+
+        if not entry.counts_as_model:
+            continue
 
         for assignment in entry.configured_profile.effective_special_rules:
 
@@ -100,17 +109,23 @@ def count_models_with_parameterised_special_rule(
     rule_id: str,
 ) -> int:
     """
-    Counts models possessing a parameterised Special Rule.
+    Counts ordinary models possessing a
+    parameterised Special Rule.
     """
 
     total = 0
 
     for entry in army.entries:
 
+        if not entry.counts_as_model:
+            continue
+
         has_rule = any(
             assignment.rule.id == rule_id
             and assignment.parameter is not None
-            for assignment in entry.configured_profile.effective_special_rules
+            for assignment in (
+                entry.configured_profile.effective_special_rules
+            )
         )
 
         if has_rule:

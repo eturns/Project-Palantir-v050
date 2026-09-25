@@ -51,6 +51,7 @@ class ArmyEntry:
         profile: Profile | None = None,
         warband_id: str | None = None,
         siege_engine_profile: SiegeEngineProfile | None = None,
+        points_override: int | None = None
     ) -> None:
         """
         Creates an ArmyEntry from either an authoritative
@@ -83,6 +84,7 @@ class ArmyEntry:
         self.siege_engine_profile = siege_engine_profile
         self.quantity = quantity
         self.warband_id = warband_id
+        self.points_override = points_override
 
         self.__post_init__()
 
@@ -100,6 +102,14 @@ class ArmyEntry:
                 "Quantity must be at least 1."
             )
 
+        if (
+            self.points_override is not None
+            and self.points_override < 0
+        ):
+            raise ValueError(
+                "Points override must not be negative."
+            )
+
     @property
     def profile(self) -> Profile:
         """
@@ -110,6 +120,12 @@ class ArmyEntry:
         return self.configured_profile.profile
     
     def total_points(self) -> int:
+        if self.points_override is not None:
+            return (
+                self.points_override
+                * self.quantity
+            )
+
         if self.siege_engine_profile is not None:
             return (
                 self.siege_engine_profile.points

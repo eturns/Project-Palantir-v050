@@ -59,6 +59,7 @@ def build_scenario_capability_profile(
     profiles = tuple(
         entry.profile
         for entry in army.entries
+        if entry.counts_as_model
         for _ in range(entry.quantity)
     )
 

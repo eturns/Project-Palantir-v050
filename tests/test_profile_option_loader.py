@@ -63,6 +63,7 @@ def test_load_profile_options_returns_options_by_id():
 
     options = load_profile_options(
         profiles=profiles,
+        skip_unknown_profiles=True,
     )
 
     assert options["IH_WR_SHIELD_SPEAR"].name == (
@@ -81,6 +82,7 @@ def test_load_profile_options_attaches_options_to_profile():
 
     options = load_profile_options(
         profiles=profiles,
+        skip_unknown_profiles=True,
     )
 
     expected_warrior_options = [
@@ -101,6 +103,7 @@ def test_load_profile_options_loads_iron_hills_warrior_options():
 
     options = load_profile_options(
         profiles=profiles,
+        skip_unknown_profiles=True,
     )
 
     assert len(profile.profile_options) == 5
@@ -188,6 +191,7 @@ def test_build_profile_options_by_external_id():
 
     options = load_profile_options(
         profiles=profiles,
+        skip_unknown_profiles=True,
     )
 
     options_by_external_id = (
@@ -268,6 +272,7 @@ def test_loads_remaining_iron_hills_options():
 
     options = load_profile_options(
         profiles=profiles,
+        skip_unknown_profiles=True,
     )
 
     war_boar = options["IH_DAIN_WAR_BOAR"]
@@ -421,4 +426,40 @@ def test_load_profile_options_preserves_relationship_positions(
         assignments[1].relationship_type
         is FieldedModelRelationshipType
         .WAR_BEAST_COMMANDER_OF
+    )
+
+def test_loads_bard_windlance_option_from_production_data():
+    profiles = {
+        profile.id: profile
+        for profile in load_all_profiles()
+    }
+
+    options = load_profile_options(
+        profiles=profiles,
+    )
+
+    option = options["BARD_WINDLANCE"]
+
+    options_by_external_id = (
+        build_profile_options_by_external_id(
+            options
+        )
+    )
+
+    assert (
+        options_by_external_id["OPT0735"]
+        is option
+)
+
+    assert option.points == 50
+    assert option.external_id == "OPT0735"
+
+    assert len(option.profile_assignments) == 1
+
+    assignment = option.profile_assignments[0]
+
+    assert assignment.profile_id == "DALE_WINDLANCE"
+
+    assert assignment.relationship_type is (
+        FieldedModelRelationshipType.CREW_OF
     )

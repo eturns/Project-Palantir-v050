@@ -45,6 +45,9 @@ def calculate_army_manoeuvrability(
     total = 0.0
 
     for entry in army.entries:
+        if not entry.counts_as_model:
+            continue
+
         configured_profile = entry.configured_profile
         
 
@@ -84,6 +87,9 @@ def calculate_army_manoeuvrability(
     spiritual_displacement_bonus = 0.0
 
     for entry in army.entries:
+        if not entry.counts_as_model:
+            continue
+
         rule_mobility = (
             _calculate_special_rule_mobility(
             entry.configured_profile,
@@ -107,10 +113,13 @@ def calculate_army_manoeuvrability(
     slayer_of_men_count = sum(
         entry.quantity
         for entry in army.entries
-        if any(
-            assignment.rule.id == "ANGMAR_ARISE_SOM"
-            for assignment
-            in entry.configured_profile.effective_special_rules
+        if (
+            entry.counts_as_model
+            and any(
+                assignment.rule.id == "ANGMAR_ARISE_SOM"
+                for assignment
+                in entry.configured_profile.effective_special_rules
+            )
         )
     )
 

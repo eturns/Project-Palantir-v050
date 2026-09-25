@@ -1,0 +1,83 @@
+{
+ "metadata": {
+  "leader": "827403a4-4855-4299-aa80-538779be4c61",
+  "tags": []
+ },
+ "warbands": [
+  {
+   "id": "827403a4-4855-4299-aa80-538779be4c61",
+   "hero": {
+    "model_id": "[the-beornings] beorn",
+    "MWFW": [
+     [
+      "",
+      "3:3:3:3"
+     ]
+    ],
+    "options": []
+   },
+   "units": [
+    {
+     "model_id": "[the-beornings] beorning",
+     "MWFW": [],
+     "options": [],
+     "quantity": 2
+    }
+   ],
+   "meta": {
+    "num": 1,
+    "points": 240,
+    "units": 2,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 2,
+    "throwLimit": 2,
+    "maxUnits": 18
+   }
+  },
+  {
+   "id": "a0c0da1f-3f42-4460-a19f-4f792cf5f87f",
+   "hero": {
+    "model_id": "[the-beornings] grimbeorn",
+    "MWFW": [
+     [
+      "",
+      "3:3:3:3"
+     ]
+    ],
+    "options": []
+   },
+   "units": [
+    {
+     "model_id": "[the-beornings] beorning",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0966",
+       "name": "Swap hand-and-a-half weapon for great bow",
+       "quantity": 1
+      }
+     ],
+     "quantity": 2
+    }
+   ],
+   "meta": {
+    "num": 2,
+    "points": 240,
+    "units": 2,
+    "heroes": 1,
+    "bows": 2,
+    "throwingWeapons": 0,
+    "bowLimit": 2,
+    "throwLimit": 2,
+    "maxUnits": 15
+   }
+  }
+ ],
+ "id": "the-beornings-zefdv2z4",
+ "version": "1.42.17",
+ "name": "The Beornings",
+ "armyList": "The Beornings",
+ "edition": "v2024"
+}

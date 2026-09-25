@@ -20,6 +20,9 @@ def get_initial_owned_resource_use_permissions(
     permissions: list[OwnedResourceUsePermission] = []
 
     for fielded_model in army.fielded_models():
+        if fielded_model.configured_profile is None:
+            continue
+
         profile = (
             fielded_model
             .configured_profile

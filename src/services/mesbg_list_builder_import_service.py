@@ -8,6 +8,7 @@ def import_army_from_mesbg_list_builder(
     profiles_by_id: dict,
     army_lists_by_id: dict,
     profile_options_by_external_id: dict | None = None,
+    siege_engine_profiles_by_id: dict | None = None,
 ) -> tuple:
     """
     Imports an MESBG List Builder JSON file and converts it
@@ -22,8 +23,12 @@ def import_army_from_mesbg_list_builder(
         definition,
         profiles_by_id,
         army_lists_by_id,
-        profile_options_by_external_id=
-            profile_options_by_external_id,
+        profile_options_by_external_id=(
+            profile_options_by_external_id
+        ),
+        siege_engine_profiles_by_id=(
+            siege_engine_profiles_by_id
+        ),
     )
 
     return definition, army, army_list

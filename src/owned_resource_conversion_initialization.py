@@ -20,6 +20,9 @@ def get_initial_owned_resource_conversions(
     conversions: list[OwnedResourceConversion] = []
 
     for fielded_model in army.fielded_models():
+        if fielded_model.configured_profile is None:
+            continue
+
         profile = (
             fielded_model
             .configured_profile

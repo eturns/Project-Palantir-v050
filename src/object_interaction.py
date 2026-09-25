@@ -87,8 +87,11 @@ def count_uncovering_artifact_eligible_models(
     return sum(
         entry.quantity
         for entry in army.entries
-        if is_profile_eligible_for_uncovering_artifact(
-            entry.profile
+        if (
+            entry.counts_as_model
+            and is_profile_eligible_for_uncovering_artifact(
+                entry.profile
+            )
         )
     )
 
@@ -110,6 +113,9 @@ def calculate_uncovering_artifact_capability_from_army(
     weighted_success_total = 0.0
 
     for entry in army.entries:
+        if not entry.counts_as_model:
+            continue
+
         if not is_profile_eligible_for_uncovering_artifact(
             entry.profile
         ):
@@ -177,6 +183,7 @@ def calculate_light_object_capability_from_army(
         )
         * entry.quantity
         for entry in army.entries
+        if entry.counts_as_model
     )
 
     average_handling = (
@@ -212,6 +219,7 @@ def calculate_heavy_object_handling_from_profile(
 
     return 0.5
 
+
 def calculate_heavy_object_capability_from_army(
     army: Army,
 ) -> float:
@@ -232,6 +240,7 @@ def calculate_heavy_object_capability_from_army(
         == 1.0
         and entry.quantity > 0
         for entry in army.entries
+        if entry.counts_as_model
     )
 
     if has_burly_model:
@@ -266,7 +275,11 @@ def calculate_search_and_light_object_capability_from_army(
     infantry_count = sum(
         entry.quantity
         for entry in army.entries
-        if ModelType.INFANTRY in entry.profile.model_types
+        if (
+            entry.counts_as_model
+            and ModelType.INFANTRY
+            in entry.profile.model_types
+        )
     )
 
     if infantry_count == 0:

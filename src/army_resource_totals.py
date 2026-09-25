@@ -10,6 +10,8 @@ def calculate_army_resource_totals(
     fate = 0
 
     for entry in army.entries:
+        if not entry.counts_as_model:
+            continue
         might += (
             entry.profile.might
             * entry.quantity

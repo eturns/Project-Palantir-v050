@@ -226,10 +226,7 @@ def calculate_key_model_preservation_from_profile(
             (
                 model
                 for model in army.fielded_models()
-                if (
-                    model.configured_profile.profile
-                    == profile
-                )
+                if model.profile_id == profile.id
             ),
             None,
         )

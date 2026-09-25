@@ -12,7 +12,86 @@ from importers.mesbg_list_builder_json_importer import (
     build_army_definition_from_data,
     get_palantir_army_list_id,
 )
+from loader import load_all_profiles
+from army_loader import (
+    load_factions,
+    load_army_lists,
+    load_army_list_profiles,
+)
+from services.mesbg_list_builder_import_service import (
+    import_army_from_mesbg_list_builder,
+)
+from profile_option_loader import (
+    build_profile_options_by_external_id,
+)
+from mount_loader import load_mounts
+from profile_option_mount_loader import (
+    load_profile_option_mount_assignments,
+)
+from wargear_loader import load_wargear
+from profile_option_wargear_loader import (
+    load_profile_option_wargear_assignments,
+)
+from model_platform_loader import load_platforms
+from profile_option_platform_loader import (
+    load_profile_option_platform_assignments,
+)
+from profile_option_state_effect_loader import (
+    load_profile_option_state_effects,
+)
 
+from analysis_loader import load_metric_thresholds
+from services.mesbg_list_analysis_service import (
+    analyse_mesbg_list_builder_file,
+)
+
+def load_production_profiles_and_options():
+    profiles = load_all_profiles()
+
+    profiles_by_id = {
+        profile.id: profile
+        for profile in profiles
+    }
+
+    profile_options = load_profile_options(
+        profiles_by_id,
+    )
+
+    mounts = load_mounts()
+
+    load_profile_option_mount_assignments(
+        profile_options,
+        mounts,
+    )
+
+    wargear = load_wargear()
+
+    load_profile_option_wargear_assignments(
+        profile_options,
+        wargear,
+    )
+
+    platforms = load_platforms()
+
+    load_profile_option_platform_assignments(
+        profile_options,
+        platforms,
+    )
+
+    load_profile_option_state_effects(
+        profile_options,
+    )
+
+    profile_options_by_external_id = (
+        build_profile_options_by_external_id(
+            profile_options
+        )
+    )
+
+    return (
+        profiles_by_id,
+        profile_options_by_external_id,
+    )
 
 def get_entry(
     army_definition,
@@ -279,3 +358,271 @@ def test_get_palantir_army_list_id_maps_the_iron_hills():
     assert get_palantir_army_list_id(
         data
     ) == "IH_IRON_HILLS"
+
+def test_real_iron_hills_json_builds_configured_runtime_army():
+    (
+        profiles_by_id,
+        profile_options_by_external_id,
+    ) = load_production_profiles_and_options()
+
+    factions = load_factions()
+
+    army_lists = load_army_lists(
+        factions
+    )
+
+    load_army_list_profiles(
+        army_lists=army_lists,
+        profiles_by_id=profiles_by_id,
+    )
+
+    definition, army, army_list = (
+        import_army_from_mesbg_list_builder(
+            "tests/fixtures/iron_hills_army.json",
+            profiles_by_id,
+            army_lists,
+            profile_options_by_external_id=(
+                profile_options_by_external_id
+            ),
+        )
+    )
+
+    assert definition.army_list_id == (
+        "IH_IRON_HILLS"
+    )
+
+    assert definition.points_limit is None
+
+    assert army_list.id == (
+        "IH_IRON_HILLS"
+    )
+
+    assert army.total_points() == 823
+
+    assert army.model_count() == 11
+
+    configured_entries = {
+        (
+            entry.profile.id,
+            tuple(
+                option.external_id
+                for option
+                in entry.configured_profile.selected_options
+            ),
+        ): entry
+        for entry in army.entries
+    }
+
+    def wargear_ids(entry):
+        return {
+            item.id
+            for item in (
+                entry
+                .configured_profile
+                .effective_wargear
+            )
+        }
+
+
+    assert wargear_ids(
+        configured_entries[
+            ("IH_WR", ("OPT0721",))
+        ]
+    ) >= {
+        "WG_BANNER",
+        "WG_SHIELD",
+    }
+
+    assert wargear_ids(
+        configured_entries[
+            ("IH_WR", ("OPT0723",))
+        ]
+    ) >= {
+        "WG_SHIELD",
+        "WG_SPEAR",
+    }
+
+    assert wargear_ids(
+        configured_entries[
+            ("IH_WR", ("OPT0724",))
+        ]
+    ) >= {
+        "WG_CROSSBOW",
+    }
+
+    assert wargear_ids(
+        configured_entries[
+            ("IH_CAP", ("OPT0720",))
+        ]
+    ) >= {
+        "WG_MATTOCK",
+    }
+
+    assert "WG_SHIELD" not in wargear_ids(
+        configured_entries[
+            ("IH_CAP", ("OPT0720",))
+        ]
+    )
+
+    assert "WG_SPEAR" not in wargear_ids(
+        configured_entries[
+            ("IH_CAP", ("OPT0720",))
+        ]
+    )
+
+    assert wargear_ids(
+        configured_entries[
+            ("IH_GR", ("OPT0726",))
+        ]
+    ) >= {
+        "WG_MATTOCK",
+    }
+
+    assert "WG_WAR_SPEAR" not in wargear_ids(
+        configured_entries[
+            ("IH_GR", ("OPT0726",))
+        ]
+    )
+
+    assert (
+        configured_entries[
+            ("IH_DAIN", ("OPT0718",))
+        ].configured_profile.effective_mount.id
+        == "MOUNT_WAR_BOAR"
+    )
+
+    assert (
+        configured_entries[
+            ("IH_DAIN", ("OPT0718",))
+        ].configured_profile.effective_base_size_mm
+        == 40
+    )
+
+    assert (
+        configured_entries[
+            ("IH_DAIN", ("OPT0718",))
+        ].configured_profile.points
+        == 185
+    )
+
+    assert (
+        configured_entries[
+            ("IH_CAP", ("OPT0719",))
+        ].configured_profile.points
+        == 250
+    )
+
+    assert (
+        configured_entries[
+            ("IH_CAP", ("OPT0720",))
+        ].configured_profile.points
+        == 80
+    )
+
+    assert (
+        configured_entries[
+            ("IH_GR", ("OPT0726",))
+        ].configured_profile.points
+        == 20
+    )
+
+    assert (
+        configured_entries[
+            ("IH_WR", ("OPT0721",))
+        ].configured_profile.points
+        == 36
+    )
+
+    assert (
+        configured_entries[
+            ("IH_WR", ("OPT0723",))
+        ].configured_profile.points
+        == 12
+    )
+
+    assert (
+        configured_entries[
+            ("IH_WR", ("OPT0724",))
+        ].quantity
+        == 2
+    )
+
+    assert (
+        configured_entries[
+            ("IH_WR", ("OPT0724",))
+        ].configured_profile.points
+        == 12
+    )
+
+    assert (
+        configured_entries[
+            ("IH_WR", ("OPT0725",))
+        ].configured_profile.points
+        == 11
+    )
+
+    fielded_models = army.fielded_models()
+
+    assert len(fielded_models) == 11
+
+    assert len({
+        model.id
+        for model in fielded_models
+    }) == 11
+
+def test_real_iron_hills_json_runs_shared_analysis_path():
+    (
+        profiles_by_id,
+        profile_options_by_external_id,
+    ) = load_production_profiles_and_options()
+
+    factions = load_factions()
+
+    army_lists = load_army_lists(
+        factions
+    )
+
+    load_army_list_profiles(
+        army_lists=army_lists,
+        profiles_by_id=profiles_by_id,
+    )
+
+    metric_thresholds = (
+        load_metric_thresholds()
+    )
+
+    result = analyse_mesbg_list_builder_file(
+        "tests/fixtures/iron_hills_army.json",
+        profiles_by_id,
+        army_lists,
+        metric_thresholds,
+        profile_options_by_external_id=(
+            profile_options_by_external_id
+        ),
+    )
+
+    assert result["definition"].army_list_id == (
+        "IH_IRON_HILLS"
+    )
+
+    assert result["definition"].points_limit is None
+
+    assert result["army_list"].id == (
+        "IH_IRON_HILLS"
+    )
+
+    assert result["army"].total_points() == 823
+
+    assert result["army"].model_count() == 11
+
+    assert result["analysis"] is not None
+
+    assert (
+        result["analysis"]["validation_errors"]
+        == []
+    )
+
+    assert (
+        result["scenario_analysis_results"]
+        is not None
+    )

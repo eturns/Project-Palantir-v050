@@ -239,17 +239,33 @@ def build_army_from_definition(
             for assigned_profile_id in (
                 configured_profile.assigned_profile_ids
             ):
-                if assigned_profile_id not in profiles_by_id:
-                    raise ValueError(
-                        "Unknown assigned Profile ID "
-                        f"'{assigned_profile_id}' for Profile "
-                        f"'{profile_id}'."
+                if assigned_profile_id in profiles_by_id:
+                    army.add_profile(
+                        profiles_by_id[assigned_profile_id],
+                        quantity=entry_definition.quantity,
+                        warband_id=entry_definition.warband_id,
                     )
+                    continue
 
-                army.add_profile(
-                    profiles_by_id[assigned_profile_id],
-                    quantity=entry_definition.quantity,
-                    warband_id=entry_definition.warband_id,
+                if (
+                    siege_engine_profiles_by_id is not None
+                    and assigned_profile_id
+                    in siege_engine_profiles_by_id
+                ):
+                    army.add_siege_engine_profile(
+                        siege_engine_profiles_by_id[
+                            assigned_profile_id
+                        ],
+                        quantity=entry_definition.quantity,
+                        warband_id=entry_definition.warband_id,
+                        points_override=0,
+                    )
+                    continue
+
+                raise ValueError(
+                    "Unknown assigned Profile ID "
+                    f"'{assigned_profile_id}' for Profile "
+                    f"'{profile_id}'."
                 )
 
         else:

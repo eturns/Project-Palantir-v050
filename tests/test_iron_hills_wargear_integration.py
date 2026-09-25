@@ -11,6 +11,7 @@ from wargear_loader import load_wargear
 from iron_hills_test_helpers import (
     load_iron_hills_test_profiles,
 )
+from loader import load_all_profiles
 
 def create_iron_hills_warrior() -> Profile:
     return Profile(
@@ -38,8 +39,7 @@ def test_iron_hills_warrior_shield_and_spear_configuration():
 
     profiles = {
         loaded_profile.id: loaded_profile
-        for loaded_profile
-        in load_iron_hills_test_profiles()
+        for loaded_profile in load_all_profiles()
     }
 
     profiles["IH_WR"] = profile
@@ -83,7 +83,7 @@ def test_iron_hills_warrior_shield_and_spear_configuration():
 def test_iron_hills_captain_mattock_configuration():
     profiles = {
         profile.id: profile
-        for profile in load_iron_hills_test_profiles()
+        for profile in load_all_profiles()
     }
 
     wargear = load_wargear()
@@ -122,9 +122,9 @@ def test_iron_hills_captain_mattock_configuration():
 
 def test_iron_hills_goat_rider_mattock_configuration():
     profiles = {
-        profile.id: profile
-        for profile in load_iron_hills_test_profiles()
-    }
+            profile.id: profile
+            for profile in load_all_profiles()
+        }
 
     wargear = load_wargear()
 

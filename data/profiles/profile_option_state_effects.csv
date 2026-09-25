@@ -1,0 +1,3 @@
+option_id,movement_override,defence_modifier,model_type_override,shooting_override,base_size_override_mm,heroic_status_override,might_override,will_override,fate_override
+DALE_SIEGE_VETERAN,,,,,,HERO,1,1,1
+IH_SIEGE_VETERAN,,,,,,HERO,1,1,1

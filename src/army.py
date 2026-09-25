@@ -86,26 +86,27 @@ class Army:
         siege_engine_profile: SiegeEngineProfile,
         quantity: int = 1,
         warband_id: str | None = None,
+        points_override: int | None = None,
     ) -> None:
         entry = ArmyEntry(
             siege_engine_profile=siege_engine_profile,
             quantity=quantity,
             warband_id=warband_id,
+            points_override=points_override,
         )
 
         self.entries.append(entry)
 
     def _total_attribute(self, attribute: str) -> int:
-        """
-        Returns the total of a chosen attribute across the army.
-        """
-
         total = 0
 
         for entry in self.entries:
+            if not entry.counts_as_model:
+                continue
+
             total += entry.total_attribute(attribute)
 
-        return total 
+        return total
 
     def _highest_entry(
         self,
@@ -416,7 +417,10 @@ class Army:
                 f"Limited Heroic Resilience. "
                 f"(Fate Density: {metrics.fate_density:.2f})"
             )
-    def validate(self, points_limit: int,) -> list[str]:
+    def validate(
+        self,
+        points_limit: int | None,
+    ) -> list[str]:
         """
         Validates the army.
 
@@ -447,6 +451,9 @@ class Army:
 
         for entry in self.entries:
 
+            if entry.configured_profile is None:
+                continue
+
             max_allowed = entry.profile.max_in_army
 
             if max_allowed == 0:
@@ -462,13 +469,19 @@ class Army:
 
         return errors
     
-    def _validate_points_limit(self, points_limit: int,) -> list[str]:
+    def _validate_points_limit(
+        self,
+        points_limit: int | None,
+    ) -> list[str]:
         """
         Validates that the army does not exceed
         the agreed points limit.
         """
 
         errors = []
+
+        if points_limit is None:
+            return errors
 
         if self.total_points() > points_limit:
 
@@ -496,12 +509,16 @@ class Army:
         predicate,
     ) -> int:
         """
-        Counts models matching a supplied ArmyEntry condition.
+        Counts ordinary models matching a supplied
+        ArmyEntry condition.
         """
 
         total = 0
 
         for entry in self.entries:
+            if not entry.counts_as_model:
+                continue
+
             if predicate(entry):
                 total += entry.quantity
 
@@ -560,12 +577,16 @@ class Army:
         selector,
     ) -> float:
         """
-        Returns the quantity-weighted average of an ArmyEntry statistic.
+        Returns the quantity-weighted average of an ordinary
+        model ArmyEntry statistic.
         """
 
         total = 0
 
         for entry in self.entries:
+            if not entry.counts_as_model:
+                continue
+
             total += (
                 selector(entry)
                 * entry.quantity
