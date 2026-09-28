@@ -71,9 +71,28 @@ These are **hypotheses to test**, not acceptance thresholds or pre-decided ranki
 | CAL-002 | Dol Guldur key-model preservation is 0.298032–0.301890. | Open, not a confirmed defect. | DEV-073B/C: trace leader and Fog of War model selection, combat and Fate assumptions; log absent explicit resurrection config. |
 | CAL-003 | Dale concentrated control is 0.627599; Five Armies 0.536111; Iron Hills 0.508704. | Open; no expected numerical ordering asserted. | DEV-073B: inspect calculation and individual model contributions in the actual fixture contexts. |
 | CAL-004 | All four fixtures have projection 0. | Open; data/effective-equipment explanation not yet verified. | DEV-073B: inspect configured ranged weapons, projection inputs, and whether ranged capability is legitimately absent. |
+**DEV-073B investigation**
+
+- Original Dol Guldur baseline omitted ability relationships. With
+  special rules, heroic actions, spells, ability tags and prerequisites
+  loaded, magic density is 0.7420634921 and shooting density is 0.5.
+  Corrected evidence: `dev073b_dol_guldur_validation.json`.
+- Iron Hills still returns zero shooting density with the corrected
+  ability loader, despite the fixture containing crossbow-equipped
+  Warriors. Corrected evidence: `dev073b_iron_hills_validation.json`.
+- `ability_availability._has_ranged_weapon()` currently always returns
+  `False`. The battlefield-evidence builder passes the base Profile
+  into availability checks, so optional configured wargear is not
+  visible there.
+- The shooting metric scores `SHOOTING` ability evidence but does not
+  directly score equipped ranged wargear.
+- DEV-073E: implement and test ranged-weapon recognition and its
+  contribution to shooting metrics. Preserve compatibility with base
+  Profile validation and avoid double-counting ranged abilities.
+- Preserve the original DEV-073A baselines as historical evidence;
+  corrected results must remain in separately named files.
 | CAL-005 | Iron Hills Heirloom object interaction is 0; other object modes yield 0.5 or 1.0. All six loaded `IH_` profiles have empty `model_types`. | **Confirmed Iron Hills source-data completeness issue**; full downstream impact remains open. | DEV-073E: add correct verified `heroic_status`, `model_types`, `races` in source data and focused loader/Heirloom regression; examine configured mounted/chariot model types and affected race-based rules. Preserve original baseline. |
 | CAL-006 | Iron Hills state resilience is 0.568279, versus Five Armies 0.788992. | Open; fixture points and composition differ. | DEV-073B: inspect model-level, equipment, chariot/platform and break/state contributions before inferring error. |
-
 ### CAL-005: targeted evidence
 
 Iron Hills scenario-specific object outputs:
@@ -104,3 +123,146 @@ The zero is explained by the **current data-plus-formula path**. It is not yet e
 **Explicit exclusions:** no synthetic acceptance armies; no assumption of full Beorn form-aware combat or resilience; no Beornings/Grimbeorn expansion in Hobbit acceptance; no assertion that default Dol Guldur scores include resurrection; no assumption that these uneven-points fixtures establish a tournament ranking. The intentionally skipped real Beornings whole-army test remains deferred per the handover.
 
 **Git hygiene:** Do not stage diagnostic scripts, architecture-audit document, `src/eddies-choice.json`, or tracked `__pycache__/*.pyc`. Stage only explicitly reviewed DEV-073 documentation and baseline paths when ready; never `git add .`.
+
+### CAL-005 — Iron Hills object interaction
+
+**DEV-073B findings**
+
+- The Iron Hills profile CSV lacks the `model_types` column.
+  Loaded Iron Hills profiles therefore have empty model-type
+  classifications.
+- Search and uncover object-interaction calculations require
+  `ModelType.INFANTRY`. With no eligible infantry identified,
+  the Iron Hills fixture receives zero capability for those modes.
+- The zero is a profile-data completeness issue, not a valid
+  conclusion about the army's ability to interact with objectives.
+- Object-interaction calculations currently inspect base-profile
+  classifications. Configured and mounted model eligibility
+  requires separate regression coverage.
+
+**Status:** Root cause identified. Complete and validate Iron Hills
+profile classifications in DEV-073E, then recapture the affected
+scenario results in a separately versioned validation file.
+Preserve the original DEV-073A baseline.
+
+### CAL-006 — State resilience
+
+**DEV-073B findings**
+
+- State resilience is the equal-weight average of army staying
+  power and resource capacity.
+- Iron Hills (823 points): staying power 0.643782, resource
+  capacity 0.492777, state resilience 0.568279.
+- Dol Guldur (700 points): staying power 0.613952, resource
+  capacity 0.650794, state resilience 0.632373.
+- Iron Hills resource totals: 7 Might, 5 Will, 5 Fate.
+- Dol Guldur resource totals: 10 Might, 30 Will, 0 Fate.
+- Resource capacity normalises each resource per 100 army points,
+  caps each contribution at 1.0, and averages all three.
+- Dol Guldur's higher resource capacity accounts for its higher
+  state resilience despite its lower average staying power.
+- The corrected ability loader reproduces both original
+  state-resilience scores.
+
+**Status:** Component calculations reproduced; no defect
+established. Resource benchmarks and weighting remain calibration
+questions. Dol Guldur's result does not include resurrection;
+assess resurrection-aware resilience separately.
+
+### CAL-008 — Attrition output
+
+**DEV-073B findings**
+
+- The production normalisation curve is
+  `combat_capability / (combat_capability + benchmark)`.
+  The eight-input curve test matched the expected results.
+- Army combat capability is a quantity-weighted average of
+  per-model combat scores, not total army damage output.
+- Each profile's combat score combines offensive and defensive
+  components at equal weight.
+- The offensive component estimates the probability of winning
+  a duel and inflicting enough wounds to defeat the benchmark
+  opponent in one fight.
+- Increasing a model's own Wounds from 1 to 3, with other
+  characteristics fixed, did not change its combat score.
+- Wounds are represented separately in staying power, which
+  contributes to state resilience.
+- Model count contributes to distributed control and scenario
+  presence. Concentrated control combines presence and
+  attrition output.
+
+**Status:** Normalisation curve validated. No production change
+approved. Retain the question of average combat effectiveness
+versus aggregate casualty output for DEV-073E, with scenario-level
+regression tests before changing the metric.
+
+### CAL-009 — Key-model pressure
+
+**DEV-073B findings**
+
+- Key-model pressure combines attrition output and hero-hunting
+  capability at equal weight.
+- Corrected Iron Hills: attrition 0.534044, hero hunting 0.000000,
+  key-model pressure 0.267022.
+- Corrected Dol Guldur: attrition 0.558435, hero hunting 0.396190,
+  key-model pressure 0.477313.
+- The original Dol Guldur baseline recorded key-model pressure
+  0.279217 because its ability relationships were not loaded.
+- The calculation behaves consistently with its inputs. No change
+  to the key-model pressure formula is justified by these tests.
+
+**Status:** Formula validated. Retain the corrected Dol Guldur
+validation as separate evidence. Any changes to hero-hunting
+evidence or ability loading must be regression-tested in DEV-073E.
+
+### CAL-010 — Deployment recovery
+
+**DEV-073B findings**
+
+- Deployment recovery is the equal-weight average of mobility
+  and state resilience.
+- Iron Hills: mobility 0.440776, state resilience 0.568279,
+  deployment recovery 0.504528.
+- Dol Guldur: mobility 0.519547, state resilience 0.632373,
+  deployment recovery 0.575960.
+- Both baseline results are consistent with the production formula.
+- The calculation inherits limitations in its inputs, including
+  the configured mount/platform movement issues recorded in
+  CAL-007.
+
+**Status:** Formula validated. No direct change required.
+Revalidate deployment recovery after any DEV-073E corrections
+to mobility or state resilience.
+
+## DEV-073B — Consolidated findings
+
+The fixed-input normalisation curves for distributed control,
+mobility and attrition output behaved as implemented. Key-model
+pressure, state resilience and deployment recovery were also
+reproduced from their component inputs.
+
+Confirmed gaps:
+- CAL-004: Equipped ranged wargear does not contribute through
+  the traced shooting-density pathway. Ranged-weapon prerequisite
+  detection is also a placeholder.
+- CAL-005: Missing Iron Hills model classifications cause
+  incorrect object-interaction eligibility.
+- CAL-007: Configured mount and platform movement requires
+  correction and regression coverage.
+
+Baseline limitation:
+- The original DEV-073A runner omitted ability relationships.
+  Corrected DEV-073B results are stored separately. The original
+  four baseline files remain unchanged.
+
+Open calibration questions:
+- CAL-001/CAL-003: Compare presence and concentrated control at
+  a shared points limit.
+- CAL-008: Establish whether attrition output should represent
+  average combat effectiveness or aggregate casualty output.
+- CAL-006: Assess resource-density benchmarks and weighting.
+- Assess resurrection-aware Dol Guldur resilience separately.
+
+Do not change production formulas solely to match the original
+baseline scores. Resolve data gaps and use controlled scenario
+comparisons before approving calibration changes.
