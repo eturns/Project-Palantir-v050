@@ -20,17 +20,24 @@ def load_iron_hills_profiles():
     }
 
 
-def test_dain_war_boar_configuration():
+def test_dain_war_boar_configuration(tmp_path):
     profiles = load_iron_hills_profiles()
     options = load_profile_options(
         profiles=profiles,
         skip_unknown_profiles=True,
     )
     mounts = load_mounts()
+    assignment_file = tmp_path / "war_boar_assignments.csv"
+    assignment_file.write_text(
+        "option_id,mount_id\n"
+        "IH_DAIN_WAR_BOAR,MOUNT_WAR_BOAR\n",
+        encoding="utf-8",
+    )
 
     load_profile_option_mount_assignments(
         profile_options=options,
         mounts=mounts,
+        file_path=str(assignment_file),
     )
 
     configured_profile = ConfiguredProfile(

@@ -37,12 +37,15 @@ from resurrection_resilience_calculator import (
 )
 from scenario_context import ScenarioContext
 from resurrection_config import ResurrectionConfig
+from fielded_model_form_state import FieldedModelFormState
 
 def build_scenario_capability_profile(
     army: Army,
     context: ScenarioContext,
     preservation_profile: Profile | None = None,
     resurrection_config: ResurrectionConfig | None = None,
+    *,
+    form_states: tuple[FieldedModelFormState, ...] | None = None,
 ) -> ScenarioCapabilityProfile:
     army_list = context.army_list
     key_profile = context.key_profile
@@ -81,11 +84,17 @@ def build_scenario_capability_profile(
         )
     )
 
+    mobility_kwargs = {}
+
+    if form_states is not None:
+        mobility_kwargs["form_states"] = form_states
+
     mobility = calculate_mobility_capability_from_army(
         army=army,
         benchmark_manoeuvrability=(
             benchmark_manoeuvrability
         ),
+        **mobility_kwargs,
     )
 
     projection = calculate_projection_capability_from_army(

@@ -106,7 +106,15 @@ def test_load_profile_options_loads_iron_hills_warrior_options():
         skip_unknown_profiles=True,
     )
 
-    assert len(profile.profile_options) == 5
+    assert len(profile.profile_options) == 6
+
+    assert {
+        option.id
+        for option in profile.profile_options
+    } >= {
+        "IH_WR_SHIELD_SPEAR",
+        "IH_WR_SHIELD_SPEAR_FIVE_ARMIES",
+    }
 
 
 def test_load_profile_options_rejects_unknown_profile(

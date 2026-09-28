@@ -4,7 +4,7 @@ from army_manoeuvrability import (
 )
 from scenario_capability import ScenarioCapability
 from scenario_demand import StrategicDemand
-
+from fielded_model_form_state import FieldedModelFormState
 
 def calculate_mobility_capability(
     manoeuvrability: int | float,
@@ -59,6 +59,8 @@ def calculate_mobility_capability(
 def calculate_mobility_capability_from_army(
     army: Army,
     benchmark_manoeuvrability: int | float,
+    *,
+    form_states: tuple[FieldedModelFormState, ...] | None = None,
 ) -> ScenarioCapability:
     if not isinstance(army, Army):
         raise TypeError(
@@ -67,6 +69,7 @@ def calculate_mobility_capability_from_army(
 
     manoeuvrability = calculate_army_manoeuvrability(
         army,
+        form_states=form_states,
     )
 
     return calculate_mobility_capability(

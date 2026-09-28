@@ -198,6 +198,7 @@ def analyse_mesbg_list_builder_file(
                 ),
                 benchmark_fate=benchmark_fate,
                 resurrection_config=resurrection_config,
+                form_states=fielded_model_form_states,
             )
         )
 

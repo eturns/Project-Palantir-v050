@@ -15,8 +15,18 @@ def create_war_boar_option() -> ProfileOption:
         external_id="OPT0718",
     )
 
+def create_war_boar_assignments_file(tmp_path: Path) -> str:
+    file_path = tmp_path / "war_boar_assignments.csv"
 
-def test_load_profile_option_mount_assignment():
+    file_path.write_text(
+        "option_id,mount_id\n"
+        "IH_DAIN_WAR_BOAR,MOUNT_WAR_BOAR\n",
+        encoding="utf-8",
+    )
+
+    return str(file_path)
+
+def test_load_profile_option_mount_assignment(tmp_path: Path):
     option = create_war_boar_option()
     options = {
         option.id: option,
@@ -27,6 +37,7 @@ def test_load_profile_option_mount_assignment():
     load_profile_option_mount_assignments(
         profile_options=options,
         mounts=mounts,
+        file_path=create_war_boar_assignments_file(tmp_path),
     )
 
     assert len(option.mount_assignments) == 1
@@ -36,7 +47,7 @@ def test_load_profile_option_mount_assignment():
     )
 
 
-def test_mount_assignment_uses_master_mount_entity():
+def test_mount_assignment_uses_master_mount_entity(tmp_path: Path):
     option = create_war_boar_option()
     mounts = load_mounts()
 
@@ -45,6 +56,7 @@ def test_mount_assignment_uses_master_mount_entity():
             option.id: option,
         },
         mounts=mounts,
+        file_path=create_war_boar_assignments_file(tmp_path),
     )
 
     assert option.mount_assignments[0].mount.id == (

@@ -17,6 +17,7 @@ from object_interaction import (
 )
 from scenario_context import ScenarioContext
 from resurrection_config import ResurrectionConfig
+from fielded_model_form_state import FieldedModelFormState
 
 def build_scenario_analysis_results(
     *,
@@ -96,7 +97,8 @@ def build_scenario_analysis_results_from_candidate(
     benchmark_manoeuvrability=None,
     benchmark_combat_capability=None,
     benchmark_fate=None,
-   resurrection_config: ResurrectionConfig | None = None,
+    resurrection_config: ResurrectionConfig | None = None,
+    form_states: tuple[FieldedModelFormState, ...] | None = None,
 ) -> tuple[ScenarioAnalysisResult, ...]:
 
     context = ScenarioContext(
@@ -109,12 +111,18 @@ def build_scenario_analysis_results_from_candidate(
         benchmark_fate=benchmark_fate,
     )
 
+    candidate_kwargs = {}
+
+    if form_states is not None:
+        candidate_kwargs["form_states"] = form_states
+
     capability_profile = (
         build_scenario_capability_profile_from_candidate(
             candidate,
             context=context,
             preservation_profile=preservation_profile,
             resurrection_config=resurrection_config,
+            **candidate_kwargs,
         )
     )
     scenario_capability_overrides = {}

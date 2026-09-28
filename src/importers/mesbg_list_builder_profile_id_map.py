@@ -115,4 +115,20 @@ EXTERNAL_PROFILE_IDS = {
         "[the-beornings] "
         "beorning"
     ): "BEORNING",
+    (
+        "[the-battle-of-five-armies] "
+        "dain-ironfoot-lord-of-the-iron-hills"
+    ): "IH_DAIN",
+    (
+        "[the-battle-of-five-armies] "
+        "iron-hills-warrior"
+    ): "IH_WR",
+    (
+        "[the-battle-of-five-armies] "
+        "bard-the-bowman"
+    ): "BARD",
+    (
+        "[the-battle-of-five-armies] "
+        "lake-town-militia"
+    ): "LAKE_TOWN_MILITIA",
 }

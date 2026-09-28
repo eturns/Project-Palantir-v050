@@ -1,0 +1,95 @@
+{
+ "metadata": {
+  "leader": "304563f5-68be-4dc8-8ba1-66d2e07977f1",
+  "tags": []
+ },
+ "warbands": [
+  {
+   "id": "304563f5-68be-4dc8-8ba1-66d2e07977f1",
+   "hero": {
+    "model_id": "[the-battle-of-five-armies] dain-ironfoot-lord-of-the-iron-hills",
+    "MWFW": [
+     [
+      "",
+      "3:3:3:3"
+     ]
+    ],
+    "options": []
+   },
+   "units": [
+    {
+     "model_id": "[the-battle-of-five-armies] iron-hills-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0782",
+       "name": "Shield and spear",
+       "quantity": 1
+      }
+     ],
+     "quantity": 2
+    }
+   ],
+   "meta": {
+    "num": 1,
+    "points": 184,
+    "units": 2,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 2,
+    "throwLimit": 2,
+    "maxUnits": 18
+   }
+  },
+  {
+   "id": "ed08a2a9-b1dd-471b-bf22-a9693b3a6d6b",
+   "hero": {
+    "model_id": "[the-battle-of-five-armies] bard-the-bowman",
+    "MWFW": [
+     [
+      "",
+      "3:3:3:3"
+     ]
+    ],
+    "options": [
+     {
+      "id": "OPT0795",
+      "name": "Exchange great bow for armour and horse",
+      "quantity": 1
+     }
+    ]
+   },
+   "units": [
+    {
+     "model_id": "[the-battle-of-five-armies] lake-town-militia",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0798",
+       "name": "Spear",
+       "quantity": 1
+      }
+     ],
+     "quantity": 2
+    }
+   ],
+   "meta": {
+    "num": 2,
+    "points": 162,
+    "units": 2,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 2,
+    "throwLimit": 2,
+    "maxUnits": 18
+   }
+  }
+ ],
+ "id": "the-battle-of-five-armies-7h7bo9wl",
+ "version": "1.42.17",
+ "name": "The Battle of Five Armies",
+ "armyList": "The Battle of Five Armies",
+ "edition": "v2024"
+}

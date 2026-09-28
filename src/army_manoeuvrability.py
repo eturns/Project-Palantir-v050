@@ -5,6 +5,7 @@ from manoeuvrability_score import (
 )
 from profile_metrics import calculate_profile_metrics
 from ability_queries import calculate_tag_score
+from fielded_model_form_state import FieldedModelFormState
 
 def _calculate_special_rule_mobility(
     profile,
@@ -38,22 +39,52 @@ def _calculate_special_rule_mobility(
 
 def calculate_army_manoeuvrability(
     army: Army,
+    *,
+    form_states: tuple[FieldedModelFormState, ...] | None = None,
 ) -> float:
     if army.model_count() == 0:
         return 0.0
 
+    if form_states is None:
+        profile_quantities = tuple(
+            (entry.configured_profile, entry.quantity)
+            for entry in army.entries
+            if entry.counts_as_model
+        )
+    else:
+        expected_model_ids = {
+            model.id
+            for model in army.fielded_models()
+            if model.counts_as_model
+        }
+
+        supplied_model_ids = [
+            state.fielded_model_id
+            for state in form_states
+        ]
+
+        if (
+            len(supplied_model_ids) != len(expected_model_ids)
+            or set(supplied_model_ids) != expected_model_ids
+        ):
+            raise ValueError(
+                "Form states must contain exactly one "
+                "state for every fielded model."
+            )
+
+        profile_quantities = tuple(
+            (state.active_configured_profile, 1)
+            for state in form_states
+        )
+
     total = 0.0
 
-    for entry in army.entries:
-        if not entry.counts_as_model:
-            continue
-
-        configured_profile = entry.configured_profile
-        
-
+    for configured_profile, quantity in profile_quantities:
         manoeuvrability = calculate_manoeuvrability(
             ManoeuvrabilityInputs(
-                movement=configured_profile.effective_movement,
+                movement=(
+                    configured_profile.effective_movement
+                ),
                 base_size_mm=(
                     configured_profile.effective_base_size_mm
                 ),
@@ -66,7 +97,7 @@ def calculate_army_manoeuvrability(
 
         spiritual_displacement_mobility = (
             _calculate_special_rule_mobility(
-                entry.configured_profile,
+                configured_profile,
                 "SPIRITUAL_DISPLACEMENT",
             )
         )
@@ -76,31 +107,24 @@ def calculate_army_manoeuvrability(
             - spiritual_displacement_mobility
         )
 
-        manoeuvrability += mobility_bonus
-
         total += (
-            manoeuvrability
-            * entry.quantity
+            (manoeuvrability + mobility_bonus)
+            * quantity
         )
 
     spiritual_displacement_model_count = 0
     spiritual_displacement_bonus = 0.0
 
-    for entry in army.entries:
-        if not entry.counts_as_model:
-            continue
-
+    for configured_profile, quantity in profile_quantities:
         rule_mobility = (
             _calculate_special_rule_mobility(
-            entry.configured_profile,
-            "SPIRITUAL_DISPLACEMENT",
-        )
+                configured_profile,
+                "SPIRITUAL_DISPLACEMENT",
+            )
         )
 
         if rule_mobility > 0:
-            spiritual_displacement_model_count += (
-                entry.quantity
-            )
+            spiritual_displacement_model_count += quantity
 
             spiritual_displacement_bonus = max(
                 spiritual_displacement_bonus,
@@ -111,14 +135,12 @@ def calculate_army_manoeuvrability(
         total += spiritual_displacement_bonus
 
     slayer_of_men_count = sum(
-        entry.quantity
-        for entry in army.entries
-        if (
-            entry.counts_as_model
-            and any(
-                assignment.rule.id == "ANGMAR_ARISE_SOM"
-                for assignment
-                in entry.configured_profile.effective_special_rules
+        quantity
+        for configured_profile, quantity in profile_quantities
+        if any(
+            assignment.rule.id == "ANGMAR_ARISE_SOM"
+            for assignment in (
+                configured_profile.effective_special_rules
             )
         )
     )

@@ -29,6 +29,20 @@ from services.mesbg_list_analysis_service import (
     analyse_mesbg_list_builder_file,
 )
 import pytest
+from army_manoeuvrability import calculate_army_manoeuvrability
+from mobility_capability import (
+    calculate_mobility_capability_from_army,
+)
+from faction import Faction
+from army_list import ArmyList
+from optimiser_candidate import OptimiserCandidate
+from scenario_analysis_context import (
+    build_default_scenario_analysis_context,
+)
+from scenario_analysis_builder import (
+    build_scenario_analysis_results_from_candidate,
+)
+from scenario_demand import StrategicDemand
 
 FIXTURE_PATH = "tests/fixtures/the_beornings.json"
 
@@ -393,3 +407,150 @@ def test_beorn_real_json_initializes_forms_through_analysis_service():
 
     assert army.total_points() == 480
     assert army.model_count() == 6
+
+def test_beorn_active_form_reaches_army_manoeuvrability():
+    profiles = {
+        profile.id: profile
+        for profile in load_all_profiles()
+    }
+
+    army = Army()
+    army.add_profile(
+        profiles["BEORN"],
+        quantity=1,
+    )
+
+    states = get_initial_fielded_model_form_states(
+        army=army,
+        allowed_alternates_by_profile_id={
+            "BEORN": frozenset({"BEORN_THE_BEAR"}),
+        },
+    )
+
+    man_state = states[0]
+
+    bear_state = request_fielded_model_form_change(
+        state=man_state,
+        new_active_configured_profile=ConfiguredProfile(
+            profile=profiles["BEORN_THE_BEAR"],
+        ),
+        transition_permitted=True,
+    )
+
+    man_manoeuvrability = calculate_army_manoeuvrability(
+        army,
+        form_states=(man_state,),
+    )
+
+    bear_manoeuvrability = calculate_army_manoeuvrability(
+        army,
+        form_states=(bear_state,),
+    )
+
+    assert man_manoeuvrability == 6.0
+    assert bear_manoeuvrability > 0
+    assert bear_manoeuvrability != man_manoeuvrability
+
+    man_mobility = calculate_mobility_capability_from_army(
+        army,
+        benchmark_manoeuvrability=6,
+        form_states=(man_state,),
+    )
+
+    bear_mobility = calculate_mobility_capability_from_army(
+        army,
+        benchmark_manoeuvrability=6,
+        form_states=(bear_state,),
+    )
+
+    assert man_mobility.value != bear_mobility.value
+
+    assert army.total_points() == 200
+    assert army.model_count() == 1
+
+def test_beorn_active_form_changes_reconnoitre_analysis():
+    profiles = {
+        profile.id: profile
+        for profile in load_all_profiles()
+    }
+
+    beorn = profiles["BEORN"]
+
+    army = Army()
+    army.add_profile(beorn, quantity=1)
+
+    states = get_initial_fielded_model_form_states(
+        army=army,
+        allowed_alternates_by_profile_id={
+            "BEORN": frozenset({"BEORN_THE_BEAR"}),
+        },
+    )
+
+    man_state = states[0]
+
+    bear_state = request_fielded_model_form_change(
+        state=man_state,
+        new_active_configured_profile=ConfiguredProfile(
+            profile=profiles["BEORN_THE_BEAR"],
+        ),
+        transition_permitted=True,
+    )
+
+    army_list = ArmyList(
+        id="BEORN_TEST",
+        name="Beorn Analysis Test",
+        faction=Faction(
+            id="BEORNING",
+            name="Beorning",
+        ),
+        profiles=[beorn],
+    )
+
+    context = build_default_scenario_analysis_context(
+        points_limit=200,
+    )
+
+    def analyse_form(form_state):
+        results = build_scenario_analysis_results_from_candidate(
+            candidate=OptimiserCandidate(army=army),
+            army_list=army_list,
+            key_profile=beorn,
+            preservation_profile=beorn,
+            combat_benchmark=context.combat_benchmark,
+            benchmark_presence=context.benchmark_presence,
+            benchmark_manoeuvrability=(
+                context.benchmark_manoeuvrability
+            ),
+            benchmark_combat_capability=(
+                context.benchmark_combat_capability
+            ),
+            benchmark_fate=context.benchmark_fate,
+            form_states=(form_state,),
+        )
+
+        return next(
+            result
+            for result in results
+            if result.scenario_id == "RECONNOITRE"
+        )
+
+    man_result = analyse_form(man_state)
+    bear_result = analyse_form(bear_state)
+
+    man_mobility = next(
+        demand.capability
+        for demand in man_result.demands
+        if demand.dimension is StrategicDemand.MOBILITY
+    )
+
+    bear_mobility = next(
+        demand.capability
+        for demand in bear_result.demands
+        if demand.dimension is StrategicDemand.MOBILITY
+    )
+
+    assert man_mobility != bear_mobility
+    assert man_result.score != bear_result.score
+
+    assert army.total_points() == 200
+    assert army.model_count() == 1
