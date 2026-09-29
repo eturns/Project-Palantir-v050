@@ -1,0 +1,6 @@
+RANGED_WARGEAR_IDS = frozenset({
+    "WG_CROSSBOW",
+    "WG_ESGAROTH_BOW",
+    "WG_GREAT_BOW",
+    "WG_RAPID_FIRE_BOLT_THROWER",
+})

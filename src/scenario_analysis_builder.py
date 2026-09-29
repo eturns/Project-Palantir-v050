@@ -155,6 +155,7 @@ def build_scenario_analysis_results_from_candidate(
                 leader_model=leader_model,
                 combat_benchmark=combat_benchmark,
                 benchmark_fate=benchmark_fate,
+                army_list=army_list,
             )
         )
 

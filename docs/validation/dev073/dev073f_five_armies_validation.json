@@ -1,0 +1,419 @@
+{
+  "ticket": "DEV-073F",
+  "commit": "80a4777dff961147bbbb62985241184575ddfff3",
+  "fixture": "tests\\fixtures\\five_armies.json",
+  "fixture_sha256": "6bff3362ad36aa9167a369c53e4b8b32ec8539af6cd599784eee07cead71570a",
+  "army": {
+    "name": "The Battle of Five Armies",
+    "points": 346,
+    "points_limit": 346,
+    "models": 6
+  },
+  "benchmarks": {
+    "presence": 4.942857142857143,
+    "manoeuvrability": 6.0,
+    "combat_capability": 0.5,
+    "fate": 3.0,
+    "combat": {
+      "fight": 4,
+      "strength": 4,
+      "defence": 6,
+      "attacks": 1,
+      "wounds": 1
+    }
+  },
+  "scenarios": [
+    {
+      "id": "DOMINATION",
+      "name": "Domination",
+      "pool": "hold_objective",
+      "score": 0.5483028720626631,
+      "demands": [
+        {
+          "dimension": "distributed_control",
+          "capability": 0.5483028720626631,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "CAPTURE_AND_CONTROL",
+      "name": "Capture & Control",
+      "pool": "hold_objective",
+      "score": 0.5483028720626631,
+      "demands": [
+        {
+          "dimension": "distributed_control",
+          "capability": 0.5483028720626631,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "BREAKTHROUGH",
+      "name": "Breakthrough",
+      "pool": "hold_objective",
+      "score": 0.5483028720626631,
+      "demands": [
+        {
+          "dimension": "distributed_control",
+          "capability": 0.5483028720626631,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "STAKE_A_CLAIM",
+      "name": "Stake a Claim",
+      "pool": "hold_objective",
+      "score": 0.5483028720626631,
+      "demands": [
+        {
+          "dimension": "distributed_control",
+          "capability": 0.5483028720626631,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "TO_THE_DEATH",
+      "name": "To the Death!",
+      "pool": "kill_the_enemy",
+      "score": 0.6564550312792641,
+      "demands": [
+        {
+          "dimension": "attrition_output",
+          "capability": 0.5239183673469389,
+          "intensity": 1.0
+        },
+        {
+          "dimension": "state_resilience",
+          "capability": 0.7889916952115892,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "LORDS_OF_BATTLE",
+      "name": "Lords of Battle",
+      "pool": "kill_the_enemy",
+      "score": 0.6564550312792641,
+      "demands": [
+        {
+          "dimension": "attrition_output",
+          "capability": 0.5239183673469389,
+          "intensity": 1.0
+        },
+        {
+          "dimension": "state_resilience",
+          "capability": 0.7889916952115892,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "ASSASSINATION",
+      "name": "Assassination",
+      "pool": "kill_the_enemy",
+      "score": 0.3544447328064174,
+      "demands": [
+        {
+          "dimension": "key_model_pressure",
+          "capability": 0.3544447328064174,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "CONTEST_OF_CHAMPIONS",
+      "name": "Contest of Champions",
+      "pool": "kill_the_enemy",
+      "score": 0.3544447328064174,
+      "demands": [
+        {
+          "dimension": "key_model_pressure",
+          "capability": 0.3544447328064174,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "HOLD_GROUND",
+      "name": "Hold Ground",
+      "pool": "maelstrom_of_battle",
+      "score": 0.6287873709364791,
+      "demands": [
+        {
+          "dimension": "deployment_recovery",
+          "capability": 0.6287873709364791,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "HEIRLOOM_OF_AGES_PAST",
+      "name": "Heirloom of Ages Past",
+      "pool": "maelstrom_of_battle",
+      "score": 0.8143936854682395,
+      "demands": [
+        {
+          "dimension": "deployment_recovery",
+          "capability": 0.6287873709364791,
+          "intensity": 1.0
+        },
+        {
+          "dimension": "object_interaction",
+          "capability": 1.0,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "SITES_OF_POWER",
+      "name": "Sites of Power",
+      "pool": "maelstrom_of_battle",
+      "score": 0.6287873709364791,
+      "demands": [
+        {
+          "dimension": "deployment_recovery",
+          "capability": 0.6287873709364791,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "COMMAND_THE_BATTLEFIELD",
+      "name": "Command the Battlefield",
+      "pool": "maelstrom_of_battle",
+      "score": 0.6287873709364791,
+      "demands": [
+        {
+          "dimension": "deployment_recovery",
+          "capability": 0.6287873709364791,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "DESTROY_THE_SUPPLIES",
+      "name": "Destroy the Supplies",
+      "pool": "object",
+      "score": 0.6682312221220567,
+      "demands": [
+        {
+          "dimension": "mobility",
+          "capability": 0.4685830466613689,
+          "intensity": 1.0
+        },
+        {
+          "dimension": "concentrated_control",
+          "capability": 0.536110619704801,
+          "intensity": 1.0
+        },
+        {
+          "dimension": "object_interaction",
+          "capability": 1.0,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "RETRIEVAL",
+      "name": "Retrieval",
+      "pool": "object",
+      "score": 0.7525249139576528,
+      "demands": [
+        {
+          "dimension": "mobility",
+          "capability": 0.4685830466613689,
+          "intensity": 1.0
+        },
+        {
+          "dimension": "state_resilience",
+          "capability": 0.7889916952115892,
+          "intensity": 1.0
+        },
+        {
+          "dimension": "object_interaction",
+          "capability": 1.0,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "SEIZE_THE_PRIZES",
+      "name": "Seize the Prizes",
+      "pool": "object",
+      "score": 0.6521155974047586,
+      "demands": [
+        {
+          "dimension": "mobility",
+          "capability": 0.4685830466613689,
+          "intensity": 1.0
+        },
+        {
+          "dimension": "object_interaction",
+          "capability": 0.8356481481481481,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "TREASURE_HOARD",
+      "name": "Treasure Hoard",
+      "pool": "object",
+      "score": 0.6521155974047586,
+      "demands": [
+        {
+          "dimension": "mobility",
+          "capability": 0.4685830466613689,
+          "intensity": 1.0
+        },
+        {
+          "dimension": "object_interaction",
+          "capability": 0.8356481481481481,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "RECONNOITRE",
+      "name": "Reconnoitre",
+      "pool": "manoeuvring",
+      "score": 0.4685830466613689,
+      "demands": [
+        {
+          "dimension": "mobility",
+          "capability": 0.4685830466613689,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "STORM_THE_CAMP",
+      "name": "Storm the Camp",
+      "pool": "manoeuvring",
+      "score": 0.5023468331830849,
+      "demands": [
+        {
+          "dimension": "mobility",
+          "capability": 0.4685830466613689,
+          "intensity": 1.0
+        },
+        {
+          "dimension": "concentrated_control",
+          "capability": 0.536110619704801,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "DIVIDE_AND_CONQUER",
+      "name": "Divide & Conquer",
+      "pool": "manoeuvring",
+      "score": 0.5485577632201704,
+      "demands": [
+        {
+          "dimension": "mobility",
+          "capability": 0.4685830466613689,
+          "intensity": 1.0
+        },
+        {
+          "dimension": "deployment_recovery",
+          "capability": 0.6287873709364791,
+          "intensity": 1.0
+        },
+        {
+          "dimension": "distributed_control",
+          "capability": 0.5483028720626631,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "ESCORT_THE_WOUNDED",
+      "name": "Escort the Wounded",
+      "pool": "manoeuvring",
+      "score": 0.7342915233306845,
+      "demands": [
+        {
+          "dimension": "mobility",
+          "capability": 0.4685830466613689,
+          "intensity": 1.0
+        },
+        {
+          "dimension": "object_interaction",
+          "capability": 1.0,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "FOG_OF_WAR",
+      "name": "Fog of War",
+      "pool": "unique",
+      "score": 0.6021179878741099,
+      "demands": [
+        {
+          "dimension": "concentrated_control",
+          "capability": 0.536110619704801,
+          "intensity": 1.0
+        },
+        {
+          "dimension": "key_model_preservation",
+          "capability": 0.9157986111111112,
+          "intensity": 1.0
+        },
+        {
+          "dimension": "key_model_pressure",
+          "capability": 0.3544447328064174,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "CLASH_BY_MOONLIGHT",
+      "name": "Clash by Moonlight",
+      "pool": "unique",
+      "score": 0.036127167630057806,
+      "demands": [
+        {
+          "dimension": "projection",
+          "capability": 0.036127167630057806,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "LEAD_FROM_THE_FRONT",
+      "name": "Lead from the Front",
+      "pool": "unique",
+      "score": 0.9302662037037037,
+      "demands": [
+        {
+          "dimension": "key_model_preservation",
+          "capability": 0.9302662037037037,
+          "intensity": 1.0
+        }
+      ]
+    },
+    {
+      "id": "CONVERGENCE",
+      "name": "Convergence",
+      "pool": "unique",
+      "score": 0.8143936854682395,
+      "demands": [
+        {
+          "dimension": "deployment_recovery",
+          "capability": 0.6287873709364791,
+          "intensity": 1.0
+        },
+        {
+          "dimension": "object_interaction",
+          "capability": 1.0,
+          "intensity": 1.0
+        }
+      ]
+    }
+  ]
+}

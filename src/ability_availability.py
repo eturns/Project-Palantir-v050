@@ -1,5 +1,7 @@
 from profiles import Profile
 from profile_spell_assignment import ProfileSpellAssignment
+from configured_profile import ConfiguredProfile
+from ranged_wargear import RANGED_WARGEAR_IDS
 
 def ability_is_available(
     profile: Profile,
@@ -33,19 +35,22 @@ def ability_is_available(
     return True
 
 def _has_ranged_weapon(
-    profile: Profile,
+    profile: Profile | ConfiguredProfile,
 ) -> bool:
-    """
-    Returns True if the Profile possesses a ranged weapon.
-    """
+    if isinstance(profile, ConfiguredProfile):
+        wargear = profile.effective_wargear
+    else:
+        wargear = profile.default_wargear
 
-    return False
+    return any(
+        item.id in RANGED_WARGEAR_IDS
+        for item in wargear
+    )
 
 def _has_spells(
-    profile: Profile,
+    profile: Profile | ConfiguredProfile,
 ) -> bool:
-    """
-    Returns True if the Profile can cast spells.
-    """
+    if isinstance(profile, ConfiguredProfile):
+        profile = profile.profile
 
     return len(profile.spells) > 0

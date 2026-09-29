@@ -1,5 +1,7 @@
 import csv
-
+from loader import load_all_profiles
+from profile_classification import HeroicStatus, ModelType
+import pytest
 from profiles import Profile
 from iron_hills_test_helpers import (
     load_iron_hills_test_profiles,
@@ -109,3 +111,54 @@ def test_loads_iron_hills_chariot():
     assert chariot.defence == 8
     assert chariot.attacks == 2
     assert chariot.wounds == 4
+
+def test_iron_hills_warrior_has_required_classifications():
+    profiles = {
+        profile.id: profile
+        for profile in load_all_profiles()
+    }
+
+    warrior = profiles["IH_WR"]
+
+    assert warrior.heroic_status is HeroicStatus.WARRIOR
+    assert ModelType.INFANTRY in warrior.model_types
+    assert "DWARF" in warrior.races
+
+def test_dain_has_required_classifications():
+    profiles = {
+        profile.id: profile
+        for profile in load_all_profiles()
+    }
+
+    dain = profiles["IH_DAIN"]
+
+    assert dain.heroic_status is HeroicStatus.HERO
+    assert ModelType.INFANTRY in dain.model_types
+    assert "DWARF" in dain.races
+
+@pytest.mark.parametrize(
+    "profile_id,expected_status,expected_type",
+    [
+        ("IH_WR", HeroicStatus.WARRIOR, ModelType.INFANTRY),
+        ("IH_DAIN", HeroicStatus.HERO, ModelType.INFANTRY),
+        ("IH_CAP", HeroicStatus.HERO, ModelType.INFANTRY),
+        ("IH_GR", HeroicStatus.WARRIOR, ModelType.CAVALRY),
+        ("IH_CHARIOT", HeroicStatus.WARRIOR, ModelType.CHARIOT),
+        ("IH_SIEGE_CREW", HeroicStatus.WARRIOR, ModelType.INFANTRY),
+    ],
+)
+def test_iron_hills_profile_classifications(
+    profile_id,
+    expected_status,
+    expected_type,
+):
+    profiles = {
+        profile.id: profile
+        for profile in load_all_profiles()
+    }
+
+    profile = profiles[profile_id]
+
+    assert profile.heroic_status is expected_status
+    assert expected_type in profile.model_types
+    assert "DWARF" in profile.races

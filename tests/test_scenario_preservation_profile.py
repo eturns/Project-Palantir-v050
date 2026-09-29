@@ -186,3 +186,61 @@ def test_preservation_selection_returns_fielded_model(monkeypatch):
     )
 
     assert selected_model == fielded_models[1]
+
+def test_fog_selection_uses_army_context_for_preservation(monkeypatch):
+    leader = make_profile(
+        profile_id="LEADER",
+        heroic_status=HeroicStatus.HERO,
+    )
+    hero_a = make_profile(
+        profile_id="HERO_A",
+        heroic_status=HeroicStatus.HERO,
+    )
+    hero_b = make_profile(
+        profile_id="HERO_B",
+        heroic_status=HeroicStatus.HERO,
+    )
+
+    army = Army()
+    for profile in (leader, hero_a, hero_b):
+        army.add_configured_profile(
+            ConfiguredProfile(profile=profile),
+        )
+
+    fielded_models = army.fielded_models()
+
+    def fake_preservation(*, profile, army=None, **kwargs):
+        without_context = {
+            "HERO_A": 0.9,
+            "HERO_B": 0.6,
+        }
+        with_context = {
+            "HERO_A": 0.2,
+            "HERO_B": 0.8,
+        }
+
+        values = (
+            with_context
+            if army is not None
+            else without_context
+        )
+
+        class Result:
+            value = values[profile.id]
+
+        return Result()
+
+    monkeypatch.setattr(
+        "scenario_preservation_profile."
+        "calculate_key_model_preservation_from_profile",
+        fake_preservation,
+    )
+
+    selected = select_fog_of_war_preservation_model(
+        army=army,
+        leader_model=fielded_models[0],
+        combat_benchmark=object(),
+        benchmark_fate=3,
+    )
+
+    assert selected == fielded_models[2]

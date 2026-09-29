@@ -186,3 +186,19 @@ def test_matchup_score_is_equal_weighted_offence_and_defence():
     )
 
     assert result.score == expected_score
+
+    assert abs(result.offensive_score - 161 / 1944) < 1e-12
+    assert abs(result.defensive_score - 593 / 648) < 1e-12
+    assert abs(result.score - 485 / 972) < 1e-12
+
+    reverse_army = Army()
+    reverse_army.add_profile(target, quantity=1)
+
+    reverse_result = calculate_matchup_result(
+        candidate=OptimiserCandidate(army=reverse_army),
+        target_profile=attacker,
+    )
+
+    assert abs(reverse_result.offensive_score - 0.0) < 1e-12
+    assert abs(reverse_result.defensive_score - 163 / 324) < 1e-12
+    assert abs(reverse_result.score - 163 / 648) < 1e-12

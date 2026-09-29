@@ -93,6 +93,53 @@ These are **hypotheses to test**, not acceptance thresholds or pre-decided ranki
   corrected results must remain in separately named files.
 | CAL-005 | Iron Hills Heirloom object interaction is 0; other object modes yield 0.5 or 1.0. All six loaded `IH_` profiles have empty `model_types`. | **Confirmed Iron Hills source-data completeness issue**; full downstream impact remains open. | DEV-073E: add correct verified `heroic_status`, `model_types`, `races` in source data and focused loader/Heirloom regression; examine configured mounted/chariot model types and affected race-based rules. Preserve original baseline. |
 | CAL-006 | Iron Hills state resilience is 0.568279, versus Five Armies 0.788992. | Open; fixture points and composition differ. | DEV-073B: inspect model-level, equipment, chariot/platform and break/state contributions before inferring error. |
+
+**DEV-073E correction and verification**
+
+The profile metric calculation now includes a base Shooting
+contribution for recognised equipped ranged wargear. Configured
+profiles use effective wargear, so equipment granted or removed
+by options is respected. Existing Shooting contributions from
+special rules remain intact.
+
+The Iron Hills fixture contains two Crossbow Warriors. Before
+the correction, their configured Crossbows were present but
+their Shooting metric was 0.0. The Crossbow regression test now
+passes, as does the equipment-removal regression test.
+
+The full imported Iron Hills army now has a non-zero projection
+score of 0.038882. The wider projection, wargear integration
+and Iron Hills import tests passed together: 29 passed.
+
+The base ranged-weapon contribution of 1.0 is provisional.
+Weapon-specific effectiveness and projection calibration remain
+outside this correction.
+
+**Status:** Corrected and targeted-validated. Full-suite regression
+and final sign-off remain in DEV-073F.
+
+**DEV-073E supplementary correction — ranged-weapon prerequisites**
+
+Replaced the placeholder HAS_RANGED_WEAPON check with effective-wargear
+recognition. Base profiles use default wargear; configured profiles use
+effective wargear.
+
+Moved the shared ranged-weapon IDs into ranged_wargear.py to avoid a
+circular import between ability availability and profile metrics.
+
+Updated battlefield-profile evidence collection to evaluate ability
+prerequisites against the configured profile rather than always using
+the base profile. Made HAS_SPELLS compatible with configured profiles.
+
+Regression coverage confirms that purchasing a Crossbow unlocks a
+ranged ability through the battlefield-evidence pathway. The focused
+availability, wargear, projection and Iron Hills import tests passed
+together: 31 passed.
+
+**Status:** CAL-004 corrected and targeted-validated. Ranged-weapon
+weights remain provisional; full-suite regression and final sign-off
+remain in DEV-073F.
+
 ### CAL-005: targeted evidence
 
 Iron Hills scenario-specific object outputs:
@@ -116,6 +163,89 @@ The zero is explained by the **current data-plus-formula path**. It is not yet e
 - **DEV-073A:** Preserve the four JSON baselines and this matrix; inventory evidence and hypotheses; no production changes. Before declaring A complete, verify exact baseline JSON files and their SHA-256 fields, and ensure the matrix is saved in the working tree.
 - **DEV-073B:** Target mobility, control, projection, attrition, key-model pressure/preservation and resilience curves; classify findings against relevant inputs and points normalisation.
 - **DEV-073C:** Compare all 24 scenarios by army, including demand sensitivity and scenario-specific overrides.
+**DEV-073C controlled comparison**
+
+- The original and corrected Dol Guldur files have matching fixture
+  hashes and contain the same 24 scenarios.
+- Lead from the Front increased from 0.301890 to 0.801890.
+- Corrected Necromancer defensive survivability is 0.603781;
+  protective resources are 1.000000; their equal-weight average
+  is 0.801890.
+- Loading HE_CANNOT_YET_TAKE_PHYSICAL_FORM enables the
+  Necromancer's Will-to-Fate resource conversion. The original
+  baseline omitted that special-rule relationship.
+- Fog of War preservation remained 0.298032; its different
+  preservation-model selection must not be conflated with
+  Lead from the Front.
+
+**Status:** The Lead from the Front score change is explained by
+ability loading. Resurrection-aware preservation remains outside
+this comparison. Preserve the original DEV-073A baseline.
+
+### DEV-073C — Dol Guldur ability-loading comparison
+
+- Original and corrected Dol Guldur results use the same fixture
+  hash and contain the same 24 scenarios.
+- 18 scenario scores changed; six remained unchanged.
+- Scenario presence increased from 11 to 20 after loading
+  DOMINANT assignments. Concentrated control increased from
+  0.541122 to 0.612551.
+- Corrected manoeuvrability is 8.010949 and mobility capability
+  is 0.571763, compared with original mobility 0.519547.
+- Loaded mobility evidence includes Spectral Walk (1.5),
+  Unnatural Speed (1.5), Swift Movement (1.25), and applicable
+  heroic-action mobility tags.
+- Key-model pressure increased from 0.279217 to 0.477313;
+  projection increased from 0 to 0.203677.
+- Lead from the Front preservation increased from 0.301890
+  to 0.801890 through the Necromancer's Will-to-Fate
+  protective-resource conversion.
+- The original DEV-073A baseline is historical evidence of an
+  incomplete loading configuration, not a fully configured
+  reference for ability-dependent scenario scoring.
+
+**Status:** Controlled comparison explained at capability level.
+Retain separately named corrected validation evidence. Do not
+overwrite the original baseline.
+
+### DEV-073C — Five Armies controlled comparison
+
+- Original and corrected files have matching fixture hashes.
+- Both contain 346 points, six models and 24 scenarios.
+- Four scenario scores changed; 20 remained unchanged.
+- Key-model pressure increased from 0.261959 to 0.354445,
+  affecting Assassination, Contest of Champions and Fog of War.
+- Projection increased from 0.000000 to 0.036127,
+  affecting Clash by Moonlight.
+- The comparison isolates the changed capabilities but does
+  not yet establish which individual ability assignments
+  caused them.
+- Corrected shooting density remains 0.0 and requires
+  separate investigation of equipment and shooting evidence.
+
+**Status:** Demand-level comparison complete. Preserve the
+original DEV-073A baseline and retain the separately named
+DEV-073C validation file.
+
+### DEV-073C — Garrison of Dale controlled comparison
+
+- Original and corrected files have matching fixture hashes.
+- Both contain 177 points, eight models and 24 scenarios.
+- Sixteen scenario scores changed; eight remained unchanged.
+- Key-model pressure increased from 0.247680 to 0.338075,
+  affecting Assassination, Contest of Champions and Fog of War.
+- Mobility increased from 0.500000 to 0.506427.
+- Deployment recovery increased from 0.625683 to 0.628896,
+  consistent with its dependence on mobility and state resilience.
+- Corrected army manoeuvrability is 6.156250. The Dale Captain
+  has an ability-mobility metric of 1.25; the other listed
+  profiles have 0.0.
+- Shooting density remains 0.0 and requires separate
+  investigation of configured shooting evidence.
+
+**Status:** Demand-level comparison complete. Preserve the
+original DEV-073A baseline and retain the separately named
+DEV-073C validation file.
 - **DEV-073D:** Reproducible asymmetric matchup benchmarks and selected independent calculations.
 - **DEV-073E:** Only evidenced corrections with focused regression tests; specifically revisit CAL-005's source-data gap and effects.
 - **DEV-073F:** Full suite, baseline-versus-revised outputs, limitation register, commit and DEV-074 handover.
@@ -145,6 +275,29 @@ profile classifications in DEV-073E, then recapture the affected
 scenario results in a separately versioned validation file.
 Preserve the original DEV-073A baseline.
 
+**DEV-073E correction and verification**
+
+Added heroic status, model type and race classifications to all six
+Iron Hills profiles. Added the CHARIOT model type to represent the
+Iron Hills Chariot without incorrectly classifying it as Infantry
+or Cavalry.
+
+The Iron Hills profile and object-interaction tests passed together:
+59 passed.
+
+The full imported Iron Hills fixture contains 11 models, of which
+9 are eligible to uncover an artifact. After the classification
+correction, its object-interaction scores are:
+
+- Heirloom of Ages Past (`SEARCH_AND_LIGHT_OBJECT`): 0.954545.
+- `UNCOVER_AND_LIGHT_OBJECT`: 0.834175.
+
+The original Heirloom score of zero is resolved. These modes use
+different calculations and must not be conflated.
+
+**Status:** Corrected and targeted-validated. Full-suite regression
+and final sign-off remain in DEV-073F.
+
 ### CAL-006 — State resilience
 
 **DEV-073B findings**
@@ -168,6 +321,33 @@ Preserve the original DEV-073A baseline.
 established. Resource benchmarks and weighting remain calibration
 questions. Dol Guldur's result does not include resurrection;
 assess resurrection-aware resilience separately.
+
+**DEV-073E correction and verification**
+
+Added Movement 8" configured-state overrides for Dáin's War Boar
+and the Iron Hills Captain's Chariot, matching Armies of The
+Hobbit (2024). Updated the validation runner setup to load
+platform assignments and configured-state effects.
+
+The full imported Iron Hills fixture now reports:
+- Dáin on War Boar: Movement 8", base 40 mm.
+- Captain on Chariot: Movement 8", base 25 mm.
+- Captain on foot: Movement 5", base 25 mm.
+- Separate Chariot entry: Movement 8", base 170 mm.
+
+Army manoeuvrability increased from 4.729155 to 5.217492.
+The movement, mobility, configuration and import tests passed
+together: 36 passed.
+
+**Remaining limitation:** The Captain on Chariot and the Chariot
+are both counted as separate models in the current manoeuvrability
+calculation. Their combined contribution requires relationship-aware
+handling. Do not apply the Chariot's 170 mm base to the Captain
+as a workaround.
+
+**Status:** Configured movement corrected and targeted-validated.
+Composite-model manoeuvrability remains open. Full-suite regression
+and final sign-off remain in DEV-073F.
 
 ### CAL-008 — Attrition output
 
@@ -234,6 +414,20 @@ evidence or ability loading must be regression-tested in DEV-073E.
 Revalidate deployment recovery after any DEV-073E corrections
 to mobility or state resilience.
 
+### CAL-011 — Fog of War preservation-model selection
+
+**DEV-073C finding: Confirmed defect.**
+
+The Fog of War selector excludes the army leader and considers eligible Heroes, but ranks them using preservation calculations without army or army-list context. The scenario builder subsequently scores the selected Hero with that context.
+
+A focused regression test, `test_fog_selection_uses_army_context_for_preservation`, demonstrates that these assumptions can select different Heroes. In the controlled test, Hero A has the higher context-free estimate (0.9 versus 0.6), while Hero B has the higher army-context estimate (0.8 versus 0.2). The current selector chooses Hero A; the test expects Hero B and fails.
+
+**DEV-073E action:** Align selection and final scoring assumptions, including army and army-list resource context. Preserve the failing test and confirm it passes after the correction. Check the effects on the real-fixture Fog of War results.
+
+**Limit:** The test establishes a possible selection error. It does not establish that the selected Hero is wrong in any of the four existing validation fixtures.
+
+**Status:** Confirmed defect; production correction deferred to DEV-073E.
+
 ## DEV-073B — Consolidated findings
 
 The fixed-input normalisation curves for distributed control,
@@ -266,3 +460,222 @@ Open calibration questions:
 Do not change production formulas solely to match the original
 baseline scores. Resolve data gaps and use controlled scenario
 comparisons before approving calibration changes.
+
+## DEV-073C — Consolidated findings
+
+All four controlled comparisons use matching fixture hashes
+and contain 24 scenarios per fixture. Original DEV-073A
+baselines have been preserved.
+
+| Fixture | Changed scenarios | Unchanged scenarios |
+|---|---:|---:|
+| Dol Guldur | 18 | 6 |
+| Iron Hills | 0 | 24 |
+| Five Armies | 4 | 20 |
+| Garrison of Dale | 16 | 8 |
+
+### Explained ability-loading effects
+
+- Dol Guldur: loaded special rules and abilities changed
+  scenario presence, mobility, key-model pressure, projection
+  and Necromancer preservation.
+- Five Armies: key-model pressure and projection changed.
+  The individual ability contributions still require attribution.
+- Garrison of Dale: key-model pressure and mobility changed;
+  the mobility change also affected deployment recovery.
+- Iron Hills: no scenario scores or demand-level capabilities
+  changed when the corrected loader was used.
+
+### Unresolved production gaps
+
+- Equipped ranged weapons are not reliably represented in
+  shooting evidence.
+- Missing model classifications affect object-interaction
+  eligibility.
+- Mount and platform configuration requires separate
+  verification.
+- Resurrection-aware capability calculations remain outside
+  these controlled comparisons.
+
+### Calibration constraint
+
+Do not tune scenario weights against the original DEV-073A
+scores. First correct and verify the relevant input pathways,
+then establish new reference results using complete
+relationships and the same real army fixtures.
+
+**DEV-073C status:** Four-army controlled comparison complete.
+Proceed to the documented production corrections and
+regression tests.
+
+## DEV-073D — Matchup calibration
+
+### Independent benchmarks
+
+1. F5/S4/D6/A2 versus F4/S4/D6/A1/W2:
+   - Offensive score: 161/1944
+   - Defensive score: 593/648
+   - Combined score: 485/972
+
+2. Reversed matchup:
+   - Offensive score: 0
+   - Defensive score: 163/324
+   - Combined score: 163/648
+   - The one-Attack model cannot inflict two Wounds in
+     a single combat under the current offensive formula.
+
+3. Configured shield, Defence 5 versus Defence 6:
+   - Offensive score remains 1/18.
+   - Defensive score increases from 2/3 to 5/6.
+   - Combined score increases from 13/36 to 4/9.
+
+All three benchmarks agree with the implemented calculations.
+The targeted matchup tests pass.
+
+### Limitations and follow-up
+
+- Offensive matchup scoring currently receives the base
+  profile; defensive scoring receives the configured profile.
+- Configured offensive equipment and special-rule effects
+  have not been validated by these benchmarks.
+- Offensive scoring measures the probability of inflicting
+  enough Wounds to defeat the target in one combat.
+  Defensive scoring uses expected incoming wounds.
+  These are different measures combined with equal weight.
+- Do not interpret these matchup scores as complete combat
+  simulations or as validated predictions of game outcomes.
+
+**Status:** DEV-073D benchmark calculations complete.
+Carry the identified limitations into DEV-073E. Preserve
+existing baselines and do not change scoring weights
+without a separate evidence-backed test.
+
+### DEV-073D — Real-fixture matchup calibration
+
+Five real-fixture profile-target benchmarks were captured:
+
+| Attacking fixture | Target | Offence | Defence | Combined |
+|---|---|---:|---:|---:|
+| Dol Guldur (11 models) | Girion, Lord of Dale | 0.055570 | 0.273306 | 0.164438 |
+| Garrison of Dale (8 models) | Sauron the Necromancer | 0.055632 | 0.112285 | 0.083958 |
+| Dol Guldur (11 models) | Dáin Ironfoot | 0.000148 | 0.197958 | 0.099053 |
+| Five Armies (6 models) | Sauron the Necromancer | 0.096140 | 0.257888 | 0.177014 |
+| Iron Hills (11 models) | Sauron the Necromancer | 0.082282 | 0.390183 | 0.236233 |
+
+These are model-count-weighted averages against individual target profiles, not whole-army combat simulations. The fixtures have different points totals. Target benchmarks use base profiles, while the evaluator uses configured Defence but base-profile offensive characteristics.
+
+**Dáin diagnostic:** The target has F7, S5, D8, A3 and W3. All Dol Guldur entries except Khamûl have two Attacks, so their probability of inflicting three wounds in one fight is zero under the current offensive metric. Khamûl contributes 0.001631028; its contribution divided across 11 models explains the army's approximately 0.000148 offensive score.
+
+**Classification:** Arithmetic explained; metric limitation confirmed. Do not interpret one-fight defeat probability as expected damage or cumulative combat effectiveness. Assess the intended attrition and matchup semantics before changing the formula in DEV-073E.
+
+## DEV-073C — Cross-army scenario audit
+
+Four corrected-loader real fixtures were compared across all 24
+scenarios: Five Armies (346 points, 6 models), Garrison of Dale
+(177 points, 8 models), Iron Hills (823 points, 11 models), and
+Dol Guldur (700 points, 11 models).
+
+All 96 scenario results were present, with no duplicate scenario IDs.
+An independent check of each recorded score against its demand
+capabilities found 0 calculation failures across all four fixtures.
+
+The comparison covered distributed and concentrated control,
+mobility, projection, attrition output, key-model pressure and
+preservation, state resilience, and deployment recovery. Scenario-
+specific object-interaction and Fog of War preservation values
+were inspected separately.
+
+**Points normalisation:** The fixtures have different points limits
+and therefore different presence benchmarks. Their control scores
+are not equal-points performance comparisons. Recalculating
+distributed control with a shared presence benchmark of 10 gives
+8/18 for Dale and 11/21 for Iron Hills. The implementation is
+consistent with its formula; benchmark suitability remains open.
+
+**Confirmed defects and limitations:**
+- Iron Hills' missing profile classifications affect object-interaction
+  eligibility, including Heirloom of Ages Past (CAL-005).
+- Equipped ranged wargear is not fully reflected in projection
+  evidence (CAL-004).
+- Fog of War selects its preservation model without the army
+  resource context used for final scoring. A focused regression
+  test reproduces the selection inconsistency (CAL-011).
+- Configured mount/platform movement remains subject to CAL-007.
+- The default Dol Guldur validation does not include an explicit
+  resurrection configuration.
+
+**Conclusion:** Cross-army comparisons and scenario aggregation
+are audited. The identified input, selection and metric limitations
+must be corrected or explicitly accepted before final DEV-073
+validation. No scenario weights have been changed.
+
+**DEV-073E correction and verification**
+
+The Fog of War selector now evaluates eligible Heroes using the army
+and army-list resource context passed to the final preservation
+calculation. The scenario builder passes that context to the selector.
+
+The focused regression and existing selection/scenario-builder tests
+passed together: 15 passed.
+
+Real-fixture checks after the correction:
+- Dol Guldur: Khamûl selected; preservation 0.298032.
+- Garrison of Dale: Captain of Dale selected; preservation 0.520448.
+
+Both real-fixture values match their recorded pre-correction results.
+The correction addresses the demonstrated selection inconsistency;
+it does not establish that every possible army configuration has
+been validated.
+
+**Status:** Corrected and targeted-validated. Full-suite regression
+and final sign-off remain in DEV-073F.
+
+## DEV-073F — Final regression and calibration close-out
+
+**Full regression:** 2,409 passed, 1 skipped, 0 failed.
+The intentionally deferred test remains excluded from DEV-073 acceptance.
+
+**Validation:** All four real fixtures were reanalysed using the
+corrected production pipeline. Each produced 24 scenario results.
+Fixture hashes, army points and model counts match the preserved
+DEV-073A baselines. The historical baseline and DEV-073B validation
+files remain unchanged.
+
+| Fixture | Points | Models | Changed scenarios |
+|---|---:|---:|---:|
+| Five Armies | 346 | 6 | 7/24 |
+| Garrison of Dale | 177 | 8 | 16/24 |
+| Iron Hills | 823 | 11 | 15/24 |
+| Dol Guldur 700 | 700 | 11 | 18/24 |
+
+**CAL-004 — Ranged capability:** Corrected effective ranged-wargear
+recognition, shooting contribution and HAS_RANGED_WEAPON prerequisites.
+Purchased Crossbows are recognised through the battlefield-evidence
+pathway. Targeted regression tests passed.
+
+**CAL-005 — Iron Hills classifications:** Added the missing profile
+classifications. Heirloom of Ages Past object interaction increased
+from 0 to 0.954545 using its actual SEARCH_AND_LIGHT_OBJECT mode.
+
+**CAL-007 — Configured movement and footprint:** Corrected War Boar
+and Chariot movement to 8 inches and the Captain-on-Chariot footprint
+to 170 mm. The real fixture contains a Captain on one Chariot plus
+a separately purchased Chariot; no relationship between those two
+entries is appropriate. Corrected Iron Hills army manoeuvrability
+is 4.769115930101429.
+
+**CAL-011 — Fog of War:** Corrected preservation-model selection to
+use the army-aware calculation. In the Iron Hills fixture the selected
+model is the Captain with IH_CAP_CHARIOT. Its revised preservation
+capability is 0.531057; the Fog of War scenario score changed from
+0.568664 to 0.435595.
+
+**Other traced changes:** Dol Guldur Lead from the Front preservation
+increased to 0.801890, and Clash by Moonlight projection increased
+to 0.203677. Demand-level comparisons account for both changes.
+
+**Disposition:** Confirmed DEV-073 calibration defects corrected and
+targeted-validated. Remaining benchmark and weighting questions are
+documented calibration limitations, not unverified production fixes.
+The revised scores are diagnostic outputs, not independently
+validated predictions of tabletop performance.

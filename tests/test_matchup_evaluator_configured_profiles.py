@@ -137,6 +137,14 @@ def test_matchup_defensive_score_uses_configured_defence():
         > plain_result.score
     )
 
+    assert plain_result.offensive_score == pytest.approx(1 / 18)
+    assert shielded_result.offensive_score == pytest.approx(1 / 18)
+
+    assert plain_result.defensive_score == pytest.approx(2 / 3)
+    assert shielded_result.defensive_score == pytest.approx(5 / 6)
+
+    assert plain_result.score == pytest.approx(13 / 36)
+    assert shielded_result.score == pytest.approx(4 / 9)
 
 def test_matchup_preserves_two_configurations_of_same_profile():
     profile = create_profile(

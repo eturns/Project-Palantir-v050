@@ -494,12 +494,14 @@ def test_candidate_analysis_uses_fog_of_war_preservation_override(
         leader_model,
         combat_benchmark,
         benchmark_fate,
+        army_list=None,
     ):
         captured["selector"] = {
             "army": army,
             "leader_model": leader_model,
             "combat_benchmark": combat_benchmark,
             "benchmark_fate": benchmark_fate,
+            "army_list": army_list,
         }
 
         return fog_model
@@ -585,6 +587,7 @@ def test_candidate_analysis_uses_fog_of_war_preservation_override(
         "leader_model": leader_model,
         "combat_benchmark": "COMBAT_BENCHMARK",
         "benchmark_fate": 40,
+        "army_list": "ARMY_LIST",
     }
 
     assert captured["profile"] is capability_profile

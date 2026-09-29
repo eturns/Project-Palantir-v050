@@ -12,6 +12,7 @@ from iron_hills_test_helpers import (
     load_iron_hills_test_profiles,
 )
 from loader import load_all_profiles
+from profile_metrics import calculate_profile_metrics
 
 def create_iron_hills_warrior() -> Profile:
     return Profile(
@@ -158,3 +159,84 @@ def test_iron_hills_goat_rider_mattock_configuration():
         "WG_HAND_WEAPON",
         "WG_MATTOCK",
     }
+
+def test_iron_hills_crossbow_contributes_to_shooting_metric():
+    profiles = {
+        profile.id: profile
+        for profile in load_all_profiles()
+    }
+
+    wargear = load_wargear()
+
+    options = load_profile_options(
+        profiles=profiles,
+        skip_unknown_profiles=True,
+    )
+
+    load_profile_default_wargear(
+        profiles=profiles,
+        wargear=wargear,
+    )
+
+    load_profile_option_wargear_assignments(
+        profile_options=options,
+        wargear=wargear,
+    )
+
+    warrior = profiles["IH_WR"]
+
+    without_crossbow = ConfiguredProfile(
+        profile=warrior,
+    )
+
+    with_crossbow = ConfiguredProfile(
+        profile=warrior,
+        selected_options=(
+            options["IH_WR_CROSSBOW"],
+        ),
+    )
+
+    assert (
+        calculate_profile_metrics(with_crossbow).shooting
+        > calculate_profile_metrics(without_crossbow).shooting
+    )
+
+def test_ranged_wargear_metric_uses_effective_equipment():
+    from profile_metrics import calculate_ranged_wargear_metric
+    from profile_option import ProfileOption
+    from profile_option_wargear_assignment import (
+        ProfileOptionWargearAssignment,
+        WargearAssignmentAction,
+    )
+
+    profiles = {
+        profile.id: profile
+        for profile in load_all_profiles()
+    }
+    warrior = profiles["IH_WR"]
+    crossbow = load_wargear()["WG_CROSSBOW"]
+
+    # Set up a profile that starts with a Crossbow.
+    warrior.default_wargear.append(crossbow)
+
+    remove_crossbow = ProfileOption(
+        id="TEST_REMOVE_CROSSBOW",
+        name="Remove Crossbow",
+        points=0,
+        wargear_assignments=(
+            ProfileOptionWargearAssignment(
+                wargear=crossbow,
+                action=WargearAssignmentAction.REMOVE,
+            ),
+        ),
+    )
+    warrior.profile_options.append(remove_crossbow)
+
+    equipped = ConfiguredProfile(profile=warrior)
+    unequipped = ConfiguredProfile(
+        profile=warrior,
+        selected_options=(remove_crossbow,),
+    )
+
+    assert calculate_ranged_wargear_metric(equipped) == 1.0
+    assert calculate_ranged_wargear_metric(unequipped) == 0.0

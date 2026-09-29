@@ -34,7 +34,7 @@ def build_profile_battlefield_evidence(
     for assignment in special_rules:
 
         if ability_is_available(
-            base_profile,
+            profile,
             assignment.rule,
         ):
             evidence.available_special_rules.append(
@@ -45,7 +45,7 @@ def build_profile_battlefield_evidence(
     for heroic_action in base_profile.heroic_actions:
 
         if ability_is_available(
-            base_profile,
+            profile,
             heroic_action,
         ):
             evidence.available_heroic_actions.append(
@@ -56,7 +56,7 @@ def build_profile_battlefield_evidence(
     for assignment in base_profile.spells:
 
         if ability_is_available(
-            base_profile,
+            profile,
             assignment.spell,
         ):
             evidence.available_spells.append(

@@ -44,6 +44,7 @@ def select_fog_of_war_preservation_model(
     leader_model: FieldedModel,
     combat_benchmark,
     benchmark_fate: int | float,
+    army_list=None,
 ) -> FieldedModel | None:
     eligible_models = (
         get_fog_of_war_preservation_models(
@@ -66,6 +67,7 @@ def select_fog_of_war_preservation_model(
                 ),
                 benchmark=combat_benchmark,
                 benchmark_fate=benchmark_fate,
+                army=army,
             ).value
         ),
     )

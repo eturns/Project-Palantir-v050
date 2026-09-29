@@ -37,9 +37,22 @@ from profile_metrics_entity import ProfileMetrics
 from army_analysis_context import ArmyAnalysisContext
 from spell_probability import casting_probability
 from configured_profile import ConfiguredProfile
+from ranged_wargear import RANGED_WARGEAR_IDS
 # ============================================================================
 # Private Functions
 # ============================================================================
+
+def calculate_ranged_wargear_metric(
+    profile: Profile | ConfiguredProfile,
+) -> float:
+    if isinstance(profile, ConfiguredProfile):
+        wargear = profile.effective_wargear
+    else:
+        wargear = profile.default_wargear
+
+    return float(
+        any(item.id in RANGED_WARGEAR_IDS for item in wargear)
+    )
 
 def calculate_metric(
     evidence: BattlefieldEvidence,
@@ -269,11 +282,14 @@ def calculate_profile_metrics(
                 context,
             )
         ),
-        shooting=calculate_metric(
-            evidence,
-            "SHOOTING",
-            base_profile,
-            context,
+        shooting=(
+            calculate_metric(
+                evidence,
+                "SHOOTING",
+                base_profile,
+                context,
+            )
+            + calculate_ranged_wargear_metric(profile)
         ),
         courage=calculate_metric(
             evidence,

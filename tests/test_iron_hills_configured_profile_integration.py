@@ -11,6 +11,9 @@ from profile_default_wargear_loader import (
     load_profile_default_wargear,
 )
 from profile_option_loader import load_profile_options
+from profile_option_state_effect_loader import (
+    load_profile_option_state_effects,
+)
 from profile_option_mount_loader import (
     load_profile_option_mount_assignments,
 )
@@ -63,6 +66,10 @@ def load_complete_iron_hills_configuration():
         platforms=platforms,
     )
 
+    load_profile_option_state_effects(
+        profile_options=options,
+    )
+
     return profiles, options, mounts, platforms
 
 
@@ -111,12 +118,15 @@ def test_all_non_warrior_iron_hills_configurations():
         mounts["MOUNT_WAR_BOAR"]
     )
     assert dain.effective_platform is None
+    assert dain.effective_movement == 8
 
     assert captain_chariot.points == 250
     assert captain_chariot.effective_platform is (
         platforms["PLATFORM_IRON_HILLS_CHARIOT"]
     )
     assert captain_chariot.effective_mount is None
+    assert captain_chariot.effective_movement == 8
+    assert captain_chariot.effective_base_size_mm == 170
 
     assert captain_mattock.points == 80
     assert {
