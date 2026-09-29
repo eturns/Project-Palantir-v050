@@ -39,12 +39,15 @@ from scenario_demand import StrategicDemand
 from services.mesbg_list_builder_import_service import (
     import_army_from_mesbg_list_builder,
 )
+from evidence_status import EvidenceStatus
 
 class FakeFieldedModel:
     def __init__(self, profile):
         self.configured_profile = SimpleNamespace(
             profile=profile,
             selected_options=(),
+            effective_special_rules=[],
+            effective_wargear=(),
         )
         self.id = f"{profile.id}:1:1"
         self.warband_id = None
@@ -123,6 +126,14 @@ def test_mesbg_list_analysis_service_returns_scenario_analysis_results(
     assert result["scenario_analysis_results"] == (
         scenario_results
     )
+
+    attrition = next(
+        record
+        for record in result["evidence_records"]
+        if record.mechanic == "attrition_output"
+    )
+
+    assert attrition.status is EvidenceStatus.PROVISIONAL
 
 def test_analysis_service_passes_imported_leader_profile_to_scenario_builder(
     monkeypatch,
@@ -515,6 +526,35 @@ def test_real_eddies_choice_matches_main_scenario_pipeline():
         0.5241126543209876,
     )
 
+    evidence_records = result["evidence_records"]
+
+    resurrection = next(
+        record
+        for record in evidence_records
+        if record.mechanic == "resurrection"
+    )
+
+    assert resurrection.status is EvidenceStatus.UNSUPPORTED
+
+    assert resurrection.provenance == (
+        "analysis_configuration"
+    )
+
+    evidence_by_mechanic = {
+        record.mechanic: record
+        for record in result["evidence_records"]
+    }
+
+    assert (
+        evidence_by_mechanic["attrition_output"].status
+        is EvidenceStatus.PROVISIONAL
+    )
+
+    assert (
+        evidence_by_mechanic["resurrection"].status
+        is EvidenceStatus.UNSUPPORTED
+    )
+
 def test_analysis_service_passes_external_option_lookup_to_import_service(
     monkeypatch,
 ):
@@ -576,6 +616,13 @@ def test_analysis_service_passes_external_option_lookup_to_import_service(
     assert (
         captured["options"]
         is profile_options_by_external_id
+    )
+
+    assert result["scenario_analysis_results"] is None
+
+    assert not any(
+        record.mechanic == "attrition_output"
+        for record in result["evidence_records"]
     )
 
 def test_real_eddies_choice_runtime_army_contains_necromancer():
@@ -679,3 +726,82 @@ def test_analysis_service_passes_siege_engine_lookup_to_import_service(
     )
 
     assert result["analysis"] == "ANALYSIS"
+
+def test_analysis_service_reports_unconfigured_resurrection(
+    monkeypatch,
+):
+    nazgul_profile = SimpleNamespace(
+        id="DG_WK",
+    )
+
+    nazgul_model = FakeFieldedModel(
+        nazgul_profile,
+    )
+
+    nazgul_model.configured_profile.effective_special_rules = [
+        SimpleNamespace(
+            rule=SimpleNamespace(
+                id="UNHOLY_RESURRECTION",
+            ),
+        ),
+    ]
+
+    definition = SimpleNamespace(
+        points_limit=700,
+        leader_profile_id="DG_WK",
+    )
+
+    army = FakeArmy(
+        (nazgul_model,),
+    )
+
+    scenario_results = (
+        "SCENARIO_RESULT",
+    )
+
+    monkeypatch.setattr(
+        mesbg_list_analysis_service,
+        "import_army_from_mesbg_list_builder",
+        lambda *args, **kwargs: (
+            definition,
+            army,
+            object(),
+        ),
+    )
+
+    monkeypatch.setattr(
+        mesbg_list_analysis_service,
+        "analyse_imported_army",
+        lambda *args, **kwargs: "ANALYSIS",
+    )
+
+    monkeypatch.setattr(
+        mesbg_list_analysis_service,
+        "build_scenario_analysis_results_from_candidate",
+        lambda **kwargs: scenario_results,
+    )
+
+    result = (
+        mesbg_list_analysis_service.analyse_mesbg_list_builder_file(
+            "army.json",
+            profiles_by_id={
+                "DG_WK": nazgul_profile,
+            },
+            army_lists_by_id={},
+            metric_thresholds={},
+        )
+    )
+
+    evidence = result["evidence_records"]
+
+    resurrection = next(
+        record
+        for record in evidence
+        if record.mechanic == "resurrection"
+    )
+
+    assert resurrection.status is EvidenceStatus.UNSUPPORTED
+
+    assert result["scenario_analysis_results"] == (
+        scenario_results
+    )

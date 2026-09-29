@@ -80,9 +80,31 @@ def print_text_analysis_report(
     else:
         print("None")
 
-    scenario_analysis_results = result.get(
-        "scenario_analysis_results",
+    evidence_records = result.get(
+        "evidence_records",
+        (),
     )
+    scenario_analysis_results = result.get(
+            "scenario_analysis_results",
+        )
+    
+    if evidence_records and scenario_analysis_results is None:
+        print()
+        print("========== EVIDENCE & LIMITATIONS ==========")
+
+        for evidence in evidence_records:
+            mechanic_name = evidence.mechanic.replace(
+                "_",
+                " ",
+            ).title()
+
+            print(
+                f"{mechanic_name}: "
+                f"{evidence.status.value.upper()}"
+            )
+
+            print(f"  Reason: {evidence.reason}")
+            print(f"  Source: {evidence.provenance}")
 
     if scenario_analysis_results is not None:
         print()
@@ -90,5 +112,6 @@ def print_text_analysis_report(
         print(
             build_scenario_analysis_report(
                 scenario_analysis_results,
+                evidence_records=evidence_records,
             )
         )

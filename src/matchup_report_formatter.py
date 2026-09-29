@@ -28,6 +28,7 @@ def _format_matchup_result(
 def format_matchup_report(
     *,
     report: MatchupReport,
+    evidence_records=(),
 ) -> str:
     sections = [
         "Strongest Matchup",
@@ -50,5 +51,30 @@ def format_matchup_report(
             for result in report.weakest_results
         ),
     ]
+
+    if evidence_records:
+        sections.extend(
+            [
+                "",
+                "========== EVIDENCE & LIMITATIONS ==========",
+            ]
+        )
+
+        for evidence in evidence_records:
+            mechanic_name = evidence.mechanic.replace(
+                "_",
+                " ",
+            ).title()
+
+            sections.extend(
+                [
+                    (
+                        f"{mechanic_name}: "
+                        f"{evidence.status.value.upper()}"
+                    ),
+                    f"  Reason: {evidence.reason}",
+                    f"  Source: {evidence.provenance}",
+                ]
+            )
 
     return "\n".join(sections)

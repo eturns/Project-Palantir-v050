@@ -24,6 +24,7 @@ from analysis_loader import load_metric_thresholds
 from services.mesbg_list_analysis_service import (
     analyse_mesbg_list_builder_file,
 )
+from evidence_status import EvidenceStatus
 
 FIXTURE_PATH = (
     Path(__file__).parent
@@ -209,3 +210,13 @@ def test_five_armies_real_json_runs_shared_analysis():
 
     assert result["scenario_analysis_results"] is not None
     assert len(result["scenario_analysis_results"]) == 24
+
+    evidence_by_mechanic = {
+        record.mechanic: record
+        for record in result["evidence_records"]
+    }
+
+    assert (
+        evidence_by_mechanic["attrition_output"].status
+        is EvidenceStatus.PROVISIONAL
+    )

@@ -24,6 +24,14 @@ from fielded_model_form_state_initialization import (
 from importers.mesbg_list_builder_alternate_form_map import (
     ALLOWED_ALTERNATE_FORMS_BY_PROFILE_ID,
 )
+from resurrection_evidence import (
+    assess_resurrection_evidence,
+)
+from metric_evidence import (
+    assess_ranged_wargear_evidence,
+    assess_attrition_evidence,
+)
+
 
 def analyse_mesbg_list_builder_file(
     file_path: str,
@@ -59,6 +67,21 @@ def analyse_mesbg_list_builder_file(
     )
 
     fielded_models = army.fielded_models()
+
+    configured_profiles = tuple(
+        model.configured_profile
+        for model in fielded_models
+        if model.configured_profile is not None
+    )
+
+    resurrection_evidence = assess_resurrection_evidence(
+        configured_profiles=configured_profiles,
+        resurrection_config=resurrection_config,
+    )
+
+    ranged_evidence = assess_ranged_wargear_evidence(
+        configured_profiles=configured_profiles,
+    )
 
     fielded_model_structures = (
         build_fielded_model_structures(
@@ -202,6 +225,20 @@ def analyse_mesbg_list_builder_file(
             )
         )
 
+    evidence_records = tuple(
+        record
+        for record in (
+            resurrection_evidence,
+            ranged_evidence,
+            (
+                assess_attrition_evidence()
+                if scenario_analysis_results is not None
+                else None
+            ),
+        )
+        if record is not None
+    )
+
     return {
         "definition": definition,
         "army": army,
@@ -216,4 +253,5 @@ def analyse_mesbg_list_builder_file(
         "scenario_analysis_results": (
             scenario_analysis_results
         ),
+        "evidence_records": evidence_records,
     }

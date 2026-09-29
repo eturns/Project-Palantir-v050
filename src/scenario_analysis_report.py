@@ -57,6 +57,8 @@ def format_scenario_analysis_report(
 
 def build_scenario_analysis_report(
     results: tuple[ScenarioAnalysisResult, ...],
+    *,
+    evidence_records=(),
 ) -> str:
     ranked = rank_scenario_analysis_results(
         results,
@@ -67,7 +69,34 @@ def build_scenario_analysis_report(
         count=5,
     )
 
-    return format_scenario_analysis_report(
+    report = format_scenario_analysis_report(
         top=top,
         bottom=bottom,
     )
+
+    if not evidence_records:
+        return report
+
+    evidence_lines = [
+        "",
+        "========== EVIDENCE & LIMITATIONS ==========",
+    ]
+
+    for evidence in evidence_records:
+        mechanic_name = evidence.mechanic.replace(
+            "_",
+            " ",
+        ).title()
+
+        evidence_lines.extend(
+            [
+                (
+                    f"{mechanic_name}: "
+                    f"{evidence.status.value.upper()}"
+                ),
+                f"  Reason: {evidence.reason}",
+                f"  Source: {evidence.provenance}",
+            ]
+        )
+
+    return report + "\n" + "\n".join(evidence_lines)

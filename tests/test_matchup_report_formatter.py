@@ -3,7 +3,7 @@ from matchup_report_formatter import (
     format_matchup_report,
 )
 from matchup_result import MatchupResult
-
+from evidence_status import EvidenceRecord, EvidenceStatus
 
 def test_formats_matchup_report_with_strongest_and_weakest_sections():
     report = MatchupReport(
@@ -44,6 +44,10 @@ def test_formats_matchup_report_with_strongest_and_weakest_sections():
         report=report,
     )
 
+    # The original report must not display an evidence section
+    # when no evidence records have been supplied.
+    assert "EVIDENCE & LIMITATIONS" not in text
+
     assert "Strongest Matchup" in text
     assert "Basic Infantry" in text
     assert "0.700" in text
@@ -56,3 +60,27 @@ def test_formats_matchup_report_with_strongest_and_weakest_sections():
     assert "0.410" in text
 
     assert "Elrond, Master of Rivendell" in text
+
+    evidence = EvidenceRecord(
+        mechanic="attrition_output",
+        status=EvidenceStatus.PROVISIONAL,
+        reason=(
+            "Aggregate casualty predictions have "
+            "not been independently validated."
+        ),
+        provenance="dev073_calibration",
+    )
+
+    report_with_evidence = format_matchup_report(
+        report=report,
+        evidence_records=(evidence,),
+    )
+
+    assert "EVIDENCE & LIMITATIONS" in report_with_evidence
+    assert "Attrition Output: PROVISIONAL" in report_with_evidence
+    assert "Aggregate casualty predictions" in report_with_evidence
+    assert "dev073_calibration" in report_with_evidence
+
+    # Evidence must not alter the original matchup scores.
+    assert "Basic Infantry - 0.700" in report_with_evidence
+    assert "Elite Heroes - 0.410" in report_with_evidence
