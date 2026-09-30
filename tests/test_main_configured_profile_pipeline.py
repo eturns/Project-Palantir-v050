@@ -297,9 +297,21 @@ def test_main_passes_external_option_lookup_to_analysis_service(
         lambda *args, **kwargs: None,
     )
 
-    main_module.main(
-        str(army_file),
+    report_calls = []
+
+    monkeypatch.setattr(
+        main_module,
+        "print_text_analysis_report",
+        lambda result: report_calls.append(result),
     )
+
+    result = main_module.main(
+        str(army_file),
+        print_report=False,
+    )
+
+    assert result is not None
+    assert report_calls == []
 
     assert captured["options"] is not None
 

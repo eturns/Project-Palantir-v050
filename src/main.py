@@ -88,8 +88,26 @@ from siege_engine_profile_loader import (
     load_siege_engine_profiles,
 )
 
+def run_analysis_workflow(
+    file_path: str,
+    *,
+    print_report: bool = True,
+):
+    """
+    Run the existing Palantír workflow.
+
+    This boundary allows console and desktop callers
+    to share the established application pathway.
+    """
+    return main(
+        file_path,
+        print_report=print_report,
+    )
+
 def main(
     file_path: str,
+    *,
+    print_report: bool = True,
 ):
     """
     Main entry point for Project Palantír.
@@ -302,9 +320,12 @@ def main(
         )
         return
 
-    print_text_analysis_report(
+    if print_report:
+        print_text_analysis_report(
         result,
-    )
+        )
+
+    return result
    
 if __name__ == "__main__":
     if len(sys.argv) >= 2:

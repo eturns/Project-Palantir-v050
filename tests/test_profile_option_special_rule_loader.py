@@ -270,3 +270,13 @@ def test_special_rule_loader_preserves_existing_scalar_state_effects(
         effects[1].granted_special_rules[0].rule
         is special_rules["GRANTED_RULE"]
     )
+
+def test_default_profile_option_special_rules_file_loads():
+    from profile_option_special_rule_loader import (
+        load_profile_option_special_rules,
+    )
+
+    load_profile_option_special_rules(
+        {},
+        {},
+    )
