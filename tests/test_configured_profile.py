@@ -1434,6 +1434,15 @@ def test_effective_base_size_override_takes_precedence_over_selected_mount():
     mount = Mount(
         id="TEST_MOUNT",
         name="Test Mount",
+        movement=10,
+        fight=2,
+        shooting="-",
+        strength=3,
+        defence=4,
+        attacks=1,
+        wounds=1,
+        courage="7+",
+        intelligence="7+",
         base_size_mm=40,
     )
 

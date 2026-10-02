@@ -32,16 +32,33 @@ from wound_probability import (
 )
 from wound_reroll import WoundReroll
 from wound_table import get_wound_target
-
+from torturer_state import TorturerState
+from torturer_wound_effect import (
+    get_torturer_wound_reroll,
+)
+from morgul_blade_combat_values import (
+    get_morgul_blade_combat_strength,
+)
+from morgul_blade_state import MorgulBladeState
 
 def calculate_configured_wound_probability(
     attacker: ConfiguredProfile,
     defender: ConfiguredProfile,
     attacker_selection: MeleeWeaponSelection | None = None,
     context: WoundContext | None = None,
+    torturer_state: TorturerState | None = None,
+    morgul_blade_state: MorgulBladeState | None = None,
 ):
+    attack_strength = (
+        get_morgul_blade_combat_strength(
+            attacker,
+            selection=attacker_selection,
+            state=morgul_blade_state,
+        )
+    )
+
     target = get_wound_target(
-        strength=attacker.profile.strength,
+        strength=attack_strength,
         defence=get_effective_defence(
             attacker,
             defender,
@@ -109,6 +126,22 @@ def calculate_configured_wound_probability(
         )
     )
 
+    attacker_rule_ids = {
+        assignment.rule.id
+        for assignment in attacker.effective_special_rules
+    }
+
+    torturer_reroll = WoundReroll()
+
+    if (
+        torturer_state is not None
+        and "TORTURER" in attacker_rule_ids
+    ):
+        torturer_reroll = get_torturer_wound_reroll(
+            torturer_state,
+            context=context,
+        )
+
     reroll = WoundReroll(
         reroll_failed=(
             (
@@ -116,6 +149,7 @@ def calculate_configured_wound_probability(
                 and generic_reroll.reroll_failed
             )
             or contextual_reroll.reroll_failed
+            or torturer_reroll.reroll_failed
         ),
         reroll_natural_ones=(
             (
@@ -123,6 +157,7 @@ def calculate_configured_wound_probability(
                 and generic_reroll.reroll_natural_ones
             )
             or contextual_reroll.reroll_natural_ones
+            or torturer_reroll.reroll_natural_ones
         ),
     )
 

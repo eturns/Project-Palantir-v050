@@ -7,6 +7,17 @@ from profile_metrics import calculate_profile_metrics
 from ability_queries import calculate_tag_score
 from fielded_model_form_state import FieldedModelFormState
 
+def _configured_profile_from_runtime_value(
+    value,
+):
+    if isinstance(
+        value,
+        FieldedModelFormState,
+    ):
+        return value.active_configured_profile
+
+    return value
+
 def _calculate_special_rule_mobility(
     profile,
     rule_id: str,
@@ -73,21 +84,38 @@ def calculate_army_manoeuvrability(
             )
 
         profile_quantities = tuple(
-            (state.active_configured_profile, 1)
+            (state, 1)
             for state in form_states
         )
 
     total = 0.0
 
-    for configured_profile, quantity in profile_quantities:
+    for profile_or_state, quantity in profile_quantities:
+        if isinstance(
+            profile_or_state,
+            FieldedModelFormState,
+        ):
+            configured_profile = (
+                profile_or_state.active_configured_profile
+            )
+            movement = (
+                profile_or_state.effective_movement
+            )
+            base_size_mm = (
+                profile_or_state.effective_base_size_mm
+            )
+        else:
+            configured_profile = profile_or_state
+            movement = (
+                configured_profile.effective_movement
+            )
+            base_size_mm = (
+                configured_profile.effective_base_size_mm
+            )
         manoeuvrability = calculate_manoeuvrability(
             ManoeuvrabilityInputs(
-                movement=(
-                    configured_profile.effective_movement
-                ),
-                base_size_mm=(
-                    configured_profile.effective_base_size_mm
-                ),
+                movement=movement,
+                base_size_mm=base_size_mm,
             )
         )
 
@@ -115,7 +143,13 @@ def calculate_army_manoeuvrability(
     spiritual_displacement_model_count = 0
     spiritual_displacement_bonus = 0.0
 
-    for configured_profile, quantity in profile_quantities:
+    for profile_or_state, quantity in profile_quantities:
+        configured_profile = (
+            _configured_profile_from_runtime_value(
+                profile_or_state
+            )
+        )
+
         rule_mobility = (
             _calculate_special_rule_mobility(
                 configured_profile,
@@ -136,11 +170,13 @@ def calculate_army_manoeuvrability(
 
     slayer_of_men_count = sum(
         quantity
-        for configured_profile, quantity in profile_quantities
+        for profile_or_state, quantity in profile_quantities
         if any(
             assignment.rule.id == "ANGMAR_ARISE_SOM"
             for assignment in (
-                configured_profile.effective_special_rules
+                _configured_profile_from_runtime_value(
+                    profile_or_state
+                ).effective_special_rules
             )
         )
     )

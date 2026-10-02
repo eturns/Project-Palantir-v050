@@ -6,6 +6,9 @@ from resource_use_permission import ResourceType
 _HE_CANNOT_YET_TAKE_PHYSICAL_FORM = (
     "HE_CANNOT_YET_TAKE_PHYSICAL_FORM"
 )
+_WILL_OF_THE_NECROMANCER = (
+    "WILL_OF_THE_NECROMANCER"
+)
 
 
 def get_special_rule_resource_conversions(
@@ -13,7 +16,10 @@ def get_special_rule_resource_conversions(
 ) -> tuple[ResourceConversion, ...]:
     conversions: list[ResourceConversion] = []
 
-    if _HE_CANNOT_YET_TAKE_PHYSICAL_FORM in special_rule_ids:
+    if (
+        _HE_CANNOT_YET_TAKE_PHYSICAL_FORM in special_rule_ids
+        or _WILL_OF_THE_NECROMANCER in special_rule_ids
+    ):
         conversions.append(
             ResourceConversion(
                 source_resource_type=ResourceType.WILL,

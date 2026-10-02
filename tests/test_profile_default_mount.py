@@ -36,6 +36,16 @@ def test_profile_can_have_default_mount():
     mount = Mount(
         id="MOUNT_TEST",
         name="Test Mount",
+        movement=8,
+        fight=2,
+        shooting="6+",
+        strength=4,
+        defence=5,
+        attacks=0,
+        wounds=1,
+        courage="7+",
+        intelligence="7+",
+        base_size_mm=40,
     )
 
     profile = create_test_profile(

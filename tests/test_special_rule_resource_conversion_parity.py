@@ -56,3 +56,26 @@ def test_unrelated_rule_generic_conversion_matches_legacy():
     )
 
     assert generic == legacy == set()
+
+def test_will_of_the_necromancer_generic_conversion_matches_legacy():
+    configured_profile = make_configured_profile(
+        (
+            "WILL_OF_THE_NECROMANCER",
+        ),
+    )
+
+    legacy = set(
+        get_special_rule_resource_conversions(
+            (
+                "WILL_OF_THE_NECROMANCER",
+            )
+        )
+    )
+
+    generic = resolved_resource_conversions(
+        get_special_rule_mechanical_effect_definitions(
+            configured_profile,
+        )
+    )
+
+    assert generic == legacy

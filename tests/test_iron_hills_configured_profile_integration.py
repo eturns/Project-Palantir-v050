@@ -25,6 +25,7 @@ from profile_option_wargear_loader import (
 )
 from wargear_loader import load_wargear
 from loader import load_all_profiles
+from profile_classification import ModelType
 
 def load_complete_iron_hills_configuration():
     profiles = {
@@ -162,4 +163,17 @@ def test_all_non_warrior_iron_hills_configurations():
         "WG_HEAVY_ARMOUR",
         "WG_HAND_WEAPON",
         "WG_MATTOCK",
+    }
+
+    assert goat_rider.effective_movement == 8
+    assert goat_rider.effective_fight == 4
+    assert goat_rider.effective_strength == 4
+    assert goat_rider.effective_attacks == 1
+    assert goat_rider.effective_model_types == {
+        ModelType.CAVALRY,
+    }
+
+    assert dain.effective_movement == 8
+    assert dain.effective_model_types == {
+        ModelType.CAVALRY,
     }

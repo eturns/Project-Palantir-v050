@@ -47,7 +47,13 @@ def test_load_army_list_profiles_populates_canonical_memberships():
         "DG_SM",
         "DG_MGS",
         "DG_MHS",
-    }
+        "DG_KEEPER",
+        "DG_HOC",
+        "DG_HOW",
+        "DG_HOWR",
+        "DG_FW",
+        "DG_CASTELLAN",
+}
 
     assert {
         profile.id

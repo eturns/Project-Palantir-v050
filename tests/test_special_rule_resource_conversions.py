@@ -70,3 +70,17 @@ def test_unrelated_rule_grants_no_special_resource_permission():
     )
 
     assert result == ()
+
+def test_will_of_the_necromancer_grants_will_as_fate_conversion():
+    result = get_special_rule_resource_conversions(
+        special_rule_ids=(
+            "WILL_OF_THE_NECROMANCER",
+        ),
+    )
+
+    assert result == (
+        ResourceConversion(
+            source_resource_type=ResourceType.WILL,
+            target_resource_use=ResourceUse.TAKE_FATE,
+        ),
+    )

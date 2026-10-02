@@ -29,6 +29,14 @@ ACCENT = "#2f80ed"
 SUCCESS = "#2e8b57"
 ERROR = "#b42318"
 
+CAPABILITY_COLOURS = {
+    "Exceptional": "#198754",
+    "Strong": "#2e8b57",
+    "Average": "#b7791f",
+    "Weak": "#d97706",
+    "Very Weak": "#b42318",
+}
+
 
 def build_army_summary(
     view_model: dict,
@@ -141,6 +149,148 @@ def build_capability_analysis_summary(
             )
 
     return "\n".join(lines)
+
+
+
+def _capability_colour(
+    line: str,
+) -> str:
+    for rating in (
+        "Very Weak",
+        "Exceptional",
+        "Strong",
+        "Average",
+        "Weak",
+    ):
+        if f" {rating} " in line:
+            return CAPABILITY_COLOURS[rating]
+
+    return TEXT
+
+
+class CapabilityDisplay:
+    """Tkinter display that preserves aligned capability rows with conditional colour."""
+
+    def __init__(
+        self,
+        parent,
+    ) -> None:
+        self._frame = Frame(
+            parent,
+            bg=PANEL_BG,
+        )
+        self._rows = []
+
+    def pack(
+        self,
+        *args,
+        **kwargs,
+    ) -> None:
+        self._frame.pack(
+            *args,
+            **kwargs,
+        )
+
+    def config(
+        self,
+        **kwargs,
+    ) -> None:
+        if "text" not in kwargs:
+            configure = getattr(
+                self._frame,
+                "configure",
+                None,
+            )
+            if callable(configure):
+                configure(**kwargs)
+            return
+
+        for row in self._rows:
+            destroy = getattr(
+                row,
+                "destroy",
+                None,
+            )
+            if callable(destroy):
+                destroy()
+
+        self._rows = []
+
+        display_text = kwargs["text"]
+
+        if not display_text:
+            return
+
+        for line in display_text.splitlines():
+            row = Frame(
+                self._frame,
+                bg=PANEL_BG,
+            )
+            row.pack(
+                anchor="w",
+                fill=X,
+            )
+            self._rows.append(row)
+
+            block_positions = [
+                position
+                for position in (
+                    line.find("█"),
+                    line.find("░"),
+                )
+                if position >= 0
+            ]
+
+            if not block_positions:
+                Label(
+                    row,
+                    text=line,
+                    bg=PANEL_BG,
+                    fg=TEXT,
+                    justify=LEFT,
+                    anchor="w",
+                    font=("Consolas", 10),
+                ).pack(
+                    side=LEFT,
+                    anchor="w",
+                )
+                continue
+
+            bar_start = min(
+                block_positions
+            )
+            prefix = line[:bar_start]
+            capability = line[bar_start:]
+
+            Label(
+                row,
+                text=prefix,
+                bg=PANEL_BG,
+                fg=TEXT,
+                justify=LEFT,
+                anchor="w",
+                font=("Consolas", 10),
+            ).pack(
+                side=LEFT,
+                anchor="w",
+            )
+
+            Label(
+                row,
+                text=capability,
+                bg=PANEL_BG,
+                fg=_capability_colour(
+                    line
+                ),
+                justify=LEFT,
+                anchor="w",
+                font=("Consolas", 10),
+            ).pack(
+                side=LEFT,
+                anchor="w",
+            )
+
+    configure = config
 
 
 def build_strengths_summary(
@@ -908,14 +1058,8 @@ def launch_desktop_app() -> None:
         "Capability Analysis",
     )
 
-    capability_label = Label(
+    capability_label = CapabilityDisplay(
         capability_panel,
-        text="",
-        bg=PANEL_BG,
-        fg=TEXT,
-        justify=LEFT,
-        anchor="nw",
-        font=("Consolas", 10),
     )
     capability_label.pack(
         fill=BOTH,

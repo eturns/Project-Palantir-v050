@@ -81,6 +81,21 @@ class ConfiguredProfile:
                 "the same option more than once."
             )
 
+        selected_exclusive_groups = [
+            option.exclusive_group
+            for option in self.selected_options
+            if option.exclusive_group is not None
+        ]
+
+        if len(selected_exclusive_groups) != len(
+            set(selected_exclusive_groups)
+        ):
+            raise ValueError(
+                "Configured Profile cannot select "
+                "more than one option from the same "
+                "exclusive group."
+            )
+
     @property
     def points(self) -> int:
         """
@@ -194,6 +209,9 @@ class ConfiguredProfile:
         if movement_overrides:
             return movement_overrides[0]
 
+        if self.effective_mount is not None:
+            return self.effective_mount.movement
+
         return self.profile.movement
 
     @property
@@ -223,6 +241,59 @@ class ConfiguredProfile:
             return self.effective_mount.base_size_mm
 
         return self.profile.base_size_mm
+
+    @property
+    def effective_fight(self) -> int:
+        """
+        Returns the Fight Value used by this configured Profile.
+
+        Mounted Cavalry uses the higher Fight Value of the
+        rider and Mount.
+        """
+
+        if self.effective_mount is not None:
+            return max(
+                self.profile.fight,
+                self.effective_mount.fight,
+            )
+
+        return self.profile.fight
+
+
+    @property
+    def effective_strength(self) -> int:
+        """
+        Returns the Strength used by this configured Profile.
+
+        Mounted Cavalry uses the higher Strength of the
+        rider and Mount during Combat.
+        """
+
+        if self.effective_mount is not None:
+            return max(
+                self.profile.strength,
+                self.effective_mount.strength,
+            )
+
+        return self.profile.strength
+
+
+    @property
+    def effective_attacks(self) -> int:
+        """
+        Returns the base Attacks used by this configured Profile.
+
+        Mounted Cavalry uses the higher Attacks characteristic
+        of the rider and Mount before situational modifiers.
+        """
+
+        if self.effective_mount is not None:
+            return max(
+                self.profile.attacks,
+                self.effective_mount.attacks,
+            )
+
+        return self.profile.attacks
 
     @property
     def effective_defence(self) -> int:
@@ -267,9 +338,19 @@ class ConfiguredProfile:
                 model_type_overrides[0]
             }
 
-        return set(
+        model_types = set(
             self.profile.model_types
         )
+
+        if self.effective_mount is not None:
+            model_types.discard(
+                ModelType.INFANTRY
+            )
+            model_types.add(
+                ModelType.CAVALRY
+            )
+
+        return model_types
 
     @property
     def effective_shooting(self) -> str:

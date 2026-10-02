@@ -16,6 +16,14 @@ from melee_weapon_selection import (
 )
 from wound_context import WoundContext
 from wound_attack_type import WoundAttackType
+from torturer_state import TorturerState
+from melee_weapon_selection import MeleeWeaponSelection
+from morgul_blade_state import MorgulBladeState
+from mount import Mount
+from wargear import Wargear
+from morgul_blade_transition import (
+    use_morgul_blade,
+)
 
 def create_test_profile(
     profile_id: str,
@@ -423,3 +431,228 @@ def test_configured_wound_probability_applies_bane_of_kings_to_shooting():
     )
 
     assert result == Fraction(3, 4)
+
+def test_torturer_one_kill_improves_wound_probability():
+    attacker_profile = create_test_profile(
+        "ATTACKER",
+    )
+    defender_profile = create_test_profile(
+        "DEFENDER",
+    )
+
+    attacker_profile.special_rules.append(
+        ProfileSpecialRuleAssignment(
+            rule=SpecialRule(
+                id="TORTURER",
+                name="Torturer",
+                category=RuleCategory.SPECIAL,
+            ),
+        )
+    )
+
+    attacker = ConfiguredProfile(
+        profile=attacker_profile,
+    )
+
+    defender = ConfiguredProfile(
+        profile=defender_profile,
+    )
+
+    result = calculate_configured_wound_probability(
+        attacker=attacker,
+        defender=defender,
+        torturer_state=TorturerState(
+            kills_in_combat=1,
+        ),
+    )
+
+    assert result == Fraction(7, 12)
+
+def test_torturer_five_kills_rerolls_all_failed_wounds():
+    attacker_profile = create_test_profile(
+        "ATTACKER",
+    )
+    defender_profile = create_test_profile(
+        "DEFENDER",
+    )
+
+    attacker_profile.special_rules.append(
+        ProfileSpecialRuleAssignment(
+            rule=SpecialRule(
+                id="TORTURER",
+                name="Torturer",
+                category=RuleCategory.SPECIAL,
+            ),
+        )
+    )
+
+    attacker = ConfiguredProfile(
+        profile=attacker_profile,
+    )
+
+def test_torturer_state_does_not_affect_non_torturer_profile():
+    attacker_profile = create_test_profile(
+        "ATTACKER",
+    )
+    defender_profile = create_test_profile(
+        "DEFENDER",
+    )
+
+    attacker = ConfiguredProfile(
+        profile=attacker_profile,
+    )
+
+    defender = ConfiguredProfile(
+        profile=defender_profile,
+    )
+
+    result = calculate_configured_wound_probability(
+        attacker=attacker,
+        defender=defender,
+        torturer_state=TorturerState(
+            kills_in_combat=5,
+        ),
+    )
+
+    assert result == Fraction(1, 2)
+
+def test_master_wants_ring_improves_configured_wound_probability():
+    attacker_profile = create_test_profile(
+        "ATTACKER",
+    )
+    defender_profile = create_test_profile(
+        "DEFENDER",
+    )
+
+    attacker_profile.special_rules.append(
+        ProfileSpecialRuleAssignment(
+            rule=SpecialRule(
+                id="MASTER_WANTS_RING",
+                name="You have something my master wants",
+                category=RuleCategory.SPECIAL,
+            ),
+        )
+    )
+
+    defender_profile.default_wargear.append(
+        Wargear(
+            id="WG_NARYA",
+            name="Narya",
+        )
+    )
+
+    attacker = ConfiguredProfile(
+        profile=attacker_profile,
+    )
+
+    defender = ConfiguredProfile(
+        profile=defender_profile,
+    )
+
+    result = calculate_configured_wound_probability(
+        attacker=attacker,
+        defender=defender,
+    )
+
+    assert result == Fraction(2, 3)
+
+def test_master_wants_ring_does_not_improve_probability_without_ring():
+    attacker_profile = create_test_profile(
+        "ATTACKER",
+    )
+    defender_profile = create_test_profile(
+        "DEFENDER",
+    )
+
+    attacker_profile.special_rules.append(
+        ProfileSpecialRuleAssignment(
+            rule=SpecialRule(
+                id="MASTER_WANTS_RING",
+                name="You have something my master wants",
+                category=RuleCategory.SPECIAL,
+            ),
+        )
+    )
+
+    attacker = ConfiguredProfile(
+        profile=attacker_profile,
+    )
+
+    defender = ConfiguredProfile(
+        profile=defender_profile,
+    )
+
+    result = calculate_configured_wound_probability(
+        attacker=attacker,
+        defender=defender,
+    )
+
+    assert result == Fraction(1, 2)
+
+def test_morgul_blade_uses_rider_strength_in_wound_probability():
+    attacker_profile = create_test_profile(
+        "ATTACKER",
+    )
+    defender_profile = create_test_profile(
+        "DEFENDER",
+    )
+
+    attacker_profile.strength = 4
+
+    attacker_profile.default_mount = Mount(
+        id="TEST_MOUNT",
+        name="Test Mount",
+        movement=10,
+        fight=3,
+        shooting="6+",
+        strength=6,
+        defence=4,
+        attacks=2,
+        wounds=1,
+        courage="7+",
+        intelligence="7+",
+        base_size_mm=40,
+    )
+
+    attacker_profile.default_wargear.append(
+        Wargear(
+            id="WG_MORGUL_BLADE",
+            name="Morgul Blade",
+        )
+    )
+
+    defender_profile.defence = 6
+
+    attacker = ConfiguredProfile(
+        profile=attacker_profile,
+    )
+    defender = ConfiguredProfile(
+        profile=defender_profile,
+    )
+
+    normal_result = (
+        calculate_configured_wound_probability(
+            attacker=attacker,
+            defender=defender,
+        )
+    )
+
+    morgul_result = (
+        calculate_configured_wound_probability(
+            attacker=attacker,
+            defender=defender,
+            attacker_selection=(
+                MeleeWeaponSelection(
+                    wargear_id="WG_MORGUL_BLADE",
+                )
+            ),
+            morgul_blade_state=(
+                use_morgul_blade(
+                    MorgulBladeState()
+                )
+            ),
+        )
+    )
+
+    assert normal_result == Fraction(1, 2)
+    assert morgul_result == Fraction(1, 3)

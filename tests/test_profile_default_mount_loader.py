@@ -28,16 +28,29 @@ def create_profile() -> Profile:
     )
 
 
-def test_load_profile_default_mount():
+def test_load_profile_default_mount(
+    tmp_path: Path,
+):
     profile = create_profile()
+
     profiles = {
         profile.id: profile,
     }
+
     mounts = load_mounts()
+
+    file_path = tmp_path / "default_mount.csv"
+
+    file_path.write_text(
+        "profile_id,mount_id\n"
+        "IH_GR,MOUNT_IRON_HILLS_GOAT\n",
+        encoding="utf-8",
+    )
 
     load_profile_default_mounts(
         profiles=profiles,
         mounts=mounts,
+        file_path=str(file_path),
     )
 
     assert profile.default_mount is (
@@ -45,15 +58,27 @@ def test_load_profile_default_mount():
     )
 
 
-def test_default_mount_uses_master_mount_entity():
+def test_default_mount_uses_master_mount_entity(
+    tmp_path: Path,
+):
     profile = create_profile()
+
     mounts = load_mounts()
+
+    file_path = tmp_path / "default_mount.csv"
+
+    file_path.write_text(
+        "profile_id,mount_id\n"
+        "IH_GR,MOUNT_IRON_HILLS_GOAT\n",
+        encoding="utf-8",
+    )
 
     load_profile_default_mounts(
         profiles={
             profile.id: profile,
         },
         mounts=mounts,
+        file_path=str(file_path),
     )
 
     assert profile.default_mount.id == (

@@ -10,7 +10,8 @@ from special_rule_wound_modifier import (
 )
 from wound_modifier import WoundModifier
 from wound_context import WoundContext
-
+from wargear import Wargear
+from wound_attack_type import WoundAttackType
 
 def create_test_profile() -> Profile:
     return Profile(
@@ -224,3 +225,113 @@ def test_backstabbers_applies_only_once_when_other_special_rules_are_present():
             to_wound=1,
         ),
     )
+
+def test_master_wants_ring_adds_one_to_wound_against_ring_bearer():
+    attacker_profile = create_test_profile()
+    defender_profile = create_test_profile()
+
+    attacker_profile.special_rules.append(
+        ProfileSpecialRuleAssignment(
+            rule=SpecialRule(
+                id="MASTER_WANTS_RING",
+                name="You have something my master wants",
+                category=RuleCategory.SPECIAL,
+            ),
+        )
+    )
+
+    defender_profile.default_wargear.append(
+        Wargear(
+            id="WG_NARYA",
+            name="Narya",
+        )
+    )
+
+    attacker = ConfiguredProfile(
+        profile=attacker_profile,
+    )
+
+    defender = ConfiguredProfile(
+        profile=defender_profile,
+    )
+
+    result = get_special_rule_wound_modifiers(
+        attacker,
+        defender,
+    )
+
+    assert WoundModifier(
+        to_wound=1,
+    ) in result
+
+def test_master_wants_ring_does_not_apply_without_ring():
+    attacker_profile = create_test_profile()
+    defender_profile = create_test_profile()
+
+    attacker_profile.special_rules.append(
+        ProfileSpecialRuleAssignment(
+            rule=SpecialRule(
+                id="MASTER_WANTS_RING",
+                name="You have something my master wants",
+                category=RuleCategory.SPECIAL,
+            ),
+        )
+    )
+
+    attacker = ConfiguredProfile(
+        profile=attacker_profile,
+    )
+
+    defender = ConfiguredProfile(
+        profile=defender_profile,
+    )
+
+    result = get_special_rule_wound_modifiers(
+        attacker,
+        defender,
+    )
+
+    assert WoundModifier(
+        to_wound=1,
+    ) not in result
+
+def test_master_wants_ring_only_applies_to_strikes():
+    attacker_profile = create_test_profile()
+    defender_profile = create_test_profile()
+
+    attacker_profile.special_rules.append(
+        ProfileSpecialRuleAssignment(
+            rule=SpecialRule(
+                id="MASTER_WANTS_RING",
+                name="You have something my master wants",
+                category=RuleCategory.SPECIAL,
+            ),
+        )
+    )
+
+    defender_profile.default_wargear.append(
+        Wargear(
+            id="WG_ONE_RING",
+            name="The One Ring",
+        )
+    )
+
+    attacker = ConfiguredProfile(
+        profile=attacker_profile,
+    )
+
+    defender = ConfiguredProfile(
+        profile=defender_profile,
+    )
+
+    result = get_special_rule_wound_modifiers(
+        attacker,
+        defender,
+        context=WoundContext(
+            attack_type=WoundAttackType.SHOOTING,
+        ),
+    )
+
+    assert WoundModifier(
+        to_wound=1,
+    ) not in result

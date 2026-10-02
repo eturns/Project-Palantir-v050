@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-
 @dataclass(frozen=True)
 class WoundModifier:
     to_wound: int = 0

@@ -80,3 +80,65 @@ def test_bofur_champion_of_erebor_loads_from_production_data():
     assert bofur.races == {
         "DWARF",
     }
+
+def test_rise_of_the_necromancer_missing_profiles_load():
+    keeper = load_profile("DG_KEEPER")
+    captain = load_profile("DG_HOC")
+    warrior = load_profile("DG_HOW")
+    warg_rider = load_profile("DG_HOWR")
+    fell_warg = load_profile("DG_FW")
+    castellan = load_profile("DG_CASTELLAN")
+
+    assert keeper.points == 80
+    assert keeper.fight == 5
+    assert keeper.strength == 5
+    assert keeper.defence == 6
+    assert keeper.attacks == 3
+    assert keeper.wounds == 2
+    assert keeper.might == 3
+    assert keeper.will == 3
+    assert keeper.fate == 0
+    assert keeper.max_in_army == 1
+    assert keeper.heroic_status is HeroicStatus.HERO
+    assert keeper.model_types == {
+        ModelType.INFANTRY,
+    }
+    assert keeper.races == {"ORC"}
+
+    assert captain.points == 45
+    assert captain.heroic_status is HeroicStatus.HERO
+    assert captain.model_types == {
+        ModelType.INFANTRY,
+    }
+    assert captain.races == {"ORC"}
+
+    assert warrior.points == 8
+    assert warrior.heroic_status is HeroicStatus.WARRIOR
+    assert warrior.model_types == {
+        ModelType.INFANTRY,
+    }
+
+    assert warg_rider.points == 15
+    assert warg_rider.movement == 6
+    assert warg_rider.model_types == {
+        ModelType.CAVALRY,
+    }
+    assert warg_rider.races == {"ORC"}
+
+    assert fell_warg.points == 8
+    assert fell_warg.movement == 10
+    assert fell_warg.model_types == {
+        ModelType.BEAST,
+        ModelType.INFANTRY,
+    }
+    assert fell_warg.races == {"WARG"}
+
+    assert castellan.points == 50
+    assert castellan.might == 0
+    assert castellan.will == 10
+    assert castellan.fate == 0
+    assert castellan.heroic_status is HeroicStatus.HERO
+    assert castellan.model_types == {
+        ModelType.INFANTRY,
+    }
+    assert castellan.races == {"SPIRIT"}

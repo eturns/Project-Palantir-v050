@@ -60,3 +60,34 @@ def test_unrelated_rule_creates_no_resource_conversion():
     )
 
     assert conversions == set()
+
+def test_will_of_the_necromancer_creates_will_to_fate_conversion():
+    configured_profile = make_configured_profile(
+        (
+            "WILL_OF_THE_NECROMANCER",
+        ),
+    )
+
+    definitions = (
+        get_special_rule_mechanical_effect_definitions(
+            configured_profile,
+        )
+    )
+
+    conversions = resolved_resource_conversions(
+        definitions,
+    )
+
+    assert len(conversions) == 1
+
+    conversion = next(iter(conversions))
+
+    assert (
+        conversion.source_resource_type
+        is ResourceType.WILL
+    )
+
+    assert (
+        conversion.target_resource_use
+        is ResourceUse.TAKE_FATE
+    )

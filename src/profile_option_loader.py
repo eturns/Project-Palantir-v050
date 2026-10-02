@@ -103,6 +103,13 @@ def load_profile_options(
                 name=row["name"],
                 points=int(row["points"]),
                 external_id=external_id,
+                exclusive_group=(
+                    row.get(
+                        "exclusive_group",
+                        "",
+                    ).strip()
+                    or None
+                ),
                 profile_assignments=tuple(
                     ProfileOptionProfileAssignment(
                         profile_id=assigned_profile_id,

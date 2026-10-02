@@ -32,7 +32,8 @@ def change_fielded_model_form(
         active_configured_profile=(
             new_active_configured_profile
         ),
-        allowed_alternate_profile_ids= (
+        allowed_alternate_profile_ids=(
             state.allowed_alternate_profile_ids
-        )
+        ),
+        mount_active=state.mount_active,
     )

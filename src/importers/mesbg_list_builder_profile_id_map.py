@@ -54,7 +54,35 @@ EXTERNAL_PROFILE_IDS = {
         "[rise-of-the-necromancer] "
         "mirkwood-hunting-spider"
     ): "DG_MHS",
+     (
+        "[rise-of-the-necromancer] "
+        "the-keeper-of-the-dungeons"
+    ): "DG_KEEPER",
 
+    (
+        "[rise-of-the-necromancer] "
+        "hunter-orc-captain"
+    ): "DG_HOC",
+
+    (
+        "[rise-of-the-necromancer] "
+        "hunter-orc-warrior"
+    ): "DG_HOW",
+
+    (
+        "[rise-of-the-necromancer] "
+        "hunter-orc-warg-rider"
+    ): "DG_HOWR",
+
+    (
+        "[rise-of-the-necromancer] "
+        "fell-warg"
+    ): "DG_FW",
+
+    (
+        "[rise-of-the-necromancer] "
+        "castellan-of-dol-guldur"
+    ): "DG_CASTELLAN",
     (
         "[the-iron-hills] "
         "dain-ironfoot-lord-of-the-iron-hills"

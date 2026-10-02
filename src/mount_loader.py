@@ -44,7 +44,32 @@ def load_mounts(
             mount = Mount(
                 id=row["id"],
                 name=row["name"],
+                movement=int(row["movement"]),
+                fight=int(row["fight"]),
+                shooting=row["shooting"],
+                strength=int(row["strength"]),
+                defence=int(row["defence"]),
+                attacks=int(row["attacks"]),
+                wounds=int(row["wounds"]),
+                courage=row["courage"],
+                intelligence=row["intelligence"],
                 base_size_mm=int(row["base_size_mm"]),
+                races=frozenset(
+                    value.strip().upper()
+                    for value in row.get(
+                        "races",
+                        "",
+                    ).split("|")
+                    if value.strip()
+                ),
+                special_rule_ids=frozenset(
+                    value.strip()
+                    for value in row.get(
+                        "special_rule_ids",
+                        "",
+                    ).split("|")
+                    if value.strip()
+                ),
             )
 
             if mount.id in mounts:

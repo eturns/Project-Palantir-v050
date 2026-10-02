@@ -235,6 +235,16 @@ def test_profile_option_stores_mount_assignment():
     war_boar = Mount(
         id="MOUNT_WAR_BOAR",
         name="War Boar",
+        movement=8,
+        fight=4,
+        shooting="6+",
+        strength=4,
+        defence=6,
+        attacks=0,
+        wounds=2,
+        courage="7+",
+        intelligence="7+",
+        base_size_mm=40,
     )
 
     assignment = ProfileOptionMountAssignment(

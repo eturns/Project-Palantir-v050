@@ -1905,10 +1905,12 @@ def test_successful_analysis_displays_structured_core_analysis(
     assert "Capability Analysis" in label_texts
 
     assert any(
-        (
-            "Board Presence" in text
-            and "Shooting" in text
-        )
+        "Board Presence" in text
+        for text in label_texts
+    )
+
+    assert any(
+        "Shooting" in text
         for text in label_texts
     )
 
@@ -2208,13 +2210,15 @@ def test_successful_analysis_displays_scenario_analysis(
     assert "Scenario Analysis" in label_texts
 
     assert any(
-        "TOP 5 SCENARIOS" in text
-        and "BOTTOM 5 SCENARIOS" in text
-        and "ALL SCENARIOS" in text
-        and "Hold Ground" in text
-        and "Matched Play" in text
-        and "0.684" in text
-        and "Board Control" in text
+        (
+            "TOP 5 SCENARIOS" in text
+            and "BOTTOM 5 SCENARIOS" in text
+            and "ALL SCENARIOS" in text
+            and "Hold Ground" in text
+            and "Matched Play" in text
+            and "0.684" in text
+            and "Board Control" in text
+        )
         for text in label_texts
     )
 
@@ -2560,9 +2564,24 @@ def test_capability_summary_displays_rating_bars():
     )
 
     assert "Offence" in summary
-    assert "████████░░" in summary
+    assert "████████████████░░░░" in summary
     assert "Strong (3.18)" in summary
     assert "Shooting" in summary
-    assert "██░░░░░░░░" in summary
+    assert "████░░░░░░░░░░░░░░░░" in summary
     assert "Very Weak (0.36)" in summary
 
+
+
+def test_capability_colour_is_conditional_on_rating():
+    assert (
+        desktop_app._capability_colour(
+            "Offence     ████████████████████ Exceptional (4.20)"
+        )
+        == desktop_app.CAPABILITY_COLOURS["Exceptional"]
+    )
+    assert (
+        desktop_app._capability_colour(
+            "Shooting    ████░░░░░░░░░░░░░░░░ Very Weak (0.36)"
+        )
+        == desktop_app.CAPABILITY_COLOURS["Very Weak"]
+    )

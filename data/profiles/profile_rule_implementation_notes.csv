@@ -1,0 +1,15 @@
+profile_id,source_rule,implementation_type,implementation_reference,status,notes
+DG_WK,Angmar Arise,BAKED_IN_PROFILE,data/profiles/dol_guldur_profiles.csv,IMPLEMENTED,Fight 6 and Might 3 are represented directly in the canonical profile
+DG_KHM,Rhunish Fury,BAKED_IN_PROFILE,data/profiles/dol_guldur_profiles.csv,IMPLEMENTED,Attacks 3 is represented directly in the canonical profile
+DG_WK,One of Nine,PROFILE_LIMIT,dol_guldur_profiles.csv:max_in_army,PARTIAL,Profile-specific limit represented here; wider Nazgul composition rules deferred to DEV-078
+DG_KHM,One of Nine,PROFILE_LIMIT,dol_guldur_profiles.csv:max_in_army,PARTIAL,Profile-specific limit represented here; wider Nazgul composition rules deferred to DEV-078
+DG_DH,One of Nine,PROFILE_LIMIT,dol_guldur_profiles.csv:max_in_army,PARTIAL,Profile-specific limit represented here; wider Nazgul composition rules deferred to DEV-078
+DG_FS,One of Nine,PROFILE_LIMIT,dol_guldur_profiles.csv:max_in_army,PARTIAL,Profile-specific limit represented here; wider Nazgul composition rules deferred to DEV-078
+DG_LS,One of Nine,PROFILE_LIMIT,dol_guldur_profiles.csv:max_in_army,PARTIAL,Profile-specific limit represented here; wider Nazgul composition rules deferred to DEV-078
+DG_AK,One of Nine,PROFILE_LIMIT,dol_guldur_profiles.csv:max_in_army,PARTIAL,Profile-specific limit represented here; wider Nazgul composition rules deferred to DEV-078
+DG_SM,One of Nine,PROFILE_LIMIT,dol_guldur_profiles.csv:max_in_army,PARTIAL,Profile-specific limit represented here; wider Nazgul composition rules deferred to DEV-078
+DG_CASTELLAN,Morgul Blade,WARGEAR_RULE,data/wargear/wargear.csv,IMPLEMENTED,Represented as wargear with once-per-game activation lifecycle, single-target strike restriction, mounted rider Strength and Attacks handling, and post-prevention reduce-wounds-to-zero effect
+DG_CASTELLAN,Will of the Necromancer,ENGINE_MECHANIC,src/special_rule_resource_conversions.py,IMPLEMENTED,Uses the generic Will-to-Fate resource conversion shared with He Cannot Yet Take Physical Form
+DG_HOC,Savage Hunters,SPECIAL_RULE,src/effective_attacks.py,IMPLEMENTED,Conditional +1 Attack when CHARGED via CombatContext; stacks with eligible Cavalry Charge bonus. Scenario-level charge-opportunity weighting is separate.
+DG_HOW,Savage Hunters,SPECIAL_RULE,src/effective_attacks.py,IMPLEMENTED,Conditional +1 Attack when CHARGED via CombatContext; stacks with eligible Cavalry Charge bonus. Scenario-level charge-opportunity weighting is separate.
+DG_HOWR,Savage Hunters,SPECIAL_RULE,src/effective_attacks.py,IMPLEMENTED,Conditional +1 Attack when CHARGED via CombatContext; stacks with eligible Cavalry Charge bonus. Scenario-level charge-opportunity weighting is separate.

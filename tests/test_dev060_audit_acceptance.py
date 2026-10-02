@@ -44,6 +44,15 @@ def test_optional_mount_resolves_static_configured_state():
     horse = Mount(
         id="HORSE",
         name="Horse",
+        movement=10,
+        fight=2,
+        shooting="6+",
+        strength=3,
+        defence=4,
+        attacks=0,
+        wounds=1,
+        courage="7+",
+        intelligence="7+",
         base_size_mm=40,
     )
 

@@ -1,0 +1,496 @@
+{
+ "metadata": {
+  "leader": "86830b16-cb5c-44c9-b601-0f4c5c5fe10f",
+  "tags": []
+ },
+ "warbands": [
+  {
+   "id": "86830b16-cb5c-44c9-b601-0f4c5c5fe10f",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] sauron-the-necromancer",
+    "MWFW": [
+     [
+      "",
+      "3:25:0:1"
+     ]
+    ],
+    "options": []
+   },
+   "units": [
+    {
+     "model_id": "[rise-of-the-necromancer] fell-warg",
+     "MWFW": [],
+     "options": [],
+     "quantity": 1
+    },
+    {
+     "model_id": "[rise-of-the-necromancer] hunter-orc-warg-rider",
+     "MWFW": [],
+     "options": [],
+     "quantity": 1
+    },
+    {
+     "model_id": "[rise-of-the-necromancer] hunter-orc-warg-rider",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0707",
+       "name": "Orc bow",
+       "quantity": 1
+      }
+     ],
+     "quantity": 1
+    },
+    {
+     "model_id": "[rise-of-the-necromancer] hunter-orc-warg-rider",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0708",
+       "name": "Two-handed weapon",
+       "quantity": 1
+      }
+     ],
+     "quantity": 1
+    },
+    {
+     "model_id": "[rise-of-the-necromancer] hunter-orc-warrior",
+     "MWFW": [],
+     "options": [],
+     "quantity": 1
+    },
+    {
+     "model_id": "[rise-of-the-necromancer] hunter-orc-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0705",
+       "name": "Orc bow",
+       "quantity": 1
+      }
+     ],
+     "quantity": 1
+    },
+    {
+     "model_id": "[rise-of-the-necromancer] hunter-orc-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0706",
+       "name": "Two-handed weapon",
+       "quantity": 1
+      }
+     ],
+     "quantity": 1
+    },
+    {
+     "model_id": "[rise-of-the-necromancer] mirkwood-giant-spider",
+     "MWFW": [],
+     "options": [],
+     "quantity": 1
+    },
+    {
+     "model_id": "[rise-of-the-necromancer] mirkwood-hunting-spider",
+     "MWFW": [],
+     "options": [],
+     "quantity": 1
+    }
+   ],
+   "meta": {
+    "num": 1,
+    "points": 321,
+    "units": 9,
+    "heroes": 1,
+    "bows": 2,
+    "throwingWeapons": 0,
+    "bowLimit": 9,
+    "throwLimit": 9,
+    "maxUnits": 18
+   }
+  },
+  {
+   "id": "88e6f2dc-ef32-4571-aba0-9af1d3690bfc",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] khamul-the-easterling",
+    "MWFW": [
+     [
+      "",
+      "1:1:0:1"
+     ]
+    ],
+    "options": []
+   },
+   "units": [],
+   "meta": {
+    "num": 2,
+    "points": 80,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 15
+   }
+  },
+  {
+   "id": "2a50f77f-6b24-4072-a5e8-1035413eb48f",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] the-abyssal-knight-1",
+    "MWFW": [
+     [
+      "",
+      "1:1:0:1"
+     ]
+    ],
+    "options": []
+   },
+   "units": [],
+   "meta": {
+    "num": 3,
+    "points": 80,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 15
+   }
+  },
+  {
+   "id": "b4e058f1-e051-4bbd-b91d-b6b981d220a4",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] the-dark-headsman",
+    "MWFW": [
+     [
+      "",
+      "1:1:0:1"
+     ]
+    ],
+    "options": []
+   },
+   "units": [],
+   "meta": {
+    "num": 4,
+    "points": 80,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 15
+   }
+  },
+  {
+   "id": "605e5c52-c807-4a05-a6f7-7385163d9154",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] the-forsaken",
+    "MWFW": [
+     [
+      "",
+      "1:1:0:1"
+     ]
+    ],
+    "options": []
+   },
+   "units": [],
+   "meta": {
+    "num": 5,
+    "points": 80,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 15
+   }
+  },
+  {
+   "id": "de8c87c8-b7f1-41b4-903f-02897593a66f",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] the-keeper-of-the-dungeons",
+    "MWFW": [
+     [
+      "",
+      "3:3:0:2"
+     ]
+    ],
+    "options": []
+   },
+   "units": [],
+   "meta": {
+    "num": 6,
+    "points": 80,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 15
+   }
+  },
+  {
+   "id": "e30b2d48-73f1-4340-aa0e-2b08fa6e1cf6",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] the-lingering-shadow",
+    "MWFW": [
+     [
+      "",
+      "1:1:0:1"
+     ]
+    ],
+    "options": []
+   },
+   "units": [],
+   "meta": {
+    "num": 7,
+    "points": 80,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 15
+   }
+  },
+  {
+   "id": "f71455d7-33fb-414f-977f-6011c211ba2c",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] the-slayer-of-men-1",
+    "MWFW": [
+     [
+      "",
+      "1:1:0:1"
+     ]
+    ],
+    "options": []
+   },
+   "units": [],
+   "meta": {
+    "num": 8,
+    "points": 80,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 15
+   }
+  },
+  {
+   "id": "4289334a-cea5-4650-b08d-d4dca1fc70f2",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] the-witch-king-of-angmar",
+    "MWFW": [
+     [
+      "",
+      "3:1:0:1"
+     ]
+    ],
+    "options": []
+   },
+   "units": [],
+   "meta": {
+    "num": 9,
+    "points": 80,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 15
+   }
+  },
+  {
+   "id": "47d2d618-7ea6-44fb-903e-46de6c66313a",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] hunter-orc-captain",
+    "MWFW": [
+     [
+      "",
+      "2:1:1:2"
+     ]
+    ],
+    "options": []
+   },
+   "units": [],
+   "meta": {
+    "num": 10,
+    "points": 45,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 12
+   }
+  },
+  {
+   "id": "a559c9b1-463e-4a38-b65f-316d77b6b769",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] hunter-orc-captain",
+    "MWFW": [
+     [
+      "",
+      "2:1:1:2"
+     ]
+    ],
+    "options": [
+     {
+      "id": "OPT0702",
+      "name": "Fell Warg",
+      "quantity": 1
+     }
+    ]
+   },
+   "units": [],
+   "meta": {
+    "num": 11,
+    "points": 65,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 12
+   }
+  },
+  {
+   "id": "f0f7ad27-ae32-4c01-b994-cf09008e1b42",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] hunter-orc-captain",
+    "MWFW": [
+     [
+      "",
+      "2:1:1:2"
+     ]
+    ],
+    "options": [
+     {
+      "id": "OPT0703",
+      "name": "Orc bow",
+      "quantity": 1
+     }
+    ]
+   },
+   "units": [],
+   "meta": {
+    "num": 12,
+    "points": 50,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 12
+   }
+  },
+  {
+   "id": "ff591d40-9ba6-47bd-b8d9-41c0d4c2ad7b",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] hunter-orc-captain",
+    "MWFW": [
+     [
+      "",
+      "2:1:1:2"
+     ]
+    ],
+    "options": [
+     {
+      "id": "OPT0704",
+      "name": "Two-handed weapon",
+      "quantity": 1
+     }
+    ]
+   },
+   "units": [],
+   "meta": {
+    "num": 13,
+    "points": 50,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 12
+   }
+  },
+  {
+   "id": "b4dacfc9-d963-4749-82e9-2f959245f4f8",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] hunter-orc-captain",
+    "MWFW": [
+     [
+      "",
+      "2:1:1:2"
+     ]
+    ],
+    "options": [
+     {
+      "id": "OPT0702",
+      "name": "Fell Warg",
+      "quantity": 1
+     },
+     {
+      "id": "OPT0703",
+      "name": "Orc bow",
+      "quantity": 1
+     }
+    ]
+   },
+   "units": [],
+   "meta": {
+    "num": 14,
+    "points": 70,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 12
+   }
+  },
+  {
+   "id": "48e26367-8557-46f6-8cf3-974c01208edb",
+   "hero": {
+    "model_id": "[rise-of-the-necromancer] castellan-of-dol-guldur",
+    "MWFW": [
+     [
+      "",
+      "0:10:0:1"
+     ]
+    ],
+    "options": []
+   },
+   "units": [],
+   "meta": {
+    "num": 15,
+    "points": 50,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 0
+   }
+  }
+ ],
+ "id": "all-options-hf00y7x6",
+ "version": "1.42.18",
+ "name": "All options",
+ "armyList": "Rise of the Necromancer",
+ "edition": "v2024"
+}

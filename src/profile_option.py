@@ -54,6 +54,7 @@ class ProfileOption:
     name: str
     points: int
     external_id: str | None = None
+    exclusive_group: str | None = None
     configured_state_effects: tuple[
         ConfiguredStateEffect,
         ...
@@ -91,6 +92,14 @@ class ProfileOption:
         ):
             raise ValueError(
                 "Profile option external ID cannot be empty."
+            )
+        if (
+            self.exclusive_group is not None
+            and not self.exclusive_group.strip()
+        ):
+            raise ValueError(
+                "Profile option exclusive group "
+                "cannot be empty."
             )
 
 

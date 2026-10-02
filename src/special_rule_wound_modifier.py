@@ -1,11 +1,16 @@
 from configured_profile import ConfiguredProfile
 from wound_context import WoundContext
 from wound_modifier import WoundModifier
-
+from ring_of_power import (
+    RING_OF_POWER_WARGEAR_IDS,
+)
+from wound_attack_type import WoundAttackType
 
 HATRED_RULE_ID = "HATRED"
 BACKSTABBERS_RULE_ID = "BACKSTABBERS"
-
+MASTER_WANTS_RING_RULE_ID = (
+    "MASTER_WANTS_RING"
+)
 
 def get_special_rule_wound_modifiers(
     attacker: ConfiguredProfile,
@@ -41,6 +46,39 @@ def get_special_rule_wound_modifiers(
         has_backstabbers
         and context is not None
         and context.defender_trapped
+    ):
+        modifiers.append(
+            WoundModifier(
+                to_wound=1,
+            )
+        )
+
+    attacker_rule_ids = {
+        assignment.rule.id
+        for assignment
+        in attacker.effective_special_rules
+    }
+
+    defender_wargear_ids = {
+        wargear.id
+        for wargear in defender.effective_wargear
+    }
+
+    attack_type = (
+        context.attack_type
+        if context is not None
+        else WoundAttackType.STRIKE
+    )
+
+    if (
+        MASTER_WANTS_RING_RULE_ID
+        in attacker_rule_ids
+        and attack_type
+        is WoundAttackType.STRIKE
+        and bool(
+            defender_wargear_ids
+            & RING_OF_POWER_WARGEAR_IDS
+        )
     ):
         modifiers.append(
             WoundModifier(

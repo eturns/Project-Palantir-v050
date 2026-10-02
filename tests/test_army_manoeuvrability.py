@@ -16,6 +16,14 @@ from configured_profile import ConfiguredProfile
 from configured_state_effect import ConfiguredStateEffect
 from profile_option import ProfileOption
 
+
+from fielded_model import FieldedModel
+from fielded_model_form_state import FieldedModelFormState
+from fielded_model_mount_transition import dismount_fielded_model
+from mount import Mount
+from profile_classification import ModelType
+from profiles import Profile
+
 def make_profile(
     *,
     profile_id: str,
@@ -807,3 +815,79 @@ def test_same_profile_with_two_configurations_remains_distinct_in_manoeuvrabilit
     )
 
     assert result > 6.0
+
+def test_army_manoeuvrability_uses_runtime_dismounted_state():
+    rider_profile = Profile(
+        id="TEST_RIDER",
+        name="Test Rider",
+        points=20,
+        movement=6,
+        base_size_mm=25,
+        fight=3,
+        shooting="4+",
+        strength=3,
+        defence=5,
+        attacks=1,
+        wounds=1,
+        courage="7+",
+        intelligence="7+",
+        might=0,
+        will=0,
+        fate=0,
+        max_in_army=0,
+        model_types={
+            ModelType.CAVALRY,
+        },
+    )
+
+    rider_profile.default_mount = Mount(
+        id="MOUNT_TEST",
+        name="Test Mount",
+        movement=10,
+        fight=3,
+        shooting="6+",
+        strength=4,
+        defence=4,
+        attacks=1,
+        wounds=1,
+        courage="8+",
+        intelligence="8+",
+        base_size_mm=40,
+    )
+
+    configured = ConfiguredProfile(
+        profile=rider_profile,
+    )
+
+    army = Army()
+    army.add_configured_profile(
+        configured,
+        quantity=1,
+    )
+
+    fielded_model = army.fielded_models()[0]
+
+    mounted_state = FieldedModelFormState(
+        fielded_model=fielded_model,
+        active_configured_profile=configured,
+    )
+
+    dismounted_state = dismount_fielded_model(
+        mounted_state
+    )
+
+    mounted_score = calculate_army_manoeuvrability(
+        army,
+        form_states=(
+            mounted_state,
+        ),
+    )
+
+    dismounted_score = calculate_army_manoeuvrability(
+        army,
+        form_states=(
+            dismounted_state,
+        ),
+    )
+
+    assert mounted_score != dismounted_score

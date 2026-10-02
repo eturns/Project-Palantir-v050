@@ -87,7 +87,7 @@ def print_text_analysis_report(
     scenario_analysis_results = result.get(
             "scenario_analysis_results",
         )
-    
+
     if evidence_records and scenario_analysis_results is None:
         print()
         print("========== EVIDENCE & LIMITATIONS ==========")

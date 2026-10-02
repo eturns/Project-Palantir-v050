@@ -42,6 +42,9 @@ UNHOLY_RESURRECTION_RULE_ID = "UNHOLY_RESURRECTION"
 HE_CANNOT_YET_TAKE_PHYSICAL_FORM_RULE_ID = (
     "HE_CANNOT_YET_TAKE_PHYSICAL_FORM"
 )
+WILL_OF_THE_NECROMANCER_RULE_ID = (
+    "WILL_OF_THE_NECROMANCER"
+)
 
 def get_special_rule_mechanical_effect_definitions(
     configured_profile: ConfiguredProfile,
@@ -128,10 +131,19 @@ def get_special_rule_mechanical_effect_definitions(
             )
         )
 
-    if (
-        HE_CANNOT_YET_TAKE_PHYSICAL_FORM_RULE_ID
-        in rule_ids
-    ):
+    will_as_fate_rule_id = next(
+        (
+            rule_id
+            for rule_id in (
+                HE_CANNOT_YET_TAKE_PHYSICAL_FORM_RULE_ID,
+                WILL_OF_THE_NECROMANCER_RULE_ID,
+            )
+            if rule_id in rule_ids
+        ),
+        None,
+    )
+
+    if will_as_fate_rule_id is not None:
         definitions.append(
             MechanicalEffectDefinition(
                 effect=ResourceConversionMechanicalEffect(
@@ -143,9 +155,7 @@ def get_special_rule_mechanical_effect_definitions(
                         MechanicalEffectTarget
                         .RESOURCE_USE
                     ),
-                    source_id=(
-                        HE_CANNOT_YET_TAKE_PHYSICAL_FORM_RULE_ID
-                    ),
+                    source_id=will_as_fate_rule_id,
                     source_resource_type=(
                         ResourceType.WILL
                     ),

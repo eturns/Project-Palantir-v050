@@ -1,11 +1,29 @@
 from mount import Mount
 
 
-def test_mount_stores_identity():
-    mount = Mount(
-        id="MOUNT_WAR_BOAR",
-        name="War Boar",
+def make_mount(
+    *,
+    mount_id: str = "MOUNT_WAR_BOAR",
+    name: str = "War Boar",
+) -> Mount:
+    return Mount(
+        id=mount_id,
+        name=name,
+        movement=8,
+        fight=4,
+        shooting="6+",
+        strength=4,
+        defence=6,
+        attacks=0,
+        wounds=2,
+        courage="7+",
+        intelligence="7+",
+        base_size_mm=40,
     )
+
+
+def test_mount_stores_identity():
+    mount = make_mount()
 
     assert mount.id == "MOUNT_WAR_BOAR"
     assert mount.name == "War Boar"
@@ -13,9 +31,8 @@ def test_mount_stores_identity():
 
 def test_mount_rejects_empty_id():
     try:
-        Mount(
-            id="",
-            name="War Boar",
+        make_mount(
+            mount_id="",
         )
     except ValueError:
         pass
@@ -27,9 +44,8 @@ def test_mount_rejects_empty_id():
 
 def test_mount_rejects_whitespace_id():
     try:
-        Mount(
-            id="   ",
-            name="War Boar",
+        make_mount(
+            mount_id="   ",
         )
     except ValueError:
         pass
@@ -41,8 +57,7 @@ def test_mount_rejects_whitespace_id():
 
 def test_mount_rejects_empty_name():
     try:
-        Mount(
-            id="MOUNT_WAR_BOAR",
+        make_mount(
             name="",
         )
     except ValueError:
@@ -55,8 +70,7 @@ def test_mount_rejects_empty_name():
 
 def test_mount_rejects_whitespace_name():
     try:
-        Mount(
-            id="MOUNT_WAR_BOAR",
+        make_mount(
             name="   ",
         )
     except ValueError:
@@ -68,10 +82,7 @@ def test_mount_rejects_whitespace_name():
 
 
 def test_mount_is_immutable():
-    mount = Mount(
-        id="MOUNT_WAR_BOAR",
-        name="War Boar",
-    )
+    mount = make_mount()
 
     try:
         mount.name = "Horse"
