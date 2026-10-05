@@ -2209,15 +2209,23 @@ def test_successful_analysis_displays_scenario_analysis(
 
     assert "Scenario Analysis" in label_texts
 
+    assert "TOP 5 SCENARIOS" in label_texts
+    assert "BOTTOM 5 SCENARIOS" in label_texts
+    assert "ALL SCENARIOS" in label_texts
+
     assert any(
         (
-            "TOP 5 SCENARIOS" in text
-            and "BOTTOM 5 SCENARIOS" in text
-            and "ALL SCENARIOS" in text
-            and "Hold Ground" in text
-            and "Matched Play" in text
+            "Hold Ground" in text
             and "0.684" in text
             and "Board Control" in text
+        )
+        for text in label_texts
+    )
+
+    assert any(
+        (
+            "Matched Play" in text
+            and "Hold Ground" in text
         )
         for text in label_texts
     )

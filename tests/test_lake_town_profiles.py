@@ -196,6 +196,9 @@ def test_bards_family_static_profile_data_loads_correctly():
         action.id
         for action in bain.heroic_actions
     } == {
+        "HEROIC_MOVE",
+        "HEROIC_SHOOT",
+        "HEROIC_COMBAT",
         "HEROIC_STRIKE",
     }
 

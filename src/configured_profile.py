@@ -96,6 +96,41 @@ class ConfiguredProfile:
                 "exclusive group."
             )
 
+        profile_options = getattr(
+            self.profile,
+            "profile_options",
+            (),
+        )
+
+        required_groups = {
+            option.exclusive_group
+            for option in profile_options
+            if (
+                getattr(
+                    option,
+                    "required_group",
+                    False,
+                )
+                and option.exclusive_group is not None
+            )
+        }
+
+        selected_groups = {
+            option.exclusive_group
+            for option in self.selected_options
+            if option.exclusive_group is not None
+        }
+
+        missing_required_groups = (
+            required_groups - selected_groups
+        )
+
+        if missing_required_groups:
+            raise ValueError(
+                "Configured Profile must select "
+                "one option from each required option group."
+            )
+
     @property
     def points(self) -> int:
         """

@@ -18,11 +18,23 @@ from desktop_analysis_adapter import run_analysis
 from file_selection import select_mesbg_json_file
 
 
-APP_BG = "#f3f5f8"
+APP_BG = "#f4f7fb"
 PANEL_BG = "#ffffff"
 SIDEBAR_BG = "#e9eef5"
+SIDEBAR_ACTIVE_BG = "#dbeafe"
+SIDEBAR_ACTIVE_FG = "#1d4ed8"
+SIDEBAR_MUTED_FG = "#6b7a90"
 HEADER_BG = "#eef2f7"
-BORDER = "#d4dbe5"
+CARD_HEADER_BG = "#f7f9fc"
+STRENGTH_HEADER_BG = "#dff3e6"
+STRENGTH_BODY_BG = "#f1faf4"
+STRENGTH_BORDER = "#9fd3ae"
+WEAKNESS_HEADER_BG = "#f9dede"
+WEAKNESS_BODY_BG = "#fff1f1"
+WEAKNESS_BORDER = "#e5aaaa"
+TOP_SCENARIO_FG = "#176b3a"
+BOTTOM_SCENARIO_FG = "#a63a3a"
+BORDER = "#dce3ec"
 TEXT = "#1f2d3d"
 MUTED = "#64748b"
 ACCENT = "#2f80ed"
@@ -529,6 +541,226 @@ def build_scenario_analysis_summary(
     return "\n".join(lines)
 
 
+
+class ScenarioDisplay:
+    """Render scenario summaries as three lightly styled report sections."""
+
+    def __init__(
+        self,
+        parent,
+    ) -> None:
+        self._frame = Frame(
+            parent,
+            bg=PANEL_BG,
+        )
+        self._content = []
+
+    def pack(
+        self,
+        *args,
+        **kwargs,
+    ) -> None:
+        self._frame.pack(
+            *args,
+            **kwargs,
+        )
+
+    def _clear(
+        self,
+    ) -> None:
+        for widget in self._content:
+            destroy = getattr(
+                widget,
+                "destroy",
+                None,
+            )
+            if callable(destroy):
+                destroy()
+
+        self._content = []
+
+    def _label(
+        self,
+        parent,
+        *,
+        text,
+        fg=TEXT,
+        bg=PANEL_BG,
+        font=("Consolas", 9),
+        pady=0,
+    ):
+        label = Label(
+            parent,
+            text=text,
+            bg=bg,
+            fg=fg,
+            justify=LEFT,
+            anchor="nw",
+            font=font,
+        )
+        label.pack(
+            fill=X,
+            pady=pady,
+        )
+        self._content.append(label)
+        return label
+
+    def config(
+        self,
+        **kwargs,
+    ) -> None:
+        if "text" not in kwargs:
+            configure = getattr(
+                self._frame,
+                "configure",
+                None,
+            )
+            if callable(configure):
+                configure(**kwargs)
+            return
+
+        self._clear()
+        display_text = kwargs["text"]
+
+        if not display_text:
+            return
+
+        if display_text == "No scenario analysis available.":
+            self._label(
+                self._frame,
+                text=display_text,
+            )
+            return
+
+        lines = display_text.splitlines()
+
+        try:
+            all_index = lines.index(
+                "ALL SCENARIOS"
+            )
+            bottom_start = lines[0].index(
+                "BOTTOM 5 SCENARIOS"
+            )
+        except (ValueError, IndexError):
+            self._label(
+                self._frame,
+                text=display_text,
+            )
+            return
+
+        side_lines = lines[:all_index]
+        while (
+            side_lines
+            and not side_lines[-1].strip()
+        ):
+            side_lines.pop()
+
+        left_lines = []
+        right_lines = []
+
+        for line in side_lines:
+            left_lines.append(
+                line[:bottom_start].rstrip()
+            )
+            right_lines.append(
+                line[bottom_start:].rstrip()
+            )
+
+        while (
+            left_lines
+            and not left_lines[-1].strip()
+        ):
+            left_lines.pop()
+
+        while (
+            right_lines
+            and not right_lines[-1].strip()
+        ):
+            right_lines.pop()
+
+        top_row = Frame(
+            self._frame,
+            bg=PANEL_BG,
+        )
+        top_row.pack(
+            fill=X,
+        )
+        self._content.append(top_row)
+
+        left_panel = Frame(
+            top_row,
+            bg=PANEL_BG,
+        )
+        left_panel.pack(
+            side=LEFT,
+            fill=X,
+            expand=True,
+            padx=(0, 10),
+        )
+        self._content.append(left_panel)
+
+        right_panel = Frame(
+            top_row,
+            bg=PANEL_BG,
+        )
+        right_panel.pack(
+            side=LEFT,
+            fill=X,
+            expand=True,
+            padx=(10, 0),
+        )
+        self._content.append(right_panel)
+
+        self._label(
+            left_panel,
+            text="TOP 5 SCENARIOS",
+            fg=TOP_SCENARIO_FG,
+            bg=STRENGTH_HEADER_BG,
+            font=("Consolas", 9, "bold"),
+            pady=(0, 5),
+        )
+        self._label(
+            left_panel,
+            text="\n".join(
+                left_lines[2:]
+            ),
+        )
+
+        self._label(
+            right_panel,
+            text="BOTTOM 5 SCENARIOS",
+            fg=BOTTOM_SCENARIO_FG,
+            bg=WEAKNESS_HEADER_BG,
+            font=("Consolas", 9, "bold"),
+            pady=(0, 5),
+        )
+        self._label(
+            right_panel,
+            text="\n".join(
+                right_lines[2:]
+            ),
+        )
+
+        self._label(
+            self._frame,
+            text="ALL SCENARIOS",
+            font=("Consolas", 9, "bold"),
+            pady=(14, 5),
+        )
+
+        all_lines = lines[
+            all_index + 2:
+        ]
+        self._label(
+            self._frame,
+            text="\n".join(
+                all_lines
+            ),
+        )
+
+    configure = config
+
+
 def build_evidence_summary(
     view_model: dict,
 ) -> str:
@@ -653,14 +885,17 @@ def select_and_run_analysis(
 
 def _panel(
     parent,
-    padx=12,
+    padx=14,
     pady=12,
 ):
     return Frame(
         parent,
         bg=PANEL_BG,
-        bd=1,
-        relief="solid",
+        bd=0,
+        relief="flat",
+        highlightbackground=BORDER,
+        highlightcolor=BORDER,
+        highlightthickness=1,
         padx=padx,
         pady=pady,
     )
@@ -669,11 +904,13 @@ def _panel(
 def _section_title(
     parent,
     text,
+    *,
+    bg=CARD_HEADER_BG,
 ):
     label = Label(
         parent,
         text=text,
-        bg=PANEL_BG,
+        bg=bg,
         fg=TEXT,
         font=(
             "TkDefaultFont",
@@ -681,6 +918,8 @@ def _section_title(
             "bold",
         ),
         anchor="w",
+        padx=8,
+        pady=6,
     )
     label.pack(
         fill=X,
@@ -751,12 +990,17 @@ def launch_desktop_app() -> None:
 
     Label(
         sidebar,
-        text="▣  Analyse Army",
-        bg="#dbe9fb",
-        fg=TEXT,
+        text="▣   Analyse Army",
+        bg=SIDEBAR_ACTIVE_BG,
+        fg=SIDEBAR_ACTIVE_FG,
         anchor="w",
-        padx=8,
-        pady=8,
+        padx=12,
+        pady=9,
+        font=(
+            "TkDefaultFont",
+            9,
+            "bold",
+        ),
     ).pack(
         fill=X,
         pady=(0, 6),
@@ -764,24 +1008,24 @@ def launch_desktop_app() -> None:
 
     Label(
         sidebar,
-        text="◷  Recent Files",
+        text="◷   Recent Files",
         bg=SIDEBAR_BG,
-        fg=MUTED,
+        fg=SIDEBAR_MUTED_FG,
         anchor="w",
-        padx=8,
-        pady=8,
+        padx=12,
+        pady=9,
     ).pack(
         fill=X,
     )
 
     Label(
         sidebar,
-        text="?  Help",
+        text="?   Help",
         bg=SIDEBAR_BG,
-        fg=MUTED,
+        fg=SIDEBAR_MUTED_FG,
         anchor="w",
-        padx=8,
-        pady=8,
+        padx=12,
+        pady=9,
     ).pack(
         fill=X,
     )
@@ -1002,6 +1246,7 @@ def launch_desktop_app() -> None:
     )
     dashboard_row.pack(
         fill=X,
+        pady=(2, 0),
     )
 
     army_panel = _panel(
@@ -1011,7 +1256,7 @@ def launch_desktop_app() -> None:
         side=LEFT,
         fill=BOTH,
         expand=True,
-        padx=(0, 5),
+        padx=(0, 7),
     )
 
     capability_panel = _panel(
@@ -1021,7 +1266,7 @@ def launch_desktop_app() -> None:
         side=LEFT,
         fill=BOTH,
         expand=True,
-        padx=5,
+        padx=7,
     )
 
     insights_column = Frame(
@@ -1032,7 +1277,7 @@ def launch_desktop_app() -> None:
         side=LEFT,
         fill=BOTH,
         expand=True,
-        padx=(5, 0),
+        padx=(7, 0),
     )
 
     _section_title(
@@ -1067,8 +1312,14 @@ def launch_desktop_app() -> None:
         pady=(10, 0),
     )
 
-    strengths_panel = _panel(
+    strengths_panel = Frame(
         insights_column,
+        bg=STRENGTH_BODY_BG,
+        bd=0,
+        relief="flat",
+        highlightbackground=STRENGTH_BORDER,
+        highlightcolor=STRENGTH_BORDER,
+        highlightthickness=1,
         padx=10,
         pady=10,
     )
@@ -1080,12 +1331,13 @@ def launch_desktop_app() -> None:
     _section_title(
         strengths_panel,
         "Key Strengths",
+        bg=STRENGTH_HEADER_BG,
     )
 
     strengths_label = Label(
         strengths_panel,
         text="",
-        bg=PANEL_BG,
+        bg=STRENGTH_BODY_BG,
         fg=TEXT,
         justify=LEFT,
         anchor="nw",
@@ -1096,8 +1348,14 @@ def launch_desktop_app() -> None:
         pady=(8, 0),
     )
 
-    weaknesses_panel = _panel(
+    weaknesses_panel = Frame(
         insights_column,
+        bg=WEAKNESS_BODY_BG,
+        bd=0,
+        relief="flat",
+        highlightbackground=WEAKNESS_BORDER,
+        highlightcolor=WEAKNESS_BORDER,
+        highlightthickness=1,
         padx=10,
         pady=10,
     )
@@ -1108,12 +1366,13 @@ def launch_desktop_app() -> None:
     _section_title(
         weaknesses_panel,
         "Key Weaknesses",
+        bg=WEAKNESS_HEADER_BG,
     )
 
     weaknesses_label = Label(
         weaknesses_panel,
         text="",
-        bg=PANEL_BG,
+        bg=WEAKNESS_BODY_BG,
         fg=TEXT,
         justify=LEFT,
         anchor="nw",
@@ -1141,14 +1400,8 @@ def launch_desktop_app() -> None:
         "Scenario Analysis",
     )
 
-    scenario_label = Label(
+    scenario_label = ScenarioDisplay(
         scenario_panel,
-        text="",
-        bg=PANEL_BG,
-        fg=TEXT,
-        justify=LEFT,
-        anchor="nw",
-        font=("Consolas", 9),
     )
     scenario_label.pack(
         fill=X,

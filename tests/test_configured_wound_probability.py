@@ -221,7 +221,7 @@ def test_configured_wound_probability_applies_ancient_enemies():
         )
     )
 
-    defender_profile.keywords.add("ORC")
+    defender_profile.races.add("ORC")
 
     attacker = ConfiguredProfile(
         profile=attacker_profile,
@@ -656,3 +656,94 @@ def test_morgul_blade_uses_rider_strength_in_wound_probability():
 
     assert normal_result == Fraction(1, 2)
     assert morgul_result == Fraction(1, 3)
+
+def test_i_am_the_master_wounds_hero_on_three_plus():
+    attacker_profile = create_test_profile(
+        "AZOG",
+    )
+    defender_profile = create_test_profile(
+        "HERO",
+    )
+
+    from profile_classification import HeroicStatus
+
+    attacker_profile.heroic_status = (
+        HeroicStatus.HERO
+    )
+    defender_profile.heroic_status = (
+        HeroicStatus.HERO
+    )
+
+    attacker_profile.special_rules.append(
+        ProfileSpecialRuleAssignment(
+            rule=SpecialRule(
+                id="I_AM_THE_MASTER",
+                name="I am the Master",
+                category=RuleCategory.OFFENCE,
+            ),
+        )
+    )
+
+    attacker_profile.strength = 5
+    defender_profile.defence = 10
+
+    result = (
+        calculate_configured_wound_probability(
+            attacker=ConfiguredProfile(
+                profile=attacker_profile,
+            ),
+            defender=ConfiguredProfile(
+                profile=defender_profile,
+            ),
+            context=WoundContext(
+                use_i_am_the_master=True,
+            ),
+        )
+    )
+
+    assert result == Fraction(2, 3)
+
+
+def test_i_am_the_master_does_not_apply_when_not_selected():
+    attacker_profile = create_test_profile(
+        "AZOG",
+    )
+    defender_profile = create_test_profile(
+        "HERO",
+    )
+
+    from profile_classification import HeroicStatus
+
+    attacker_profile.heroic_status = (
+        HeroicStatus.HERO
+    )
+    defender_profile.heroic_status = (
+        HeroicStatus.HERO
+    )
+
+    attacker_profile.special_rules.append(
+        ProfileSpecialRuleAssignment(
+            rule=SpecialRule(
+                id="I_AM_THE_MASTER",
+                name="I am the Master",
+                category=RuleCategory.OFFENCE,
+            ),
+        )
+    )
+
+    attacker_profile.strength = 5
+    defender_profile.defence = 10
+
+    result = (
+        calculate_configured_wound_probability(
+            attacker=ConfiguredProfile(
+                profile=attacker_profile,
+            ),
+            defender=ConfiguredProfile(
+                profile=defender_profile,
+            ),
+            context=WoundContext(),
+        )
+    )
+
+    assert result != Fraction(2, 3)

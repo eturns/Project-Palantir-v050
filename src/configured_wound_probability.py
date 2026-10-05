@@ -40,6 +40,10 @@ from morgul_blade_combat_values import (
     get_morgul_blade_combat_strength,
 )
 from morgul_blade_state import MorgulBladeState
+from i_am_the_master import (
+    uses_i_am_the_master,
+)
+from wound_target import WoundTarget
 
 def calculate_configured_wound_probability(
     attacker: ConfiguredProfile,
@@ -64,6 +68,15 @@ def calculate_configured_wound_probability(
             defender,
         ),
     )
+
+    if uses_i_am_the_master(
+        attacker,
+        defender,
+        context,
+    ):
+        target = WoundTarget(
+            first_roll=3,
+        )
 
     wargear_definitions = (
         get_wargear_mechanical_effect_definitions(

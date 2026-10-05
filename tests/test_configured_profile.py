@@ -1748,3 +1748,71 @@ def test_configured_profile_exposes_selected_option_profile_assignments():
     assert configured.assigned_profile_ids == (
         "TROLL_BRUTE",
     )
+
+def test_required_option_group_rejects_no_selection():
+    profile = create_test_profile()
+
+    first = ProfileOption(
+        id="FIRST",
+        name="First",
+        points=0,
+        exclusive_group="REQUIRED_GROUP",
+        required_group=True,
+    )
+
+    second = ProfileOption(
+        id="SECOND",
+        name="Second",
+        points=0,
+        exclusive_group="REQUIRED_GROUP",
+        required_group=True,
+    )
+
+    profile.profile_options.extend(
+        (first, second)
+    )
+
+    try:
+        ConfiguredProfile(
+            profile=profile,
+        )
+    except ValueError:
+        pass
+    else:
+        raise AssertionError(
+            "Expected ValueError when required "
+            "option group has no selection."
+        )
+
+
+def test_required_option_group_accepts_one_selection():
+    profile = create_test_profile()
+
+    first = ProfileOption(
+        id="FIRST",
+        name="First",
+        points=0,
+        exclusive_group="REQUIRED_GROUP",
+        required_group=True,
+    )
+
+    second = ProfileOption(
+        id="SECOND",
+        name="Second",
+        points=0,
+        exclusive_group="REQUIRED_GROUP",
+        required_group=True,
+    )
+
+    profile.profile_options.extend(
+        (first, second)
+    )
+
+    configured = ConfiguredProfile(
+        profile=profile,
+        selected_options=(first,),
+    )
+
+    assert configured.selected_options == (
+        first,
+    )

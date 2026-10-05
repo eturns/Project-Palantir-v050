@@ -83,6 +83,60 @@ EXTERNAL_PROFILE_IDS = {
         "[rise-of-the-necromancer] "
         "castellan-of-dol-guldur"
     ): "DG_CASTELLAN",
+     (
+        "[pits-of-dol-guldur] "
+        "azog-the-defiler"
+    ): "AZOG_THE_DEFILER",
+
+    (
+        "[pits-of-dol-guldur] "
+        "the-keeper-of-the-dungeons"
+    ): "DG_KEEPER",
+
+    (
+        "[pits-of-dol-guldur] "
+        "gundabad-orc-captain"
+    ): "GUNDABAD_ORC_CAPTAIN",
+
+    (
+        "[pits-of-dol-guldur] "
+        "hunter-orc-captain"
+    ): "DG_HOC",
+
+    (
+        "[pits-of-dol-guldur] "
+        "thrain-the-broken"
+    ): "THRAIN_THE_BROKEN",
+
+    (
+        "[pits-of-dol-guldur] "
+        "gundabad-orc-warrior"
+    ): "GUNDABAD_ORC_WARRIOR",
+
+    (
+        "[pits-of-dol-guldur] "
+        "hunter-orc-warrior"
+    ): "DG_HOW",
+
+    (
+        "[pits-of-dol-guldur] "
+        "hunter-orc-warg-rider"
+    ): "DG_HOWR",
+
+    (
+        "[pits-of-dol-guldur] "
+        "fell-warg"
+    ): "DG_FW",
+
+    (
+        "[pits-of-dol-guldur] "
+        "mirkwood-giant-spider"
+    ): "DG_MGS",
+
+    (
+        "[pits-of-dol-guldur] "
+        "mirkwood-hunting-spider"
+    ): "DG_MHS",
     (
         "[the-iron-hills] "
         "dain-ironfoot-lord-of-the-iron-hills"

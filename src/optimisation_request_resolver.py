@@ -13,9 +13,6 @@ Created:
     DEV-052 – Legal Composition Enumeration
 """
 
-from composition_enumerator import (
-    enumerate_legal_quantity_candidates,
-)
 from composition_resolver import (
     build_legal_multi_group_candidates,
 )
@@ -46,14 +43,14 @@ def build_request_candidates(
         request.army_list.profiles
     )
 
-    if request.composition_spec is not None:
-        return build_legal_multi_group_candidates(
-            spec=request.composition_spec,
-            profiles=army_profiles,
-            points_limit=request.points_limit,
+    if request.composition_spec is None:
+        raise ValueError(
+            "Open-ended army enumeration is not supported. "
+            "Provide a CompositionSpec for bounded optimisation."
         )
 
-    return enumerate_legal_quantity_candidates(
+    return build_legal_multi_group_candidates(
+        spec=request.composition_spec,
         profiles=army_profiles,
         points_limit=request.points_limit,
     )

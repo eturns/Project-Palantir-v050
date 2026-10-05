@@ -40,10 +40,17 @@ from army_rule import ArmyRule
 from profile_special_rule_assignment import (
     ProfileSpecialRuleAssignment,
 )
+from profile_classification import HeroicStatus
 
 # ============================================================================
 # Functions
 # ============================================================================
+
+UNIVERSAL_HEROIC_ACTION_IDS = (
+    "HEROIC_MOVE",
+    "HEROIC_SHOOT",
+    "HEROIC_COMBAT",
+)
 
 def _optional_parameter(
     value: str | None,
@@ -104,13 +111,14 @@ def load_profile_special_rules(
                 )
             )
 
-
 def load_profile_heroic_actions(
     profiles: dict[str, Profile],
     heroic_actions: dict[str, HeroicAction],
 ) -> None:
     """
-    Loads heroic action relationships for every Profile.
+    Loads specialised Heroic Action relationships for
+    every Profile, then grants the three universal
+    Heroic Actions to every Hero.
     """
 
     with open(
@@ -137,8 +145,31 @@ def load_profile_heroic_actions(
                 "profile_heroic_actions.csv",
             )
 
-            profile.heroic_actions.append(heroic_action)
+            profile.heroic_actions.append(
+                heroic_action
+            )
 
+    for profile in profiles.values():
+        if (
+            profile.heroic_status
+            is not HeroicStatus.HERO
+        ):
+            continue
+
+        for heroic_action_id in (
+            UNIVERSAL_HEROIC_ACTION_IDS
+        ):
+            heroic_action = validate_lookup(
+                heroic_action_id,
+                heroic_actions,
+                "Heroic Action",
+                "universal heroic actions",
+            )
+
+            if heroic_action not in profile.heroic_actions:
+                profile.heroic_actions.append(
+                    heroic_action
+                )
 
 def load_profile_spells(
     profiles: dict[str, Profile],

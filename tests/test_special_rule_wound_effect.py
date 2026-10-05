@@ -208,7 +208,7 @@ def test_ancient_enemies_grants_reroll_against_matching_keyword():
         )
     )
 
-    defender_profile.keywords.add("ORC")
+    defender_profile.races.add("ORC")
 
     attacker = ConfiguredProfile(
         profile=attacker_profile,
@@ -244,7 +244,7 @@ def test_ancient_enemies_does_not_apply_against_nonmatching_keyword():
         )
     )
 
-    defender_profile.keywords.add("DWARF")
+    defender_profile.races.add("DWARF")
 
     attacker = ConfiguredProfile(
         profile=attacker_profile,

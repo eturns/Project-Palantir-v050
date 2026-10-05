@@ -2,3 +2,8 @@ id,name,points,movement,base_size_mm,fight,shooting,strength,defence,attacks,wou
 GUNDABAD_CATAPULT_TROLL,Gundabad Catapult Troll,180,"6""",160,7,4+,8,8,3,5,6+,7+,0,0,0,0,HERO,INFANTRY|MONSTER|SIEGE_ENGINE,TROLL
 ORC_COMMANDER,Orc Commander,0,"6""",25,5,5+,5,6,2,2,6+,7+,1,1,1,0,HERO,INFANTRY,ORC
 TROLL_BRUTE,Troll Brute,0,"6""",80,5,6+,7,6,3,4,6+,9+,0,0,0,0,,WAR_BEAST,TROLL
+AZOG_THE_DEFILER,Azog the Defiler,175,"6""",25,7,4+,5,5,3,3,5+,5+,3,3,1,1,HERO,INFANTRY,ORC
+GUNDABAD_ORC_CAPTAIN,Gundabad Orc Captain,60,"6""",25,5,5+,5,7,2,2,6+,7+,2,1,1,0,HERO,INFANTRY,ORC
+GUNDABAD_ORC_WARRIOR,Gundabad Orc Warrior,9,"6""",25,4,5+,4,5,1,1,7+,8+,0,0,0,0,WARRIOR,INFANTRY,ORC
+THRAIN_THE_BROKEN,Thráin the Broken,10,"6""",25,4,4+,2,4,1,2,6+,6+,0,0,1,1,HERO,INFANTRY,DWARF
+WHITE_WARG_SEPARATED,The White Warg,0,"10""",50,5,6+,5,5,2,2,6+,6+,2,1,1,1,HERO,BEAST,WARG

@@ -104,11 +104,24 @@ def load_profile_options(
                 points=int(row["points"]),
                 external_id=external_id,
                 exclusive_group=(
-                    row.get(
-                        "exclusive_group",
-                        "",
+                    (
+                        row.get(
+                            "exclusive_group",
+                            "",
+                        )
+                        or ""
                     ).strip()
                     or None
+                ),
+                required_group=(
+                    (
+                        row.get(
+                            "required_group",
+                            "",
+                        )
+                        or ""
+                    ).strip().lower()
+                    in {"1", "true", "yes"}
                 ),
                 profile_assignments=tuple(
                     ProfileOptionProfileAssignment(

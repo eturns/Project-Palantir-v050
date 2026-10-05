@@ -55,6 +55,7 @@ class ProfileOption:
     points: int
     external_id: str | None = None
     exclusive_group: str | None = None
+    required_group: bool = False
     configured_state_effects: tuple[
         ConfiguredStateEffect,
         ...

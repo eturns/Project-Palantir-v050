@@ -25,6 +25,7 @@ def get_contextual_special_rule_wound_reroll(
     }
 
     defender_keywords = set()
+    defender_races = set()
 
     if defender is not None:
         defender_keywords = {
@@ -32,10 +33,15 @@ def get_contextual_special_rule_wound_reroll(
             for keyword in defender.profile.keywords
         }
 
+        defender_races = {
+            race.upper()
+            for race in defender.profile.races
+        }
+
     has_ancient_enemies_match = any(
         assignment.rule.id == ANCIENT_ENEMIES_RULE_ID
         and isinstance(assignment.parameter, str)
-        and assignment.parameter.upper() in defender_keywords
+        and assignment.parameter.upper() in defender_races
         for assignment in configured_profile.profile.special_rules
     )
 
