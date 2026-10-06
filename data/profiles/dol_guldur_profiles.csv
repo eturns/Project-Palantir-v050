@@ -15,3 +15,7 @@ DG_HOW,Hunter Orc Warrior,8,6",25,3,4+,4,4,1,1,8+,8+,0,0,0,0,WARRIOR,INFANTRY,OR
 DG_HOWR,Hunter Orc Warg Rider,15,6",25,3,4+,4,4,1,1,8+,8+,0,0,0,0,WARRIOR,CAVALRY,ORC
 DG_FW,Fell Warg,8,10",25,3,6+,4,4,1,1,8+,7+,0,0,0,0,WARRIOR,BEAST|INFANTRY,WARG
 DG_CASTELLAN,Castellan of Dol Guldur,50,6",25,5,4+,5,6,2,1,4+,7+,0,10,0,0,HERO,INFANTRY,SPIRIT
+BOLG_SPAWN_OF_AZOG,"Bolg, Spawn of Azog",175,"6""",25,7,4+,5,7,3,3,5+,5+,3,3,1,1,HERO,INFANTRY,ORC
+YAZNEG,"Yazneg, Hunter Orc Captain",55,"6""",25,5,5+,4,5,2,2,6+,6+,3,1,1,1,HERO,INFANTRY,ORC
+NARZUG,"Narzug, Hunter Orc Captain",55,"6""",25,4,3+,4,4,2,2,6+,6+,2,2,1,1,HERO,INFANTRY,ORC
+FIMBUL,"Fimbul, Hunter Orc Captain",50,"6""",25,4,5+,4,5,2,2,6+,7+,2,1,1,1,HERO,INFANTRY,ORC

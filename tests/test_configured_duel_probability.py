@@ -24,6 +24,9 @@ from fielded_model_mount_transition import (
     dismount_fielded_model,
 )
 from mount import Mount
+from price_of_failure_state import (
+    PriceOfFailureState,
+)
 
 def create_test_profile(
     profile_id: str,
@@ -351,4 +354,195 @@ def test_dismounted_runtime_state_uses_rider_combat_characteristics():
         mounted_result.attacker_win_probability
         >
         dismounted_result.attacker_win_probability
+    )
+
+def test_hunt_master_improves_duel_probability_when_charging():
+    attacker_profile = create_test_profile(
+        "FIMBUL",
+    )
+    defender_profile = create_test_profile(
+        "DEFENDER",
+    )
+
+    attacker_profile.default_mount = Mount(
+        id="MOUNT_FELL_WARG",
+        name="Fell Warg",
+        movement=10,
+        fight=3,
+        shooting="6+",
+        strength=4,
+        defence=4,
+        attacks=1,
+        wounds=1,
+        courage="8+",
+        intelligence="7+",
+        base_size_mm=40,
+    )
+
+    attacker_profile.special_rules.append(
+        ProfileSpecialRuleAssignment(
+            rule=SpecialRule(
+                id="HUNT_MASTER",
+                name="Hunt Master",
+                category=RuleCategory.SPECIAL,
+            ),
+        )
+    )
+
+    attacker = ConfiguredProfile(
+        profile=attacker_profile,
+    )
+
+    defender = ConfiguredProfile(
+        profile=defender_profile,
+    )
+
+    result = calculate_configured_duel_probability(
+        attacker=attacker,
+        defender=defender,
+        attacker_context=CombatContext(
+            engagement_role=EngagementRole.CHARGED,
+        ),
+        defender_context=CombatContext(
+            engagement_role=EngagementRole.WAS_CHARGED,
+        ),
+    )
+
+    assert result.attacker_win_probability > 0.5
+
+def test_price_of_failure_improves_configured_duel_probability():
+    attacker_profile = create_test_profile(
+        "YAZNEG",
+    )
+    defender_profile = create_test_profile(
+        "DEFENDER",
+    )
+
+    attacker_profile.special_rules.append(
+        ProfileSpecialRuleAssignment(
+            rule=SpecialRule(
+                id="PRICE_OF_FAILURE",
+                name="Price of Failure",
+                category=RuleCategory.SPECIAL,
+            ),
+        )
+    )
+
+    attacker = ConfiguredProfile(
+        profile=attacker_profile,
+    )
+
+    defender = ConfiguredProfile(
+        profile=defender_profile,
+    )
+
+    normal_result = (
+        calculate_configured_duel_probability(
+            attacker=attacker,
+            defender=defender,
+        )
+    )
+
+    price_result = (
+        calculate_configured_duel_probability(
+            attacker=attacker,
+            defender=defender,
+            attacker_price_of_failure_state=(
+                PriceOfFailureState(
+                    declared=True,
+                    within_azog_range=True,
+                )
+            ),
+        )
+    )
+
+    assert (
+        price_result.attacker_win_probability
+        > normal_result.attacker_win_probability
+    )
+
+def test_price_of_failure_state_does_not_affect_profile_without_rule():
+    attacker = ConfiguredProfile(
+        profile=create_test_profile(
+            "ATTACKER",
+        ),
+    )
+
+    defender = ConfiguredProfile(
+        profile=create_test_profile(
+            "DEFENDER",
+        ),
+    )
+
+    normal_result = (
+        calculate_configured_duel_probability(
+            attacker=attacker,
+            defender=defender,
+        )
+    )
+
+    state_result = (
+        calculate_configured_duel_probability(
+            attacker=attacker,
+            defender=defender,
+            attacker_price_of_failure_state=(
+                PriceOfFailureState(
+                    declared=True,
+                    within_azog_range=True,
+                )
+            ),
+        )
+    )
+
+    assert state_result == normal_result
+
+def test_price_of_failure_can_apply_to_defender():
+    attacker_profile = create_test_profile(
+        "ATTACKER",
+    )
+    defender_profile = create_test_profile(
+        "YAZNEG",
+    )
+
+    defender_profile.special_rules.append(
+        ProfileSpecialRuleAssignment(
+            rule=SpecialRule(
+                id="PRICE_OF_FAILURE",
+                name="Price of Failure",
+                category=RuleCategory.SPECIAL,
+            ),
+        )
+    )
+
+    attacker = ConfiguredProfile(
+        profile=attacker_profile,
+    )
+
+    defender = ConfiguredProfile(
+        profile=defender_profile,
+    )
+
+    normal_result = (
+        calculate_configured_duel_probability(
+            attacker=attacker,
+            defender=defender,
+        )
+    )
+
+    price_result = (
+        calculate_configured_duel_probability(
+            attacker=attacker,
+            defender=defender,
+            defender_price_of_failure_state=(
+                PriceOfFailureState(
+                    declared=True,
+                    within_azog_range=True,
+                )
+            ),
+        )
+    )
+
+    assert (
+        price_result.defender_win_probability
+        > normal_result.defender_win_probability
     )

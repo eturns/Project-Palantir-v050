@@ -7,12 +7,16 @@ from torturer_state import TorturerState
 from shattered_spirit_state import (
     ShatteredSpiritState,
 )
+from bringer_of_death_state import (
+    BringerOfDeathState,
+)
 
 def get_effective_special_rule_ids(
     combatant: ConfiguredProfile | FieldedModelFormState,
     *,
     torturer_state: TorturerState | None = None,
     shattered_spirit_state: ShatteredSpiritState | None = None,
+    bringer_of_death_state: BringerOfDeathState | None = None,
 ) -> frozenset[str]:
     """
     Returns special-rule IDs currently available to the model,
@@ -60,9 +64,8 @@ def get_effective_special_rule_ids(
         get_runtime_granted_rule_ids(
             static_rule_ids,
             torturer_state=torturer_state,
-            shattered_spirit_state=(
-                shattered_spirit_state
-            ),
+            shattered_spirit_state=shattered_spirit_state,
+            bringer_of_death_state=bringer_of_death_state,
         )
     )
 

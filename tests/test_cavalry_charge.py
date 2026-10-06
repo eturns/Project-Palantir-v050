@@ -16,7 +16,11 @@ from fielded_model_mount_transition import (
 from mount import Mount
 from profile_classification import ModelType
 from profiles import Profile
-
+from database.rule_category import RuleCategory
+from profile_special_rule_assignment import (
+    ProfileSpecialRuleAssignment,
+)
+from special_rule import SpecialRule
 
 def make_rider() -> Profile:
     return Profile(
@@ -205,3 +209,28 @@ def test_dismounted_rider_does_not_qualify():
         dismounted_state,
         make_eligible_context(),
     ) is False
+
+def test_hunt_master_keeps_cavalry_charge_bonus_in_difficult_terrain():
+    state = make_mounted_state()
+
+    state.active_configured_profile.profile.special_rules.append(
+        ProfileSpecialRuleAssignment(
+            rule=SpecialRule(
+                id="HUNT_MASTER",
+                name="Hunt Master",
+                category=RuleCategory.SPECIAL,
+            ),
+        )
+    )
+
+    context = CombatContext(
+        engagement_role=EngagementRole.CHARGED,
+        charged_only_infantry=True,
+        resolving_exclusively_against_infantry=True,
+        in_difficult_terrain=True,
+    )
+
+    assert qualifies_for_cavalry_charge_bonus(
+        state,
+        context,
+    ) is True

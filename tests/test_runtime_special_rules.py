@@ -9,7 +9,13 @@ from runtime_special_rules import (
 )
 from special_rule import SpecialRule
 from torturer_state import TorturerState
-
+from bringer_of_death_state import (
+    BringerOfDeathState,
+)
+from runtime_special_rules import (
+    get_runtime_granted_rule_assignments,
+    get_runtime_granted_rule_ids,
+)
 
 def make_profile() -> Profile:
     return Profile(
@@ -92,3 +98,58 @@ def test_non_torturer_does_not_gain_terror_from_torturer_state():
     )
 
     assert "TERROR" not in result
+
+def test_runtime_layer_preserves_bringer_of_death_harbinger_parameter():
+    assignments = (
+        get_runtime_granted_rule_assignments(
+            frozenset({
+                "BRINGER_OF_DEATH",
+            }),
+            bringer_of_death_state=(
+                BringerOfDeathState(
+                    kills_in_combat=5,
+                )
+            ),
+        )
+    )
+
+    harbinger = next(
+        assignment
+        for assignment in assignments
+        if assignment.rule_id
+        == "HARBINGER_OF_EVIL"
+    )
+
+    assert harbinger.parameter == 12
+
+def test_runtime_id_api_remains_backwards_compatible_for_bringer_of_death():
+    rule_ids = get_runtime_granted_rule_ids(
+        frozenset({
+            "BRINGER_OF_DEATH",
+        }),
+        bringer_of_death_state=(
+            BringerOfDeathState(
+                kills_in_combat=8,
+            )
+        ),
+    )
+
+    assert rule_ids == frozenset({
+        "TERROR",
+        "HARBINGER_OF_EVIL",
+        "MIGHTY_HERO",
+    })
+
+def test_bringer_of_death_state_does_not_grant_rules_without_source_rule():
+    assignments = (
+        get_runtime_granted_rule_assignments(
+            frozenset(),
+            bringer_of_death_state=(
+                BringerOfDeathState(
+                    kills_in_combat=8,
+                )
+            ),
+        )
+    )
+
+    assert assignments == ()

@@ -7,7 +7,9 @@ from fielded_model_form_state import (
     FieldedModelFormState,
 )
 from profile_classification import ModelType
-
+from hunt_master import (
+    hunt_master_allows_difficult_terrain_charge_bonus,
+)
 
 def qualifies_for_cavalry_charge_bonus(
     combatant: (
@@ -51,7 +53,13 @@ def qualifies_for_cavalry_charge_bonus(
     ):
         return False
 
-    if context.in_difficult_terrain:
+    if (
+        context.in_difficult_terrain
+        and not hunt_master_allows_difficult_terrain_charge_bonus(
+            combatant,
+            context,
+        )
+    ):
         return False
 
     if context.transfixed:

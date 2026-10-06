@@ -24,6 +24,10 @@ from wargear import Wargear
 from morgul_blade_transition import (
     use_morgul_blade,
 )
+from lethal_aim_state import (
+    LethalAimSpend,
+    LethalAimState,
+)
 
 def create_test_profile(
     profile_id: str,
@@ -747,3 +751,76 @@ def test_i_am_the_master_does_not_apply_when_not_selected():
     )
 
     assert result != Fraction(2, 3)
+
+def test_lethal_aim_improves_shooting_wound_probability():
+    attacker_profile = create_test_profile(
+        "NARZUG",
+    )
+    defender_profile = create_test_profile(
+        "DEFENDER",
+    )
+
+    attacker_profile.special_rules.append(
+        ProfileSpecialRuleAssignment(
+            rule=SpecialRule(
+                id="LETHAL_AIM",
+                name="Lethal Aim",
+                category=RuleCategory.SHOOTING,
+            ),
+        )
+    )
+
+    attacker = ConfiguredProfile(
+        profile=attacker_profile,
+    )
+
+    defender = ConfiguredProfile(
+        profile=defender_profile,
+    )
+
+    result = calculate_configured_wound_probability(
+        attacker=attacker,
+        defender=defender,
+        context=WoundContext(
+            attack_type=WoundAttackType.SHOOTING,
+        ),
+        lethal_aim_state=LethalAimState(),
+        lethal_aim_spend=LethalAimSpend.TO_WOUND,
+    )
+
+    assert result == Fraction(2, 3)
+
+
+def test_lethal_aim_does_not_modify_melee_wound_probability():
+    attacker_profile = create_test_profile(
+        "NARZUG",
+    )
+    defender_profile = create_test_profile(
+        "DEFENDER",
+    )
+
+    attacker_profile.special_rules.append(
+        ProfileSpecialRuleAssignment(
+            rule=SpecialRule(
+                id="LETHAL_AIM",
+                name="Lethal Aim",
+                category=RuleCategory.SHOOTING,
+            ),
+        )
+    )
+
+    result = calculate_configured_wound_probability(
+        attacker=ConfiguredProfile(
+            profile=attacker_profile,
+        ),
+        defender=ConfiguredProfile(
+            profile=defender_profile,
+        ),
+        context=WoundContext(
+            attack_type=WoundAttackType.STRIKE,
+        ),
+        lethal_aim_state=LethalAimState(),
+        lethal_aim_spend=LethalAimSpend.TO_WOUND,
+    )
+
+    assert result == Fraction(1, 2)

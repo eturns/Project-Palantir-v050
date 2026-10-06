@@ -137,6 +137,50 @@ EXTERNAL_PROFILE_IDS = {
         "[pits-of-dol-guldur] "
         "mirkwood-hunting-spider"
     ): "DG_MHS",
+     (
+        "[azog's-hunters] "
+        "azog-the-defiler"
+    ): "AZOG_THE_DEFILER",
+
+    (
+        "[azog's-hunters] "
+        "bolg-spawn-of-azog"
+    ): "BOLG_SPAWN_OF_AZOG",
+
+    (
+        "[azog's-hunters] "
+        "narzug-hunter-orc-captain"
+    ): "NARZUG",
+
+    (
+        "[azog's-hunters] "
+        "yazneg-hunter-orc-captain"
+    ): "YAZNEG",
+
+    (
+        "[azog's-hunters] "
+        "fimbul-hunter-orc-captain"
+    ): "FIMBUL",
+
+    (
+        "[azog's-hunters] "
+        "hunter-orc-captain"
+    ): "DG_HOC",
+
+    (
+        "[azog's-hunters] "
+        "hunter-orc-warrior"
+    ): "DG_HOW",
+
+    (
+        "[azog's-hunters] "
+        "hunter-orc-warg-rider"
+    ): "DG_HOWR",
+
+    (
+        "[azog's-hunters] "
+        "fell-warg"
+    ): "DG_FW",
     (
         "[the-iron-hills] "
         "dain-ironfoot-lord-of-the-iron-hills"

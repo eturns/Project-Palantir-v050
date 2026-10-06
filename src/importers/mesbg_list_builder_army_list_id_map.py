@@ -8,4 +8,5 @@ EXTERNAL_ARMY_LIST_IDS = {
     "The Beornings": "THE_BEORNINGS",
     "The Battle of Five Armies": "BATTLE_OF_FIVE_ARMIES",
     "Pits of Dol Guldur": "DG_PITS",
+    "Azog's Hunters": "AZOGS_HUNTERS",
 }

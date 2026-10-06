@@ -18,7 +18,19 @@ from combat_context import (
 )
 from effective_attacks import get_effective_attacks
 from fielded_model_form_state import FieldedModelFormState
-
+from hunt_master import (
+    get_hunt_master_fight_bonus,
+)
+from price_of_failure import (
+    calculate_price_of_failure_duel_probability,
+    has_price_of_failure,
+)
+from price_of_failure_state import (
+    PriceOfFailureState,
+)
+from duel_probability_result import (
+    DuelProbabilityResult,
+)
 
 def calculate_configured_duel_probability(
     attacker: ConfiguredProfile | FieldedModelFormState,
@@ -29,6 +41,8 @@ def calculate_configured_duel_probability(
     defender_additional_burly: bool = False,
     attacker_context: CombatContext | None = None,
     defender_context: CombatContext | None = None,
+    attacker_price_of_failure_state: PriceOfFailureState | None = None,
+    defender_price_of_failure_state: PriceOfFailureState | None = None,
 ):
     attacker_configured = (
         attacker.active_configured_profile
@@ -103,21 +117,84 @@ def calculate_configured_duel_probability(
 
     attacker_fight = (
         attacker.effective_fight
-        if isinstance(
+        + get_hunt_master_fight_bonus(
             attacker,
-            FieldedModelFormState,
+            attacker_context,
         )
-        else attacker.effective_fight
     )
 
     defender_fight = (
         defender.effective_fight
-        if isinstance(
+        + get_hunt_master_fight_bonus(
             defender,
-            FieldedModelFormState,
+            defender_context,
         )
-        else defender.effective_fight
     )
+
+    attacker_price_active = (
+        attacker_price_of_failure_state is not None
+        and attacker_price_of_failure_state.can_use
+        and has_price_of_failure(
+            attacker,
+        )
+    )
+
+    defender_price_active = (
+        defender_price_of_failure_state is not None
+        and defender_price_of_failure_state.can_use
+        and has_price_of_failure(
+            defender,
+        )
+    )
+
+    if (
+        attacker_price_active
+        and defender_price_active
+    ):
+        raise NotImplementedError(
+            "Simultaneous Price of Failure use "
+            "on both sides is not yet modelled."
+        )
+
+    if attacker_price_active:
+        return (
+            calculate_price_of_failure_duel_probability(
+                attacker_attacks=attacker_attacks,
+                attacker_fight=attacker_fight,
+                defender_attacks=defender_attacks,
+                defender_fight=defender_fight,
+                state=attacker_price_of_failure_state,
+                attacker_modifier=attacker_modifier,
+                defender_modifier=defender_modifier,
+            )
+        )
+
+    if defender_price_active:
+        reversed_result = (
+            calculate_price_of_failure_duel_probability(
+                attacker_attacks=defender_attacks,
+                attacker_fight=defender_fight,
+                defender_attacks=attacker_attacks,
+                defender_fight=attacker_fight,
+                state=defender_price_of_failure_state,
+                attacker_modifier=defender_modifier,
+                defender_modifier=attacker_modifier,
+            )
+        )
+
+        return DuelProbabilityResult(
+            attacker_win_probability=(
+                reversed_result
+                .defender_win_probability
+            ),
+            defender_win_probability=(
+                reversed_result
+                .attacker_win_probability
+            ),
+            draw_probability=(
+                reversed_result.draw_probability
+            ),
+        )
 
     return calculate_basic_duel_probability(
         attacker_attacks=attacker_attacks,

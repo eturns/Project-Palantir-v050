@@ -44,6 +44,13 @@ from i_am_the_master import (
     uses_i_am_the_master,
 )
 from wound_target import WoundTarget
+from lethal_aim import (
+    get_lethal_aim_wound_modifier,
+)
+from lethal_aim_state import (
+    LethalAimSpend,
+    LethalAimState,
+)
 
 def calculate_configured_wound_probability(
     attacker: ConfiguredProfile,
@@ -52,6 +59,8 @@ def calculate_configured_wound_probability(
     context: WoundContext | None = None,
     torturer_state: TorturerState | None = None,
     morgul_blade_state: MorgulBladeState | None = None,
+    lethal_aim_state: LethalAimState | None = None,
+    lethal_aim_spend: LethalAimSpend | None = None,
 ):
     attack_strength = (
         get_morgul_blade_combat_strength(
@@ -117,8 +126,20 @@ def calculate_configured_wound_probability(
         generic_modifier_definitions,
     )
 
+    lethal_aim_modifier = (
+        get_lethal_aim_wound_modifier(
+            attacker,
+            lethal_aim_state,
+            context=context,
+            spend=lethal_aim_spend,
+        )
+    )
+
     modifier = combine_wound_modifiers(
-        (generic_modifier,)
+        (
+            generic_modifier,
+            lethal_aim_modifier,
+        )
         + get_special_rule_wound_modifiers(
             attacker,
             defender,
