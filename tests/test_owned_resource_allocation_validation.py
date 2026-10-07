@@ -15,7 +15,9 @@ from resource_conversion import ResourceConversion
 from resource_owner import ResourceOwner
 from resource_use import ResourceUse
 from resource_use_permission import ResourceType
-
+from temporary_resource_grant import (
+    TemporaryResourceGrant,
+)
 
 def test_competing_uses_can_share_same_finite_source_pool():
     owner = ResourceOwner(
@@ -184,3 +186,46 @@ def test_different_owners_validate_against_their_own_pools():
         permissions=(),
         conversions=(),
     )
+
+def test_temporary_might_cannot_pay_for_will_spend():
+    owner = ResourceOwner(
+        fielded_model_id="BOLG:1:1",
+    )
+
+    states = (
+        OwnedHeroResourceState(
+            owner=owner,
+            resources=HeroResourceState(
+                remaining_might=3,
+                remaining_will=0,
+                remaining_fate=0,
+            ),
+        ),
+    )
+
+    allocations = (
+        OwnedResourceAllocation(
+            owner=owner,
+            resource_type=ResourceType.WILL,
+            resource_use=ResourceUse.CAST_SPELL,
+            amount=1,
+        ),
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="Owned resource allocations exceed remaining Will.",
+    ):
+        validate_owned_resource_allocations(
+            states=states,
+            allocations=allocations,
+            permissions=(),
+            conversions=(),
+            temporary_grants=(
+                TemporaryResourceGrant(
+                    owner=owner,
+                    resource_type=ResourceType.MIGHT,
+                    amount=1,
+                ),
+            ),
+        )

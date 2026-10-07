@@ -514,7 +514,7 @@ def test_candidate_analysis_uses_fog_of_war_preservation_override(
         army=None,
         army_list=None,
     ):
-        assert profile is fog_model.configured_profile.profile
+        assert profile is fog_model.configured_profile
         assert benchmark == "COMBAT_BENCHMARK"
         assert benchmark_fate == 40
 

@@ -10,7 +10,7 @@ def get_effective_defence(
 ) -> int:
     has_blades_of_the_dead = any(
         assignment.rule.id == BLADES_OF_THE_DEAD_RULE_ID
-        for assignment in attacker.profile.special_rules
+        for assignment in attacker.effective_special_rules
     )
 
     if not has_blades_of_the_dead:

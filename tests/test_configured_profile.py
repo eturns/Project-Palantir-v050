@@ -1816,3 +1816,29 @@ def test_required_option_group_accepts_one_selection():
     assert configured.selected_options == (
         first,
     )
+
+def test_effective_keywords_include_race_keywords():
+    profile = create_test_profile()
+
+    profile.races.add(
+        "DRAGON"
+    )
+
+    configured = ConfiguredProfile(
+        profile=profile,
+    )
+
+    assert "DRAGON" in configured.effective_keywords
+
+def test_effective_keywords_include_faction_keywords():
+    profile = create_test_profile()
+
+    profile.factions.add(
+        "GUNDABAD"
+    )
+
+    configured = ConfiguredProfile(
+        profile=profile,
+    )
+
+    assert "GUNDABAD" in configured.effective_keywords

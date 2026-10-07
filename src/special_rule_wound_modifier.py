@@ -9,7 +9,7 @@ from wound_attack_type import WoundAttackType
 HATRED_RULE_ID = "HATRED"
 BACKSTABBERS_RULE_ID = "BACKSTABBERS"
 MASTER_WANTS_RING_RULE_ID = (
-    "MASTER_WANTS_RING"
+    "YOU_HAVE_SOMETHING_MY_MASTER_WANTS"
 )
 
 def get_special_rule_wound_modifiers(
@@ -17,14 +17,13 @@ def get_special_rule_wound_modifiers(
     defender: ConfiguredProfile,
     context: WoundContext | None = None,
 ) -> tuple[WoundModifier, ...]:
-    defender_keywords = {
-        keyword.upper()
-        for keyword in defender.profile.keywords
-    }
+    defender_keywords = (
+        defender.effective_keywords
+    )
 
     modifiers: list[WoundModifier] = []
 
-    for assignment in attacker.profile.special_rules:
+    for assignment in attacker.effective_special_rules:
         if (
             assignment.rule.id == HATRED_RULE_ID
             and isinstance(assignment.parameter, str)
@@ -39,7 +38,7 @@ def get_special_rule_wound_modifiers(
 
     has_backstabbers = any(
         assignment.rule.id == BACKSTABBERS_RULE_ID
-        for assignment in attacker.profile.special_rules
+        for assignment in attacker.effective_special_rules
     )
 
     if (

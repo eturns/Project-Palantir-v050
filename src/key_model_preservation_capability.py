@@ -23,6 +23,7 @@ from resource_strategy import ResourceStrategy
 from resource_strategy_budget import calculate_resource_budget
 from army_list import ArmyList
 from fielded_model import FieldedModel
+from configured_profile import ConfiguredProfile
 
 def calculate_key_model_preservation_capability(
     defensive_survivability: int | float,
@@ -177,15 +178,18 @@ def calculate_protective_resources_from_fielded_model(
     )
 
 def calculate_key_model_preservation_from_profile(
-    profile: Profile,
+    profile: Profile | ConfiguredProfile,
     benchmark: CombatBenchmark,
     benchmark_fate: int | float,
     army: Army | None = None,
     army_list: ArmyList | None = None,
 ) -> ScenarioCapability:
-    if not isinstance(profile, Profile):
+    if not isinstance(
+        profile,
+        (Profile, ConfiguredProfile),
+    ):
         raise TypeError(
-            "profile must be a Profile."
+            "profile must be a Profile or ConfiguredProfile."
         )
 
     if not isinstance(
@@ -216,9 +220,19 @@ def calculate_key_model_preservation_from_profile(
         )
     )
 
+    if isinstance(
+        profile,
+        ConfiguredProfile,
+    ):
+        base_profile = profile.profile
+        fate = profile.effective_fate
+    else:
+        base_profile = profile
+        fate = profile.fate
+
     if army is None:
         protective_resources = min(
-            profile.fate / benchmark_fate,
+            fate / benchmark_fate,
             1.0,
         )
     else:
@@ -226,7 +240,7 @@ def calculate_key_model_preservation_from_profile(
             (
                 model
                 for model in army.fielded_models()
-                if model.profile_id == profile.id
+                if model.profile_id == base_profile.id
             ),
             None,
         )

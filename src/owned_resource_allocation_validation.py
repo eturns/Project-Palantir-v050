@@ -17,7 +17,12 @@ from owned_resource_use_permission import (
     OwnedResourceUsePermission,
 )
 from resource_use_permission import ResourceType
-
+from temporary_resource_grant import (
+    TemporaryResourceGrant,
+)
+from temporary_resource_grant_totals import (
+    calculate_temporary_resource_total,
+)
 
 def validate_owned_resource_allocations(
     states: tuple[
@@ -36,6 +41,10 @@ def validate_owned_resource_allocations(
         OwnedResourceConversion,
         ...,
     ],
+    temporary_grants: tuple[
+        TemporaryResourceGrant,
+        ...,
+    ] = (),
 ) -> None:
     states_by_owner = {
         state.owner: state
@@ -64,13 +73,25 @@ def validate_owned_resource_allocations(
     ), amount in totals.items():
         state = states_by_owner[owner].resources
 
-        if (
-            resource_type == ResourceType.MIGHT
-            and amount > state.remaining_might
-        ):
-            raise ValueError(
-                "Owned resource allocations exceed remaining Might."
+        if resource_type == ResourceType.MIGHT:
+            temporary_might = (
+                calculate_temporary_resource_total(
+                    grants=temporary_grants,
+                    owner=owner,
+                    resource_type=ResourceType.MIGHT,
+                )
             )
+
+            if (
+                amount
+                > state.remaining_might
+                + temporary_might
+            ):
+                raise ValueError(
+                    "Owned resource allocations exceed remaining Might."
+                )
+
+            continue
 
         if (
             resource_type == ResourceType.WILL

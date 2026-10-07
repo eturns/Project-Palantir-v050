@@ -108,6 +108,14 @@ def _load_profiles_from_file(
                         ).split("|")
                         if race.strip()
                     },
+                    factions={
+                        faction.strip()
+                        for faction in row.get(
+                            "factions",
+                            "",
+                        ).split("|")
+                        if faction.strip()
+                    },
                 )
             )
 

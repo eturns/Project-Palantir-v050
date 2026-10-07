@@ -6,7 +6,7 @@ def get_initial_hero_resource_state(
     configured_profile: ConfiguredProfile,
 ) -> HeroResourceState:
     return HeroResourceState(
-        remaining_might=configured_profile.profile.might,
-        remaining_will=configured_profile.profile.will,
-        remaining_fate=configured_profile.profile.fate,
+        remaining_might=configured_profile.effective_might,
+        remaining_will=configured_profile.effective_will,
+        remaining_fate=configured_profile.effective_fate,
     )

@@ -32,7 +32,7 @@ def calculate_matchup_result(
     else:
         offensive_score = sum(
             calculate_profile_offensive_combat_score(
-                entry.profile,
+                entry.configured_profile,
                 benchmark,
             )
             * entry.quantity

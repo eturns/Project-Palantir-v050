@@ -12,7 +12,10 @@ from profile_combat_capability import (
 )
 from profile_option import ProfileOption
 from profiles import Profile
-
+from mount import Mount
+from profile_option_mount_assignment import (
+    ProfileOptionMountAssignment,
+)
 
 def create_profile():
     return Profile(
@@ -242,3 +245,63 @@ def test_mixed_army_preserves_same_profile_different_loadouts():
     assert mixed_score == pytest.approx(
         expected,
     )
+
+def test_selected_mount_changes_profile_combat_capability():
+    profile = create_profile()
+
+    mount = Mount(
+        id="TEST_MOUNT",
+        name="Test Mount",
+        movement=10,
+        fight=5,
+        shooting="-",
+        strength=5,
+        defence=4,
+        attacks=3,
+        wounds=1,
+        courage="6+",
+        intelligence="6+",
+        base_size_mm=40,
+    )
+
+    mounted_option = ProfileOption(
+        id="MOUNTED",
+        name="Mounted",
+        points=10,
+        mount_assignments=(
+            ProfileOptionMountAssignment(
+                mount=mount,
+            ),
+        ),
+    )
+
+    profile.profile_options.append(
+        mounted_option
+    )
+
+    plain = ConfiguredProfile(
+        profile=profile,
+    )
+
+    mounted = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            mounted_option,
+        ),
+    )
+
+    plain_score = calculate_profile_combat_capability(
+        plain,
+        create_benchmark(),
+    )
+
+    mounted_score = calculate_profile_combat_capability(
+        mounted,
+        create_benchmark(),
+    )
+
+    assert mounted.effective_fight == 5
+    assert mounted.effective_strength == 5
+    assert mounted.effective_attacks == 3
+
+    assert mounted_score > plain_score

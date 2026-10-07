@@ -13,7 +13,7 @@ def get_special_rule_post_prevention_effect(
 ) -> PostPreventionEffect:
     has_drain_soul = any(
         assignment.rule.id == DRAIN_SOUL_RULE_ID
-        for assignment in attacker.profile.special_rules
+        for assignment in attacker.effective_special_rules
     )
 
     if (

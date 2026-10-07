@@ -23,6 +23,8 @@ from profile_special_rule_assignment import (
     ProfileSpecialRuleAssignment,
 )
 from special_rule import SpecialRule
+from configured_profile import ConfiguredProfile
+from mount import Mount
 
 def test_object_interaction_modes_cover_supported_scenario_mechanics():
     assert ObjectInteractionMode.STATIC_ACTION.value == "static_action"
@@ -1224,4 +1226,160 @@ def test_object_interaction_resolver_uses_heavy_object_mode():
             ObjectInteractionMode.HEAVY_OBJECT,
         )
         == 1.0
+    )
+
+def test_configured_mounted_profile_uses_effective_cavalry_type_for_light_object():
+    profile = Profile(
+        id="MOUNTED_INFANTRY",
+        name="Mounted Infantry",
+        points=40,
+        movement=6,
+        fight=4,
+        shooting="4+",
+        strength=4,
+        defence=5,
+        attacks=1,
+        wounds=1,
+        courage="6+",
+        intelligence="6+",
+        might=0,
+        will=0,
+        fate=0,
+        max_in_army=1,
+        model_types={ModelType.INFANTRY},
+    )
+
+    profile.default_mount = Mount(
+        id="TEST_MOUNT",
+        name="Test Mount",
+        movement=10,
+        fight=3,
+        shooting="6+",
+        strength=4,
+        defence=4,
+        attacks=1,
+        wounds=1,
+        courage="8+",
+        intelligence="7+",
+        base_size_mm=40,
+    )
+
+    configured = ConfiguredProfile(
+        profile=profile,
+    )
+
+    assert (
+        calculate_light_object_handling_from_profile(
+            configured
+        )
+        == 0.0
+    )
+
+def test_configured_mounted_expert_rider_can_handle_light_object():
+    expert_rider = SpecialRule(
+        id="EXPERT_RIDER",
+        name="Expert Rider",
+        category=RuleCategory.MOBILITY,
+    )
+
+    profile = Profile(
+        id="MOUNTED_EXPERT_RIDER",
+        name="Mounted Expert Rider",
+        points=40,
+        movement=6,
+        fight=4,
+        shooting="4+",
+        strength=4,
+        defence=5,
+        attacks=1,
+        wounds=1,
+        courage="6+",
+        intelligence="6+",
+        might=0,
+        will=0,
+        fate=0,
+        max_in_army=1,
+        model_types={ModelType.INFANTRY},
+        special_rules=[
+            ProfileSpecialRuleAssignment(
+                rule=expert_rider,
+            )
+        ],
+    )
+
+    profile.default_mount = Mount(
+        id="TEST_MOUNT",
+        name="Test Mount",
+        movement=10,
+        fight=3,
+        shooting="6+",
+        strength=4,
+        defence=4,
+        attacks=1,
+        wounds=1,
+        courage="8+",
+        intelligence="7+",
+        base_size_mm=40,
+    )
+
+    configured = ConfiguredProfile(
+        profile=profile,
+    )
+
+    assert (
+        calculate_light_object_handling_from_profile(
+            configured
+        )
+        == 1.0
+    )
+
+def test_search_and_light_object_does_not_count_configured_mount_as_infantry():
+    profile = Profile(
+        id="MOUNTED_SEARCHER",
+        name="Mounted Searcher",
+        points=40,
+        movement=6,
+        fight=4,
+        shooting="4+",
+        strength=4,
+        defence=5,
+        attacks=1,
+        wounds=1,
+        courage="6+",
+        intelligence="6+",
+        might=0,
+        will=0,
+        fate=0,
+        max_in_army=0,
+        model_types={ModelType.INFANTRY},
+    )
+
+    profile.default_mount = Mount(
+        id="TEST_MOUNT",
+        name="Test Mount",
+        movement=10,
+        fight=3,
+        shooting="6+",
+        strength=4,
+        defence=4,
+        attacks=1,
+        wounds=1,
+        courage="8+",
+        intelligence="7+",
+        base_size_mm=40,
+    )
+
+    army = Army()
+    army.add_configured_profile(
+        ConfiguredProfile(
+            profile=profile,
+        ),
+        quantity=4,
+    )
+
+    assert (
+        calculate_search_and_light_object_capability_from_army(
+            army
+        )
+        == 0.0
     )

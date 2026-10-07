@@ -13,6 +13,9 @@ from owned_resource_conversion import (
 from owned_resource_use_permission import (
     OwnedResourceUsePermission,
 )
+from temporary_resource_grant import (
+    TemporaryResourceGrant,
+)
 
 
 def apply_owned_resource_turn(
@@ -32,10 +35,17 @@ def apply_owned_resource_turn(
         OwnedResourceConversion,
         ...,
     ],
+    temporary_grants: tuple[
+        TemporaryResourceGrant,
+        ...,
+    ] = (),
 ) -> tuple[OwnedHeroResourceState, ...]:
+    _ = temporary_grants
+
     return apply_owned_resource_allocations(
-        states=states,
-        allocations=allocations,
-        permissions=permissions,
-        conversions=conversions,
-    )
+    states=states,
+    allocations=allocations,
+    permissions=permissions,
+    conversions=conversions,
+    temporary_grants=temporary_grants,
+)

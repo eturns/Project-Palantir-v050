@@ -22,13 +22,15 @@ def get_fog_of_war_preservation_models(
         if fielded_model.configured_profile is None:
             continue
 
-        profile = (
+        configured_profile = (
             fielded_model
             .configured_profile
-            .profile
         )
 
-        if profile.heroic_status is not HeroicStatus.HERO:
+        if (
+            configured_profile.effective_heroic_status
+            is not HeroicStatus.HERO
+        ):
             continue
 
         eligible_models.append(
@@ -63,7 +65,6 @@ def select_fog_of_war_preservation_model(
                 profile=(
                     fielded_model
                     .configured_profile
-                    .profile
                 ),
                 benchmark=combat_benchmark,
                 benchmark_fate=benchmark_fate,

@@ -15,10 +15,9 @@ def get_initial_owned_hero_resource_states(
         if fielded_model.configured_profile is None:
             continue
 
-        profile = (
+        configured_profile = (
             fielded_model
             .configured_profile
-            .profile
         )
 
         owned_states.append(
@@ -27,9 +26,15 @@ def get_initial_owned_hero_resource_states(
                     fielded_model_id=fielded_model.id,
                 ),
                 resources=HeroResourceState(
-                    remaining_might=profile.might,
-                    remaining_will=profile.will,
-                    remaining_fate=profile.fate,
+                    remaining_might=(
+                        configured_profile.effective_might
+                    ),
+                    remaining_will=(
+                        configured_profile.effective_will
+                    ),
+                    remaining_fate=(
+                        configured_profile.effective_fate
+                    ),
                 ),
             )
         )

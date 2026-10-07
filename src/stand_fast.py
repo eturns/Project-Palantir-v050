@@ -75,7 +75,7 @@ def can_receive_stand_fast_from_provider(
         and recipient_profile.effective_heroic_status
         is HeroicStatus.HERO
         and "ORC"
-        in recipient_profile.profile.races
+        in recipient_profile.effective_keywords
     ):
         return True
 

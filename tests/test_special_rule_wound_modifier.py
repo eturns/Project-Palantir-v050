@@ -233,7 +233,7 @@ def test_master_wants_ring_adds_one_to_wound_against_ring_bearer():
     attacker_profile.special_rules.append(
         ProfileSpecialRuleAssignment(
             rule=SpecialRule(
-                id="MASTER_WANTS_RING",
+                id="YOU_HAVE_SOMETHING_MY_MASTER_WANTS",
                 name="You have something my master wants",
                 category=RuleCategory.SPECIAL,
             ),
@@ -335,3 +335,75 @@ def test_master_wants_ring_only_applies_to_strikes():
     assert WoundModifier(
         to_wound=1,
     ) not in result
+
+def test_hatred_matches_race_keyword():
+    attacker_profile = create_test_profile()
+    defender_profile = create_test_profile()
+
+    attacker_profile.special_rules.append(
+        ProfileSpecialRuleAssignment(
+            rule=SpecialRule(
+                id="HATRED",
+                name="Hatred",
+                category=RuleCategory.SPECIAL,
+            ),
+            parameter="DRAGON",
+        )
+    )
+
+    defender_profile.races.add(
+        "DRAGON"
+    )
+
+    attacker = ConfiguredProfile(
+        profile=attacker_profile,
+    )
+
+    defender = ConfiguredProfile(
+        profile=defender_profile,
+    )
+
+    assert get_special_rule_wound_modifiers(
+        attacker,
+        defender,
+    ) == (
+        WoundModifier(
+            to_wound=1,
+        ),
+    )
+
+def test_hatred_matches_faction_keyword():
+    attacker_profile = create_test_profile()
+    defender_profile = create_test_profile()
+
+    attacker_profile.special_rules.append(
+        ProfileSpecialRuleAssignment(
+            rule=SpecialRule(
+                id="HATRED",
+                name="Hatred",
+                category=RuleCategory.SPECIAL,
+            ),
+            parameter="GUNDABAD",
+        )
+    )
+
+    defender_profile.factions.add(
+        "GUNDABAD"
+    )
+
+    attacker = ConfiguredProfile(
+        profile=attacker_profile,
+    )
+
+    defender = ConfiguredProfile(
+        profile=defender_profile,
+    )
+
+    assert get_special_rule_wound_modifiers(
+        attacker,
+        defender,
+    ) == (
+        WoundModifier(
+            to_wound=1,
+        ),
+    )

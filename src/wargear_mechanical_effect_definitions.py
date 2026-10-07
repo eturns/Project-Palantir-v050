@@ -41,7 +41,7 @@ def get_wargear_mechanical_effect_definitions(
         or any(
             assignment.rule.id == BURLY_RULE_ID
             for assignment
-            in configured_profile.profile.special_rules
+            in configured_profile.effective_special_rules
         )
     )
 

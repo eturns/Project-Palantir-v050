@@ -225,8 +225,17 @@ def test_fog_selection_uses_army_context_for_preservation(monkeypatch):
             else without_context
         )
 
+        profile_id = (
+            profile.profile.id
+            if isinstance(
+                profile,
+                ConfiguredProfile,
+            )
+            else profile.id
+        )
+
         class Result:
-            value = values[profile.id]
+            value = values[profile_id]
 
         return Result()
 

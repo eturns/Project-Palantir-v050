@@ -21,28 +21,21 @@ def get_contextual_special_rule_wound_reroll(
     rule_ids = {
         assignment.rule.id
         for assignment
-        in configured_profile.profile.special_rules
+        in configured_profile.effective_special_rules
     }
 
     defender_keywords = set()
-    defender_races = set()
 
     if defender is not None:
-        defender_keywords = {
-            keyword.upper()
-            for keyword in defender.profile.keywords
-        }
-
-        defender_races = {
-            race.upper()
-            for race in defender.profile.races
-        }
+        defender_keywords = (
+            defender.effective_keywords
+        )
 
     has_ancient_enemies_match = any(
         assignment.rule.id == ANCIENT_ENEMIES_RULE_ID
         and isinstance(assignment.parameter, str)
-        and assignment.parameter.upper() in defender_races
-        for assignment in configured_profile.profile.special_rules
+        and assignment.parameter.upper() in defender_keywords
+        for assignment in configured_profile.effective_special_rules
     )
 
     selected_weapon_rule_ids = set()
@@ -104,7 +97,7 @@ def get_special_rule_wound_reroll(
     rule_ids = {
         assignment.rule.id
         for assignment
-        in configured_profile.profile.special_rules
+        in configured_profile.effective_special_rules
     }
 
     contextual = (

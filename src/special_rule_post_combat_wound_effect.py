@@ -12,7 +12,7 @@ def get_special_rule_post_combat_wound_effect(
 ) -> PostCombatWoundEffect:
     has_venom = any(
         assignment.rule.id == VENOM_RULE_ID
-        for assignment in attacker.profile.special_rules
+        for assignment in attacker.effective_special_rules
     )
 
     if has_venom:

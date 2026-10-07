@@ -3,7 +3,9 @@ from owned_army_resource_initialization import (
     get_initial_owned_hero_resource_states,
 )
 from profiles import Profile
-
+from configured_profile import ConfiguredProfile
+from configured_state_effect import ConfiguredStateEffect
+from profile_option import ProfileOption
 
 def make_profile(
     profile_id: str,
@@ -103,3 +105,61 @@ def test_each_owned_state_uses_the_profiles_resources():
     assert owned_states[0].resources.remaining_might == 3
     assert owned_states[0].resources.remaining_will == 10
     assert owned_states[0].resources.remaining_fate == 2
+
+def test_owned_resource_state_uses_configured_resource_overrides():
+    army = Army()
+
+    profile = make_profile(
+        profile_id="CONFIGURED_HERO",
+        might=3,
+        will=2,
+        fate=1,
+    )
+
+    option = ProfileOption(
+        id="RESOURCE_OVERRIDE",
+        name="Resource Override",
+        points=0,
+        configured_state_effects=(
+            ConfiguredStateEffect(
+                might_override=1,
+                will_override=4,
+                fate_override=2,
+            ),
+        ),
+    )
+
+    profile.profile_options.append(
+        option
+    )
+
+    configured_profile = ConfiguredProfile(
+        profile=profile,
+        selected_options=(
+            option,
+        ),
+    )
+
+    army.add_configured_profile(
+        configured_profile,
+        quantity=1,
+    )
+
+    owned_states = get_initial_owned_hero_resource_states(
+        army,
+    )
+
+    assert len(owned_states) == 1
+
+    assert (
+        owned_states[0].resources.remaining_might
+        == 1
+    )
+    assert (
+        owned_states[0].resources.remaining_will
+        == 4
+    )
+    assert (
+        owned_states[0].resources.remaining_fate
+        == 2
+    )

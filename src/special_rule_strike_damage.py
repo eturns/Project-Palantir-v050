@@ -21,7 +21,7 @@ def get_special_rule_strike_damage(
         and context.attacker_natural_duel_roll == 6
         and any(
             assignment.rule.id == EXECUTIONER_RULE_ID
-            for assignment in attacker.profile.special_rules
+            for assignment in attacker.effective_special_rules
         )
     )
 
@@ -32,7 +32,7 @@ def get_special_rule_strike_damage(
     
     has_mighty_blow = any(
         assignment.rule.id == MIGHTY_BLOW_RULE_ID
-        for assignment in attacker.profile.special_rules
+        for assignment in attacker.effective_special_rules
     )
 
     if has_mighty_blow:

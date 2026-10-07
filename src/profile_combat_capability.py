@@ -70,16 +70,22 @@ def calculate_profile_combat_capability(
         ConfiguredProfile,
     ):
         base_profile = profile.profile
+        fight = profile.effective_fight
+        strength = profile.effective_strength
         defence = profile.effective_defence
+        attacks = profile.effective_attacks
     else:
         base_profile = profile
+        fight = profile.fight
+        strength = profile.strength
         defence = profile.defence
+        attacks = profile.attacks
 
     return _calculate_profile_combat_capability_cached(
-        profile_fight=base_profile.fight,
-        profile_strength=base_profile.strength,
+        profile_fight=fight,
+        profile_strength=strength,
         profile_defence=defence,
-        profile_attacks=base_profile.attacks,
+        profile_attacks=attacks,
         profile_wounds=base_profile.wounds,
         benchmark_fight=benchmark.fight,
         benchmark_strength=benchmark.strength,

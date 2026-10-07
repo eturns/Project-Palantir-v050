@@ -42,7 +42,7 @@ def can_receive_command_benefit(
     if PACK_MASTER_RULE_ID in provider_rule_ids:
         return (
             "WARG"
-            in recipient_profile.profile.races
+            in recipient_profile.effective_keywords
         )
 
     return True

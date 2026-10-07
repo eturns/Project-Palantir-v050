@@ -91,6 +91,10 @@ class Profile:
         default_factory=set,
     )
 
+    factions: set[str] = field(
+        default_factory=set,
+    )
+
     base_size_mm: int = 25
 
     keywords: set[str] = field(

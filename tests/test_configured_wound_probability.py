@@ -531,7 +531,7 @@ def test_master_wants_ring_improves_configured_wound_probability():
     attacker_profile.special_rules.append(
         ProfileSpecialRuleAssignment(
             rule=SpecialRule(
-                id="MASTER_WANTS_RING",
+                id="YOU_HAVE_SOMETHING_MY_MASTER_WANTS",
                 name="You have something my master wants",
                 category=RuleCategory.SPECIAL,
             ),
@@ -571,7 +571,7 @@ def test_master_wants_ring_does_not_improve_probability_without_ring():
     attacker_profile.special_rules.append(
         ProfileSpecialRuleAssignment(
             rule=SpecialRule(
-                id="MASTER_WANTS_RING",
+                id="YOU_HAVE_SOMETHING_MY_MASTER_WANTS",
                 name="You have something my master wants",
                 category=RuleCategory.SPECIAL,
             ),

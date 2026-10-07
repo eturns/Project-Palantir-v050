@@ -165,7 +165,6 @@ def build_scenario_analysis_results_from_candidate(
                     profile=(
                         fog_model
                         .configured_profile
-                        .profile
                     ),
                     benchmark=combat_benchmark,
                     benchmark_fate=benchmark_fate,

@@ -388,6 +388,35 @@ class ConfiguredProfile:
         return model_types
 
     @property
+    def effective_keywords(self) -> set[str]:
+        keywords = {
+            keyword.upper()
+            for keyword in self.profile.keywords
+        }
+
+        keywords.update(
+            race.upper()
+            for race in self.profile.races
+        )
+
+        keywords.update(
+            faction.upper()
+            for faction in self.profile.factions
+        )
+
+        keywords.update(
+            model_type.value.upper()
+            for model_type in self.effective_model_types
+        )
+
+        if self.effective_heroic_status is not None:
+            keywords.add(
+                self.effective_heroic_status.value.upper()
+            )
+
+        return keywords
+
+    @property
     def effective_shooting(self) -> str:
         """
         Returns the Profile's effective shooting value after applying

@@ -15,6 +15,7 @@ from bringer_of_death_state import (
 from runtime_special_rules import (
     get_runtime_granted_rule_assignments,
     get_runtime_granted_rule_ids,
+    get_effective_runtime_rule_assignments,
 )
 
 def make_profile() -> Profile:
@@ -153,3 +154,53 @@ def test_bringer_of_death_state_does_not_grant_rules_without_source_rule():
     )
 
     assert assignments == ()
+
+def test_effective_runtime_assignments_preserve_bringer_of_death_harbinger_parameter():
+    profile = Profile(
+        id="BOLG_SPAWN_OF_AZOG",
+        name="Bolg, Spawn of Azog",
+        points=175,
+        movement=6,
+        fight=7,
+        shooting="4+",
+        strength=5,
+        defence=7,
+        attacks=3,
+        wounds=3,
+        courage="5+",
+        intelligence="5+",
+        might=3,
+        will=3,
+        fate=1,
+        max_in_army=1,
+    )
+
+    profile.special_rules.append(
+        ProfileSpecialRuleAssignment(
+            rule=SpecialRule(
+                id="BRINGER_OF_DEATH",
+                name="The Bringer of Death",
+                category=RuleCategory.SPECIAL,
+            ),
+        )
+    )
+
+    bolg = ConfiguredProfile(
+        profile=profile,
+    )
+
+    assignments = get_effective_runtime_rule_assignments(
+        bolg,
+        bringer_of_death_state=BringerOfDeathState(
+            kills_in_combat=5,
+        ),
+    )
+
+    harbinger = next(
+        assignment
+        for assignment in assignments
+        if assignment.rule_id
+        == "HARBINGER_OF_EVIL"
+    )
+
+    assert harbinger.parameter == 12

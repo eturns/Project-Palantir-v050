@@ -2,6 +2,7 @@ from enum import Enum
 from profiles import Profile
 from profile_classification import ModelType
 from army import Army
+from configured_profile import ConfiguredProfile
 
 class ObjectInteractionMode(Enum):
     STATIC_ACTION = "static_action"
@@ -10,6 +11,22 @@ class ObjectInteractionMode(Enum):
     UNCOVER_AND_LIGHT_OBJECT = "uncover_and_light_object"
     HEAVY_OBJECT = "heavy_object"
 
+def _get_model_types(
+    profile: Profile | ConfiguredProfile,
+) -> set[ModelType]:
+    if isinstance(profile, ConfiguredProfile):
+        return profile.effective_model_types
+
+    return profile.model_types
+
+
+def _get_special_rules(
+    profile: Profile | ConfiguredProfile,
+):
+    if isinstance(profile, ConfiguredProfile):
+        return profile.effective_special_rules
+
+    return profile.special_rules
 
 def calculate_intelligence_test_success_probability(
     intelligence: str,
@@ -48,21 +65,29 @@ def calculate_intelligence_test_success_probability_from_profile(
     )
 
 def is_profile_eligible_for_uncovering_artifact(
-    profile: Profile,
+    profile: Profile | ConfiguredProfile,
 ) -> bool:
-    if not isinstance(profile, Profile):
+    if not isinstance(
+        profile,
+        (Profile, ConfiguredProfile),
+    ):
         raise TypeError(
-            "profile must be a Profile."
+            "profile must be a Profile or ConfiguredProfile."
         )
 
-    return ModelType.INFANTRY in profile.model_types
+    return ModelType.INFANTRY in _get_model_types(
+        profile
+    )
 
 def calculate_uncovering_artifact_success_probability_from_profile(
-    profile: Profile,
+    profile: Profile | ConfiguredProfile,
 ) -> float:
-    if not isinstance(profile, Profile):
+    if not isinstance(
+        profile,
+        (Profile, ConfiguredProfile),
+    ):
         raise TypeError(
-            "profile must be a Profile."
+            "profile must be a Profile or ConfiguredProfile."
         )
 
     if not is_profile_eligible_for_uncovering_artifact(
@@ -70,9 +95,15 @@ def calculate_uncovering_artifact_success_probability_from_profile(
     ):
         return 0.0
 
+    base_profile = (
+        profile.profile
+        if isinstance(profile, ConfiguredProfile)
+        else profile
+    )
+
     return (
         calculate_intelligence_test_success_probability_from_profile(
-            profile
+            base_profile
         )
     )
 
@@ -90,7 +121,7 @@ def count_uncovering_artifact_eligible_models(
         if (
             entry.counts_as_model
             and is_profile_eligible_for_uncovering_artifact(
-                entry.profile
+                entry.configured_profile
             )
         )
     )
@@ -117,13 +148,13 @@ def calculate_uncovering_artifact_capability_from_army(
             continue
 
         if not is_profile_eligible_for_uncovering_artifact(
-            entry.profile
+            entry.configured_profile
         ):
             continue
 
         weighted_success_total += (
             calculate_uncovering_artifact_success_probability_from_profile(
-                entry.profile
+                entry.configured_profile
             )
             * entry.quantity
         )
@@ -144,20 +175,27 @@ def calculate_uncovering_artifact_capability_from_army(
     )
 
 def calculate_light_object_handling_from_profile(
-    profile: Profile,
+    profile: Profile | ConfiguredProfile,
 ) -> float:
-    if not isinstance(profile, Profile):
+    if not isinstance(
+        profile,
+        (Profile, ConfiguredProfile),
+    ):
         raise TypeError(
-            "profile must be a Profile."
+            "profile must be a Profile or ConfiguredProfile."
         )
 
     has_expert_rider = any(
         assignment.rule.id == "EXPERT_RIDER"
-        for assignment in profile.special_rules
+        for assignment in _get_special_rules(
+            profile
+        )
     )
 
     if (
-        ModelType.CAVALRY in profile.model_types
+        ModelType.CAVALRY in _get_model_types(
+            profile
+        )
         and not has_expert_rider
     ):
         return 0.0
@@ -179,7 +217,7 @@ def calculate_light_object_capability_from_army(
 
     weighted_handling_total = sum(
         calculate_light_object_handling_from_profile(
-            entry.profile
+            entry.configured_profile
         )
         * entry.quantity
         for entry in army.entries
@@ -202,16 +240,21 @@ def calculate_light_object_capability_from_army(
     )
 
 def calculate_heavy_object_handling_from_profile(
-    profile: Profile,
+    profile: Profile | ConfiguredProfile,
 ) -> float:
-    if not isinstance(profile, Profile):
+    if not isinstance(
+        profile,
+        (Profile, ConfiguredProfile),
+    ):
         raise TypeError(
-            "profile must be a Profile."
+            "profile must be a Profile or ConfiguredProfile."
         )
 
     has_burly = any(
         assignment.rule.id == "BURLY"
-        for assignment in profile.special_rules
+        for assignment in _get_special_rules(
+            profile
+        )
     )
 
     if has_burly:
@@ -235,7 +278,7 @@ def calculate_heavy_object_capability_from_army(
 
     has_burly_model = any(
         calculate_heavy_object_handling_from_profile(
-            entry.profile
+            entry.configured_profile
         )
         == 1.0
         and entry.quantity > 0
@@ -278,7 +321,7 @@ def calculate_search_and_light_object_capability_from_army(
         if (
             entry.counts_as_model
             and ModelType.INFANTRY
-            in entry.profile.model_types
+            in entry.configured_profile.effective_model_types
         )
     )
 

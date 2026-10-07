@@ -14,6 +14,7 @@ from wargear import Wargear
 
 from wound_attack_type import WoundAttackType
 from wound_context import WoundContext
+from profile_classification import ModelType
 
 def create_test_profile() -> Profile:
     return Profile(
@@ -503,3 +504,71 @@ def test_slayer_of_men_does_not_apply_to_shooting():
     )
 
     assert result == WoundReroll()
+
+def test_ancient_enemies_matches_faction_keyword():
+    attacker_profile = create_test_profile()
+    defender_profile = create_test_profile()
+
+    attacker_profile.special_rules.append(
+        ProfileSpecialRuleAssignment(
+            rule=SpecialRule(
+                id="ANCIENT_ENEMIES",
+                name="Ancient Enemies",
+                category=RuleCategory.SPECIAL,
+            ),
+            parameter="GUNDABAD",
+        )
+    )
+
+    defender_profile.factions.add(
+        "GUNDABAD"
+    )
+
+    attacker = ConfiguredProfile(
+        profile=attacker_profile,
+    )
+
+    defender = ConfiguredProfile(
+        profile=defender_profile,
+    )
+
+    result = get_special_rule_wound_reroll(
+        configured_profile=attacker,
+        defender=defender,
+    )
+
+    assert result.reroll_natural_ones is True
+
+def test_ancient_enemies_matches_unit_type_keyword():
+    attacker_profile = create_test_profile()
+    defender_profile = create_test_profile()
+
+    attacker_profile.special_rules.append(
+        ProfileSpecialRuleAssignment(
+            rule=SpecialRule(
+                id="ANCIENT_ENEMIES",
+                name="Ancient Enemies",
+                category=RuleCategory.SPECIAL,
+            ),
+            parameter="INFANTRY",
+        )
+    )
+
+    defender_profile.model_types.add(
+        ModelType.INFANTRY
+    )
+
+    attacker = ConfiguredProfile(
+        profile=attacker_profile,
+    )
+
+    defender = ConfiguredProfile(
+        profile=defender_profile,
+    )
+
+    result = get_special_rule_wound_reroll(
+        configured_profile=attacker,
+        defender=defender,
+    )
+
+    assert result.reroll_natural_ones is True

@@ -22,7 +22,12 @@ from owned_resource_use_permission import (
     OwnedResourceUsePermission,
 )
 from resource_use_permission import ResourceType
-
+from temporary_resource_grant import (
+    TemporaryResourceGrant,
+)
+from temporary_resource_grant_totals import (
+    calculate_temporary_resource_total,
+)
 
 def apply_owned_resource_allocations(
     states: tuple[
@@ -41,12 +46,17 @@ def apply_owned_resource_allocations(
         OwnedResourceConversion,
         ...,
     ],
+    temporary_grants: tuple[
+        TemporaryResourceGrant,
+        ...,
+    ] = (),
 ) -> tuple[OwnedHeroResourceState, ...]:
     validate_owned_resource_allocations(
         states=states,
         allocations=allocations,
         permissions=permissions,
         conversions=conversions,
+        temporary_grants=temporary_grants,
     )
 
     totals = calculate_owned_resource_allocation_totals(
@@ -83,10 +93,24 @@ def apply_owned_resource_allocations(
         )
 
         if might_spend:
-            resources = spend_might(
-                resources,
-                amount=might_spend,
+            temporary_might = (
+                calculate_temporary_resource_total(
+                    grants=temporary_grants,
+                    owner=state.owner,
+                    resource_type=ResourceType.MIGHT,
+                )
             )
+
+            persistent_might_spend = max(
+                might_spend - temporary_might,
+                0,
+            )
+
+            if persistent_might_spend:
+                resources = spend_might(
+                    resources,
+                    amount=persistent_might_spend,
+                )
 
         if will_spend:
             resources = spend_will(
