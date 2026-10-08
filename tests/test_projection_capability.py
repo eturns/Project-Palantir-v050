@@ -137,7 +137,7 @@ def test_projection_capability_from_army_uses_magic_and_shooting(
     monkeypatch.setattr(
         projection_capability,
         "build_battlefield_effects_inputs",
-        lambda army, army_list: expected_inputs,
+        lambda army, army_list, *, shooting_density=None: expected_inputs,
     )
 
     monkeypatch.setattr(
@@ -186,7 +186,7 @@ def test_projection_from_army_uses_only_magic_and_shooting(
     monkeypatch.setattr(
         projection_capability,
         "build_battlefield_effects_inputs",
-        lambda army, army_list: inputs,
+        lambda army, army_list, *, shooting_density=None: inputs,
     )
 
     monkeypatch.setattr(
@@ -206,4 +206,141 @@ def test_projection_from_army_uses_only_magic_and_shooting(
     assert result == ScenarioCapability(
         dimension=StrategicDemand.PROJECTION,
         value=0.35,
+    )
+
+def test_projection_from_army_can_use_mechanical_shooting_density(
+    monkeypatch,
+):
+    army = Army()
+
+    army_list = ArmyList(
+        id="TEST_LIST",
+        name="Test List",
+        faction=Faction(
+            id="TEST_FACTION",
+            name="Test Faction",
+        ),
+    )
+
+    import projection_capability
+
+    captured = {}
+
+    def fake_build_inputs(
+        army,
+        army_list,
+        *,
+        shooting_density=None,
+    ):
+        captured["shooting_density"] = shooting_density
+
+        return BattlefieldEffectsInputs(
+            offence=0.0,
+            defence=0.0,
+            shooting=0.5,
+            courage=0.0,
+            command=0.0,
+            hero_hunting=0.0,
+        )
+
+    monkeypatch.setattr(
+        projection_capability,
+        "build_battlefield_effects_inputs",
+        fake_build_inputs,
+    )
+
+    monkeypatch.setattr(
+        projection_capability,
+        "calculate_army_metric_densities",
+        lambda army, army_list: SimpleNamespace(
+            magic=0.0,
+        ),
+    )
+
+    result = calculate_projection_capability_from_army(
+        army=army,
+        army_list=army_list,
+        shooting_density=1.5625,
+    )
+
+    assert captured["shooting_density"] == 1.5625
+
+    assert result == ScenarioCapability(
+        dimension=StrategicDemand.PROJECTION,
+        value=0.25,
+    )
+
+def test_projection_from_army_uses_automatic_mechanical_shooting_density(
+    monkeypatch,
+):
+    army = Army()
+
+    army_list = ArmyList(
+        id="TEST_LIST",
+        name="Test List",
+        faction=Faction(
+            id="TEST_FACTION",
+            name="Test Faction",
+        ),
+    )
+
+    import projection_capability
+
+    captured = {}
+
+    monkeypatch.setattr(
+        projection_capability,
+        "calculate_army_shooting_output_density",
+        lambda *, army, defender: 1.5625,
+        raising=False,
+    )
+
+    monkeypatch.setattr(
+        projection_capability,
+        "build_shooting_benchmark_defender",
+        lambda: object(),
+        raising=False,
+    )
+
+    def fake_build_inputs(
+        army,
+        army_list,
+        *,
+        shooting_density=None,
+    ):
+        captured["shooting_density"] = shooting_density
+
+        return BattlefieldEffectsInputs(
+            offence=0.0,
+            defence=0.0,
+            shooting=0.5,
+            courage=0.0,
+            command=0.0,
+            hero_hunting=0.0,
+        )
+
+    monkeypatch.setattr(
+        projection_capability,
+        "build_battlefield_effects_inputs",
+        fake_build_inputs,
+    )
+
+    monkeypatch.setattr(
+        projection_capability,
+        "calculate_army_metric_densities",
+        lambda army, army_list: SimpleNamespace(
+            magic=0.0,
+        ),
+    )
+
+    result = calculate_projection_capability_from_army(
+        army=army,
+        army_list=army_list,
+    )
+
+    assert captured["shooting_density"] == 1.5625
+
+    assert result == ScenarioCapability(
+        dimension=StrategicDemand.PROJECTION,
+        value=0.25,
     )

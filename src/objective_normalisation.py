@@ -11,6 +11,9 @@ SHOOTING_EFFECT_DENSITY_MAX = 3.125
 COURAGE_EFFECT_DENSITY_MAX = 4.0625
 COMMAND_EFFECT_DENSITY_MAX = 3.125
 HERO_HUNTING_EFFECT_DENSITY_MAX = 3.125
+# Provisional DEV-077S shooting calibration.
+# Reassess after real shooting-heavy army integration.
+SHOOTING_OUTPUT_DENSITY_MAX = 0.6
 
 
 def normalise_model_presence(
@@ -89,4 +92,14 @@ def normalise_battlefield_effect(
             0.0,
         ),
         1.0,
+    )
+
+def normalise_shooting_output_density(
+    value: float,
+    *,
+    maximum: float = SHOOTING_OUTPUT_DENSITY_MAX,
+) -> float:
+    return normalise_battlefield_effect(
+        value,
+        maximum,
     )

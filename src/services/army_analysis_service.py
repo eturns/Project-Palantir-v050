@@ -7,6 +7,20 @@ from army_metric_assessment import (
 from battlefield_assessment import (
     assess_battlefield,
 )
+from army_shooting_capability import (
+    calculate_army_shooting_output_density,
+)
+
+from objective_normalisation import (
+    normalise_shooting_output_density,
+)
+
+from projection_capability import (
+    build_shooting_benchmark_defender,
+)
+from army_offence_capability import (
+    calculate_army_offensive_output_density,
+)
 
 def analyse_imported_army(
     army,
@@ -30,9 +44,24 @@ def analyse_imported_army(
         army_list,
     )
 
+    offence_score = calculate_army_offensive_output_density(
+        army,
+    )
+
+    shooting_density = calculate_army_shooting_output_density(
+        army=army,
+        defender=build_shooting_benchmark_defender(),
+    )
+
+    shooting_score = normalise_shooting_output_density(
+        shooting_density,
+    )
+
     metric_assessments = assess_army_metrics(
         metric_densities,
         metric_thresholds,
+        offence_value=offence_score,
+        shooting_value=shooting_score,
     )
 
     battlefield_assessments = assess_battlefield(

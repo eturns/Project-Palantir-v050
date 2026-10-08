@@ -1,0 +1,122 @@
+{
+ "metadata": {
+  "leader": "841fd9c7-99bc-45fa-a8e3-032fcc0f7ad0",
+  "maxPoints": 700,
+  "tags": []
+ },
+ "warbands": [
+  {
+   "id": "841fd9c7-99bc-45fa-a8e3-032fcc0f7ad0",
+   "hero": {
+    "model_id": "[rangers-of-mirkwood] legolas-greenleaf-prince-of-mirkwood",
+    "MWFW": [
+     [
+      "",
+      "3:2:3:2"
+     ]
+    ],
+    "options": [
+     {
+      "id": "OPT0771",
+      "name": "Elven cloak",
+      "quantity": 1
+     }
+    ]
+   },
+   "units": [
+    {
+     "model_id": "[rangers-of-mirkwood] mirkwood-ranger",
+     "MWFW": [],
+     "options": [],
+     "quantity": 10
+    }
+   ],
+   "meta": {
+    "num": 1,
+    "points": 250,
+    "units": 10,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 10,
+    "maxUnits": 15
+   }
+  },
+  {
+   "id": "48868feb-81e5-4dd5-beef-dbf3f7cfbd3e",
+   "hero": {
+    "model_id": "[rangers-of-mirkwood] tauriel-ranger-of-mirkwood",
+    "MWFW": [
+     [
+      "",
+      "3:2:3:2"
+     ]
+    ],
+    "options": [
+     {
+      "id": "OPT0772",
+      "name": "Elf bow",
+      "quantity": 1
+     }
+    ]
+   },
+   "units": [
+    {
+     "model_id": "[rangers-of-mirkwood] mirkwood-ranger",
+     "MWFW": [],
+     "options": [],
+     "quantity": 10
+    }
+   ],
+   "meta": {
+    "num": 2,
+    "points": 235,
+    "units": 10,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 10,
+    "maxUnits": 15
+   }
+  },
+  {
+   "id": "60f4ed28-9286-4df5-bd95-ebac15edb125",
+   "hero": {
+    "model_id": "[rangers-of-mirkwood] mirkwood-ranger-captain",
+    "MWFW": [
+     [
+      "",
+      "2:1:1:2"
+     ]
+    ],
+    "options": []
+   },
+   "units": [
+    {
+     "model_id": "[rangers-of-mirkwood] mirkwood-ranger",
+     "MWFW": [],
+     "options": [],
+     "quantity": 10
+    }
+   ],
+   "meta": {
+    "num": 3,
+    "points": 215,
+    "units": 10,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 10,
+    "maxUnits": 12
+   }
+  }
+ ],
+ "id": "shooting-test-vr43tq78",
+ "version": "1.42.19",
+ "name": "shooting test",
+ "armyList": "Rangers of Mirkwood",
+ "edition": "v2024"
+}

@@ -87,6 +87,9 @@ from profile_option_special_rule_loader import (
 from siege_engine_profile_loader import (
     load_siege_engine_profiles,
 )
+from profile_default_wargear_loader import (
+    load_profile_default_wargear,
+)
 
 def run_analysis_workflow(
     file_path: str,
@@ -156,6 +159,11 @@ def main(
     )
 
     wargear = load_wargear()
+
+    load_profile_default_wargear(
+        profiles=profiles_by_id,
+        wargear=wargear,
+    )
 
     load_profile_option_wargear_assignments(
         profile_options,

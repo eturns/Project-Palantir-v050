@@ -1,0 +1,154 @@
+{
+ "metadata": {
+  "leader": "95dbc13c-6ed9-42b9-965c-54b97e0ba550",
+  "tags": []
+ },
+ "warbands": [
+  {
+   "id": "95dbc13c-6ed9-42b9-965c-54b97e0ba550",
+   "hero": {
+    "model_id": "[azog's-hunters] azog-the-defiler",
+    "MWFW": [
+     [
+      "Azog the Defiler",
+      "3:3:1:3"
+     ],
+     [
+      "The White Warg",
+      "2:1:1:2"
+     ]
+    ],
+    "options": [
+     {
+      "id": "OPT0690",
+      "name": "The White Warg",
+      "quantity": 1
+     }
+    ]
+   },
+   "units": [
+    {
+     "model_id": "[azog's-hunters] hunter-orc-warg-rider",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0700",
+       "name": "Orc bow",
+       "quantity": 1
+      }
+     ],
+     "quantity": 3
+    },
+    {
+     "model_id": "[azog's-hunters] hunter-orc-warg-rider",
+     "MWFW": [],
+     "options": [],
+     "quantity": 3
+    }
+   ],
+   "meta": {
+    "num": 1,
+    "points": 318,
+    "units": 6,
+    "heroes": 1,
+    "bows": 3,
+    "throwingWeapons": 0,
+    "bowLimit": 6,
+    "throwLimit": 6,
+    "maxUnits": 18
+   }
+  },
+  {
+   "id": "b70be2f0-b00d-4788-8afa-9a8f38f6b085",
+   "hero": {
+    "model_id": "[azog's-hunters] narzug-hunter-orc-captain",
+    "MWFW": [
+     [
+      "",
+      "2:1:1:2"
+     ]
+    ],
+    "options": []
+   },
+   "units": [
+    {
+     "model_id": "[azog's-hunters] hunter-orc-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0698",
+       "name": "Orc bow",
+       "quantity": 1
+      }
+     ],
+     "quantity": 4
+    },
+    {
+     "model_id": "[azog's-hunters] hunter-orc-warrior",
+     "MWFW": [],
+     "options": [],
+     "quantity": 4
+    }
+   ],
+   "meta": {
+    "num": 2,
+    "points": 123,
+    "units": 8,
+    "heroes": 1,
+    "bows": 4,
+    "throwingWeapons": 0,
+    "bowLimit": 8,
+    "throwLimit": 8,
+    "maxUnits": 12
+   }
+  },
+  {
+   "id": "431e0082-d2fe-4d8b-9303-a46c40aaeee3",
+   "hero": {
+    "model_id": "[azog's-hunters] bolg-spawn-of-azog",
+    "MWFW": [
+     [
+      "",
+      "3:3:1:3"
+     ]
+    ],
+    "options": [
+     {
+      "id": "OPT0691",
+      "name": "Fell Warg",
+      "quantity": 1
+     },
+     {
+      "id": "OPT0692",
+      "name": "Orc bow",
+      "quantity": 1
+     }
+    ]
+   },
+   "units": [
+    {
+     "model_id": "[azog's-hunters] fell-warg",
+     "MWFW": [],
+     "options": [],
+     "quantity": 7
+    }
+   ],
+   "meta": {
+    "num": 3,
+    "points": 256,
+    "units": 7,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 7,
+    "throwLimit": 7,
+    "maxUnits": 15
+   }
+  }
+ ],
+ "id": "shooting-test-vz0ypfdc",
+ "version": "1.42.19",
+ "name": "shooting test",
+ "armyList": "Azog's Hunters",
+ "edition": "v2024"
+}

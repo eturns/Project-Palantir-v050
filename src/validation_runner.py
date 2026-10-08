@@ -42,6 +42,17 @@ from validation.battlefield_evidence import (validate_battlefield_evidence,)
 from validation.ability_metric_audit import (validate_ability_metric_audit,)
 from validation.army_comparison import (validate_army_comparison,)
 from validation.mesbg_list_builder_importer import (validate_mesbg_list_builder_importer,)
+from army_shooting_capability import (
+    calculate_army_shooting_output_density,
+)
+
+from objective_normalisation import (
+    normalise_shooting_output_density,
+)
+
+from projection_capability import (
+    build_shooting_benchmark_defender,
+)
 
 def run_validation(
     profiles,
@@ -155,6 +166,15 @@ def run_validation(
         army,
         army_list,
     )
+    shooting_density = calculate_army_shooting_output_density(
+        army=army,
+        defender=build_shooting_benchmark_defender(),
+    )
+
+    shooting_score = normalise_shooting_output_density(
+        shooting_density,
+    )
+
     validate_metric_interpretation(
         densities,
         metric_thresholds,
@@ -192,9 +212,10 @@ def run_validation(
         verbose=False,
     )
     assessments = assess_army_metrics(
-    densities,
-    metric_thresholds,
-)
+        densities,
+        metric_thresholds,
+        shooting_value=shooting_score,
+    )
 
     validate_army_metric_assessments(
         assessments,

@@ -70,3 +70,45 @@ def get_lethal_aim_wound_modifier(
     return WoundModifier(
         to_wound=1,
     )
+
+def get_lethal_aim_hit_modifier(
+    profile: ConfiguredProfile,
+    state: LethalAimState | None,
+    *,
+    spend: LethalAimSpend | None = None,
+) -> int:
+    if (
+        state is None
+        or spend is not LethalAimSpend.TO_HIT
+    ):
+        return 0
+
+    if not can_use_lethal_aim(
+        profile,
+        state,
+        spend,
+    ):
+        return 0
+
+    return 1
+
+def get_lethal_aim_in_the_way_modifier(
+    profile: ConfiguredProfile,
+    state: LethalAimState | None,
+    *,
+    spend: LethalAimSpend | None = None,
+) -> int:
+    if (
+        state is None
+        or spend is not LethalAimSpend.IN_THE_WAY
+    ):
+        return 0
+
+    if not can_use_lethal_aim(
+        profile,
+        state,
+        spend,
+    ):
+        return 0
+
+    return 1

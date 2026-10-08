@@ -11,13 +11,14 @@ from objective_normalisation import (
     OFFENCE_EFFECT_DENSITY_MAX,
     SHOOTING_EFFECT_DENSITY_MAX,
     COMMAND_EFFECT_DENSITY_MAX,
+    SHOOTING_OUTPUT_DENSITY_MAX,
     normalise_battlefield_effect,
     normalise_control,
     normalise_magic,
     normalise_manoeuvrability,
     normalise_model_presence,
+    normalise_shooting_output_density,
 )
-
 
 def test_objective_normalisation_exposes_v1_calibration_constants():
     assert MODEL_PRESENCE_MAX_PER_100_POINTS == 10.0
@@ -90,3 +91,31 @@ def test_battlefield_effect_normalisation_caps_at_zero():
         value=-1.0,
         maximum=OFFENCE_EFFECT_DENSITY_MAX,
     ) == 0.0
+
+def test_normalise_shooting_output_density_uses_its_own_calibration():
+    result = normalise_shooting_output_density(
+        0.5,
+        maximum=1.0,
+    )
+
+    assert result == 0.5
+
+
+def test_normalise_shooting_output_density_caps_at_one():
+    result = normalise_shooting_output_density(
+        2.0,
+        maximum=1.0,
+    )
+
+    assert result == 1.0
+
+def test_shooting_output_density_has_provisional_calibration_maximum():
+    assert SHOOTING_OUTPUT_DENSITY_MAX == 0.6
+
+
+def test_shooting_output_density_uses_provisional_calibration_by_default():
+    result = normalise_shooting_output_density(
+        0.3,
+    )
+
+    assert result == pytest.approx(0.5)

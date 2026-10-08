@@ -57,3 +57,41 @@ def test_build_battlefield_effects_inputs_normalises_metric_densities(
     assert inputs.courage == pytest.approx(0.8)
     assert inputs.command == pytest.approx(0.8)
     assert inputs.hero_hunting == pytest.approx(0.8)
+
+def test_build_battlefield_effects_inputs_can_use_mechanical_shooting_density(
+    monkeypatch,
+):
+    army = Army()
+
+    army_list = ArmyList(
+        id="TEST_LIST",
+        name="Test List",
+        faction=Faction(
+            id="TEST_FACTION",
+            name="Test Faction",
+        ),
+    )
+
+    monkeypatch.setattr(
+        battlefield_effects_input_builder,
+        "calculate_army_metric_densities",
+        lambda army, army_list: ArmyMetrics(
+            offence=0.0,
+            defence=0.0,
+            shooting=99.0,
+            courage=0.0,
+            command=0.0,
+            hero_hunting=0.0,
+        ),
+    )
+
+    inputs = (
+        battlefield_effects_input_builder
+        .build_battlefield_effects_inputs(
+            army,
+            army_list,
+            shooting_density=0.3,
+        )
+    )
+
+    assert inputs.shooting == pytest.approx(0.5)

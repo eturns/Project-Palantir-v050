@@ -18,6 +18,33 @@ from objective_normalisation import (
     MAGIC_DENSITY_MAX,
     normalise_battlefield_effect,
 )
+from army_shooting_capability import (
+    calculate_army_shooting_output_density,
+)
+from configured_profile import ConfiguredProfile
+from profiles import Profile
+
+def build_shooting_benchmark_defender() -> ConfiguredProfile:
+    return ConfiguredProfile(
+        profile=Profile(
+            id="SHOOTING_BENCHMARK",
+            name="Shooting Benchmark",
+            points=0,
+            movement=6,
+            fight=4,
+            shooting="4+",
+            strength=4,
+            defence=6,
+            attacks=1,
+            wounds=1,
+            courage="6+",
+            intelligence="6+",
+            might=0,
+            will=0,
+            fate=0,
+            max_in_army=0,
+        )
+    )
 
 def calculate_projection_capability(
     battlefield_effects_score: int | float,
@@ -73,6 +100,8 @@ def calculate_projection_capability_from_inputs(
 def calculate_projection_capability_from_army(
     army: Army,
     army_list: ArmyList,
+    *,
+    shooting_density: float | None = None,
 ) -> ScenarioCapability:
     if not isinstance(army, Army):
         raise TypeError(
@@ -87,9 +116,18 @@ def calculate_projection_capability_from_army(
             "army_list must be an ArmyList."
         )
 
+    if shooting_density is None:
+        shooting_density = (
+            calculate_army_shooting_output_density(
+                army=army,
+                defender=build_shooting_benchmark_defender(),
+            )
+        )
+
     inputs = build_battlefield_effects_inputs(
         army,
         army_list,
+        shooting_density=shooting_density,
     )
 
     densities = calculate_army_metric_densities(

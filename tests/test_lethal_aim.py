@@ -2,6 +2,8 @@ from configured_profile import ConfiguredProfile
 from database.rule_category import RuleCategory
 from lethal_aim import (
     can_use_lethal_aim,
+    get_lethal_aim_hit_modifier,
+    get_lethal_aim_in_the_way_modifier,
     get_lethal_aim_wound_modifier,
 )
 from lethal_aim_state import (
@@ -15,7 +17,11 @@ from profiles import Profile
 from special_rule import SpecialRule
 from wound_attack_type import WoundAttackType
 from wound_context import WoundContext
-
+from lethal_aim import (
+    can_use_lethal_aim,
+    get_lethal_aim_hit_modifier,
+    get_lethal_aim_wound_modifier,
+)
 
 def make_profile(
     *,
@@ -135,3 +141,61 @@ def test_available_lethal_aim_gives_plus_one_shooting_wound_modifier():
     )
 
     assert modifier.to_wound == 1
+
+def test_available_lethal_aim_gives_plus_one_shooting_hit_modifier():
+    narzug = make_profile(
+        lethal_aim=True,
+    )
+
+    modifier = get_lethal_aim_hit_modifier(
+        narzug,
+        LethalAimState(),
+        spend=LethalAimSpend.TO_HIT,
+    )
+
+    assert modifier == 1
+
+
+def test_spent_lethal_aim_gives_no_hit_modifier():
+    narzug = make_profile(
+        lethal_aim=True,
+    )
+
+    modifier = get_lethal_aim_hit_modifier(
+        narzug,
+        LethalAimState(
+            free_might_available=False,
+        ),
+        spend=LethalAimSpend.TO_HIT,
+    )
+
+    assert modifier == 0
+
+def test_available_lethal_aim_gives_plus_one_in_the_way_modifier():
+    narzug = make_profile(
+        lethal_aim=True,
+    )
+
+    modifier = get_lethal_aim_in_the_way_modifier(
+        narzug,
+        LethalAimState(),
+        spend=LethalAimSpend.IN_THE_WAY,
+    )
+
+    assert modifier == 1
+
+
+def test_spent_lethal_aim_gives_no_in_the_way_modifier():
+    narzug = make_profile(
+        lethal_aim=True,
+    )
+
+    modifier = get_lethal_aim_in_the_way_modifier(
+        narzug,
+        LethalAimState(
+            free_might_available=False,
+        ),
+        spend=LethalAimSpend.IN_THE_WAY,
+    )
+
+    assert modifier == 0

@@ -12,17 +12,30 @@ from objective_normalisation import (
     OFFENCE_EFFECT_DENSITY_MAX,
     SHOOTING_EFFECT_DENSITY_MAX,
     normalise_battlefield_effect,
+    normalise_shooting_output_density,
 )
 
 
 def build_battlefield_effects_inputs(
     army,
     army_list,
+    *,
+    shooting_density: float | None = None,
 ) -> BattlefieldEffectsInputs:
     densities = calculate_army_metric_densities(
         army,
         army_list,
     )
+
+    if shooting_density is None:
+        shooting_score = normalise_battlefield_effect(
+            densities.shooting,
+            SHOOTING_EFFECT_DENSITY_MAX,
+        )
+    else:
+        shooting_score = normalise_shooting_output_density(
+            shooting_density,
+        )
 
     return BattlefieldEffectsInputs(
         offence=normalise_battlefield_effect(
@@ -33,10 +46,7 @@ def build_battlefield_effects_inputs(
             densities.defence,
             DEFENCE_EFFECT_DENSITY_MAX,
         ),
-        shooting=normalise_battlefield_effect(
-            densities.shooting,
-            SHOOTING_EFFECT_DENSITY_MAX,
-        ),
+        shooting=shooting_score,
         courage=normalise_battlefield_effect(
             densities.courage,
             COURAGE_EFFECT_DENSITY_MAX,
