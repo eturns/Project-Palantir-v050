@@ -1,9 +1,15 @@
+"""Evaluate an army candidate against a target profile.
+
+The legacy matchup scoring contract is preserved until
+the Defence v2 capability has been calibrated.
+"""
+
 from combat_benchmark import CombatBenchmark
+from legacy_defensive_combat_score import (
+    calculate_legacy_profile_defensive_combat_score,
+)
 from matchup_result import MatchupResult
 from optimiser_candidate import OptimiserCandidate
-from profile_defensive_combat_score import (
-    calculate_profile_defensive_combat_score,
-)
 from profile_offensive_combat_score import (
     calculate_profile_offensive_combat_score,
 )
@@ -28,23 +34,20 @@ def calculate_matchup_result(
     if total_models == 0:
         offensive_score = 0.0
         defensive_score = 0.0
-
     else:
         offensive_score = sum(
             calculate_profile_offensive_combat_score(
                 entry.configured_profile,
                 benchmark,
-            )
-            * entry.quantity
+            ) * entry.quantity
             for entry in candidate.army.entries
         ) / total_models
 
         defensive_score = sum(
-            calculate_profile_defensive_combat_score(
+            calculate_legacy_profile_defensive_combat_score(
                 entry.configured_profile,
                 benchmark,
-            )
-            * entry.quantity
+            ) * entry.quantity
             for entry in candidate.army.entries
         ) / total_models
 

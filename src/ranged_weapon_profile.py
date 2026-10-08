@@ -59,12 +59,22 @@ class RangedWeaponProfile:
 RANGED_WEAPON_PROFILES = {
     "WG_CROSSBOW": RangedWeaponProfile(
         wargear_id="WG_CROSSBOW",
+        range_inches=24,
+        strength=4,
+        shots=1,
+        requires_stationary=True,
     ),
     "WG_ESGAROTH_BOW": RangedWeaponProfile(
         wargear_id="WG_ESGAROTH_BOW",
+        range_inches=24,
+        strength=3,
+        shots=1,
     ),
     "WG_GREAT_BOW": RangedWeaponProfile(
         wargear_id="WG_GREAT_BOW",
+        range_inches=24,
+        strength=4,
+        shots=1,
     ),
     "WG_RAPID_FIRE_BOLT_THROWER": RangedWeaponProfile(
         wargear_id="WG_RAPID_FIRE_BOLT_THROWER",

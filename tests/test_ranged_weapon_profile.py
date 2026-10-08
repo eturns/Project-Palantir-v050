@@ -68,13 +68,17 @@ def test_configured_crossbow_resolves_ranged_weapon_profile():
         selected_options=(crossbow_option,),
     )
 
-    result = resolve_ranged_weapon(
-        configured,
-    )
+    result = resolve_ranged_weapon(configured)
 
     assert result == RangedWeaponProfile(
         wargear_id="WG_CROSSBOW",
+        range_inches=24,
+        strength=4,
+        shots=1,
+        requires_stationary=True,
     )
+
+    assert result.is_mechanically_complete is True
 
 
 def test_profile_without_ranged_weapon_resolves_none():

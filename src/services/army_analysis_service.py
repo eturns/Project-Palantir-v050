@@ -1,3 +1,10 @@
+"""Project Palantir army analysis service.
+
+DEV-077S-I2-C-H3-B:
+Expose mechanical Defence diagnostics without changing
+existing metric assessments or battlefield ratings.
+"""
+
 from army_metric_densities import (
     calculate_army_metric_densities,
 )
@@ -10,17 +17,19 @@ from battlefield_assessment import (
 from army_shooting_capability import (
     calculate_army_shooting_output_density,
 )
-
 from objective_normalisation import (
     normalise_shooting_output_density,
 )
-
 from projection_capability import (
     build_shooting_benchmark_defender,
 )
 from army_offence_capability import (
     calculate_army_offensive_output_density,
 )
+from mechanical_defence_diagnostics import (
+    calculate_mechanical_defence_diagnostics,
+)
+
 
 def analyse_imported_army(
     army,
@@ -28,9 +37,11 @@ def analyse_imported_army(
     points_limit: int,
     metric_thresholds,
 ) -> dict:
-    """
-    Runs the complete Project Palantír analysis pipeline
-    for an imported army.
+    """Run the complete army analysis pipeline.
+
+    Mechanical Defence is returned as a diagnostic only.
+    Existing metric assessment and battlefield logic
+    remain unchanged.
     """
 
     validation_errors = army.validate(
@@ -57,6 +68,15 @@ def analyse_imported_army(
         shooting_density,
     )
 
+    # Independent diagnostic calculation.
+    # Do not feed these values into the existing assessment
+    # or scenario rating pipelines at this stage.
+    mechanical_defence = (
+        calculate_mechanical_defence_diagnostics(
+            army,
+        )
+    )
+
     metric_assessments = assess_army_metrics(
         metric_densities,
         metric_thresholds,
@@ -74,4 +94,5 @@ def analyse_imported_army(
         "metric_densities": metric_densities,
         "metric_assessments": metric_assessments,
         "battlefield_assessments": battlefield_assessments,
+        "mechanical_defence": mechanical_defence,
     }

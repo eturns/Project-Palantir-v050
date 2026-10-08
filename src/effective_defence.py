@@ -1,3 +1,12 @@
+"""Resolve effective Defence for configured combatants.
+
+DEV-077S-I2-C-H3-D:
+Use the defender's configured Defence characteristic.
+
+Preserve the existing Blades of the Dead interaction
+without introducing faction-specific scoring logic.
+"""
+
 from configured_profile import ConfiguredProfile
 
 
@@ -14,7 +23,7 @@ def get_effective_defence(
     )
 
     if not has_blades_of_the_dead:
-        return defender.profile.defence
+        return defender.effective_defence
 
     courage_value = int(
         defender.profile.courage.rstrip("+")

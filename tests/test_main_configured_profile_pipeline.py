@@ -10,9 +10,25 @@ import pytest
 def mock_army_list_profile_loading(
     monkeypatch,
 ):
+    """Isolate mocked main-pipeline tests from production data.
+
+    These tests supply their own profile database and inspect
+    specific option-loading relationships.
+
+    Production default-wargear loading is tested separately;
+    it must not attempt to attach unrelated Iron Hills
+    wargear to the synthetic TEST_PROFILE database.
+    """
+
     monkeypatch.setattr(
         main_module,
         "load_army_list_profiles",
+        lambda *args, **kwargs: None,
+    )
+
+    monkeypatch.setattr(
+        main_module,
+        "load_profile_default_wargear",
         lambda *args, **kwargs: None,
     )
 

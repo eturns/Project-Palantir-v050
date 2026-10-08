@@ -1,6 +1,18 @@
+"""Generic combined combat capability.
+
+DEV-077S-I2-C-H3-C:
+Preserve the cached statline-based combat calculation
+while supplying Fate and Will required by Defence v2.
+
+This adapter represents effective combat characteristics.
+It does not carry equipment-specific or special-rule
+mechanics; those require configured-profile evaluation.
+"""
+
 from functools import lru_cache
 
 from combat_benchmark import CombatBenchmark
+from configured_profile import ConfiguredProfile
 from profile_defensive_combat_score import (
     calculate_profile_defensive_combat_score,
 )
@@ -8,7 +20,7 @@ from profile_offensive_combat_score import (
     calculate_profile_offensive_combat_score,
 )
 from profiles import Profile
-from configured_profile import ConfiguredProfile
+
 
 OFFENSIVE_COMBAT_WEIGHT = 0.5
 DEFENSIVE_COMBAT_WEIGHT = 0.5
@@ -22,6 +34,8 @@ def _calculate_profile_combat_capability_cached(
     profile_defence: int,
     profile_attacks: int,
     profile_wounds: int,
+    profile_fate: int,
+    profile_will: int,
     benchmark_fight: int,
     benchmark_strength: int,
     benchmark_defence: int,
@@ -30,12 +44,20 @@ def _calculate_profile_combat_capability_cached(
     offensive_calculator,
     defensive_calculator,
 ) -> float:
+    """Evaluate a cached effective statline."""
+
     class CombatProfileView:
         fight = profile_fight
         strength = profile_strength
         defence = profile_defence
         attacks = profile_attacks
         wounds = profile_wounds
+        fate = profile_fate
+        will = profile_will
+
+        # A statline adapter is not a configured model.
+        # No special-rule benefits are inferred.
+        special_rules = ()
 
     benchmark = CombatBenchmark(
         fight=benchmark_fight,
@@ -65,21 +87,29 @@ def calculate_profile_combat_capability(
     profile: Profile | ConfiguredProfile,
     benchmark: CombatBenchmark,
 ) -> float:
-    if isinstance(
-        profile,
-        ConfiguredProfile,
-    ):
+    """Calculate combined combat capability from effective stats.
+
+    Configuration-derived numeric statistics are retained.
+    The cached legacy route does not resolve contextual
+    special rules or equipment effects.
+    """
+
+    if isinstance(profile, ConfiguredProfile):
         base_profile = profile.profile
+
         fight = profile.effective_fight
         strength = profile.effective_strength
         defence = profile.effective_defence
         attacks = profile.effective_attacks
+        will = profile.effective_will
     else:
         base_profile = profile
+
         fight = profile.fight
         strength = profile.strength
         defence = profile.defence
         attacks = profile.attacks
+        will = profile.will
 
     return _calculate_profile_combat_capability_cached(
         profile_fight=fight,
@@ -87,6 +117,8 @@ def calculate_profile_combat_capability(
         profile_defence=defence,
         profile_attacks=attacks,
         profile_wounds=base_profile.wounds,
+        profile_fate=base_profile.fate,
+        profile_will=will,
         benchmark_fight=benchmark.fight,
         benchmark_strength=benchmark.strength,
         benchmark_defence=benchmark.defence,
