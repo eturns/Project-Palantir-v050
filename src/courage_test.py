@@ -17,6 +17,13 @@ FEARLESS_RULE_ID = "FEARLESS"
 @dataclass(frozen=True)
 class CourageTestContext:
     automatically_passes: bool = False
+    roll_modifier: int = 0
+
+    def __post_init__(self) -> None:
+        if type(self.roll_modifier) is not int:
+            raise TypeError(
+                "Courage roll modifier must be an integer."
+            )
 
 
 def _target_number(
@@ -49,9 +56,12 @@ def calculate_courage_test_success_probability(
 ) -> Fraction:
     """
     Calculates the probability of passing a standard 2D6
-    Courage Test.
+    Courage Test with an explicitly supplied roll modifier.
 
-    Automatic-pass effects are consumed before dice are rolled.
+    The modifier is added to the 2D6 total before checking
+    against the Courage target. Rule eligibility and stacking
+    are the caller's responsibility. Automatic-pass effects
+    are consumed before dice are rolled.
     """
 
     if context.automatically_passes:
@@ -72,7 +82,7 @@ def calculate_courage_test_success_probability(
         1
         for first_die in range(1, 7)
         for second_die in range(1, 7)
-        if first_die + second_die >= target
+        if first_die + second_die + context.roll_modifier >= target
     )
 
     return Fraction(
