@@ -25,6 +25,15 @@ def setup_analysis(monkeypatch):
     existing_battlefield = object()
     assessment_calls = []
 
+    # DEV-077S-I2-D-E1:
+    # The Defence tests use a lightweight mock army.
+    # Isolate the new Mobility diagnostic dependency.
+    monkeypatch.setattr(
+        service,
+        "build_mobility_integration_contract",
+        lambda supplied_army: object(),
+    )
+
     monkeypatch.setattr(
         service,
         "calculate_army_metric_densities",
