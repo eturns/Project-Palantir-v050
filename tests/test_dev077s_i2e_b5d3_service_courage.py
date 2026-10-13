@@ -1,7 +1,6 @@
 """DEV-077S-I2-E-B5-D3: diagnostic-only service integration.
 
-Monkeys isolate the legacy scoring pipeline. Contract mechanics have their
-own focused tests; these guard service wiring and legacy output invariance.
+Updated F4-A1 to expect the new diagnostic-only mechanical_magic service key.
 """
 from types import SimpleNamespace
 import pytest
@@ -46,6 +45,7 @@ def setup_dependencies(monkeypatch, *, courage="courage-evidence"):
     monkeypatch.setattr(service, "calculate_mechanical_defence_diagnostics", record("defence", "defence-evidence"))
     monkeypatch.setattr(service, "build_mobility_integration_contract", record("mobility", "mobility-evidence"))
     monkeypatch.setattr(service, "build_courage_integration_contract", record("courage", courage))
+    monkeypatch.setattr(service, "build_army_magic_contract", record("magic", "magic-evidence"))
     monkeypatch.setattr(service, "assess_army_metrics", record("metric-assessment", "unchanged-metric-scores"))
     monkeypatch.setattr(service, "assess_battlefield", record("battlefield", "unchanged-scenario-scores"))
     return calls
@@ -67,6 +67,7 @@ def test_courage_key_is_returned(monkeypatch):
 
 def test_existing_service_keys_and_values_remain_unchanged(monkeypatch):
     _, _, result = analyse(monkeypatch)
+    assert result["mechanical_magic_completeness"].is_complete
     assert result == {
         "validation_errors": ("validation", 700),
         "metrics": "metrics",
@@ -76,6 +77,8 @@ def test_existing_service_keys_and_values_remain_unchanged(monkeypatch):
         "mechanical_defence": "defence-evidence",
         "mechanical_mobility": "mobility-evidence",
         "mechanical_courage": "courage-evidence",
+        "mechanical_magic": "magic-evidence",
+        "mechanical_magic_completeness": result["mechanical_magic_completeness"],
     }
 
 
@@ -129,6 +132,7 @@ def test_legacy_mock_without_army_entries_has_unavailable_courage(monkeypatch):
     )
     result = service.analyse_imported_army(mock, object(), 700, object())
     assert result["mechanical_courage"] is None
+    assert result["mechanical_magic"] is None
     assert result["metric_assessments"] == "unchanged-metric-scores"
     assert not any(name == "courage" for name, args, kwargs in calls)
 
