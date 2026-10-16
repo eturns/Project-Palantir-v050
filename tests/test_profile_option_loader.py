@@ -106,7 +106,7 @@ def test_load_profile_options_loads_iron_hills_warrior_options():
         skip_unknown_profiles=True,
     )
 
-    assert len(profile.profile_options) == 6
+    assert len(profile.profile_options) == 7
 
     assert {
         option.id
@@ -114,6 +114,7 @@ def test_load_profile_options_loads_iron_hills_warrior_options():
     } >= {
         "IH_WR_SHIELD_SPEAR",
         "IH_WR_SHIELD_SPEAR_FIVE_ARMIES",
+        "IH_WR_CROSSBOW_FIVE_ARMIES",
     }
 
 

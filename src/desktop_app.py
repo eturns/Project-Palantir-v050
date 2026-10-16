@@ -140,6 +140,8 @@ def build_capability_analysis_summary(
 ) -> str:
     lines = []
     metrics = view_model["metrics"]
+    if view_model.get("defence_presentation") is not None:
+        metrics = tuple(m for m in metrics if m["metric"].strip().casefold() != "defence")
 
     if not metrics:
         lines.append(
@@ -160,8 +162,49 @@ def build_capability_analysis_summary(
                 )
             )
 
+    defence = view_model.get("defence_presentation")
+    if defence is not None:
+        # These are raw, *uncalibrated* mechanical outputs. Never give them
+        # legacy Strong/Weak ratings or combine their differently scaled bars.
+        lines.extend(_defence_measurement_rows(defence))
+
     return "\n".join(lines)
 
+
+def _raw_measurement_bar(value: float, *, display_max: float) -> str:
+    """Visual-only fixed axis; does not calibrate or cap the real value."""
+    from math import isfinite
+    if not isfinite(value) or value < 0:
+        raise ValueError("Defence measurement must be finite and nonnegative")
+    count = min(20, round(20 * value / display_max))
+    return "█" * count + "░" * (20 - count)
+
+
+def _defence_measurement_rows(defence: dict) -> list[str]:
+    """Different fixed display axes, explicit units; not a 0-1 rating."""
+    descriptors = (
+        ("army_survival_density", 5.0, "survivors/100pts", "0-5 display axis"),
+        ("per_model_resilience", 1.0, "survival probability", "0-1 display axis"),
+    )
+    result = ["", "DEFENCE — MECHANICAL MEASUREMENTS (UNCALIBRATED)"]
+    for key, axis, unit, caption in descriptors:
+        metric = defence[key]
+        value = float(metric["value"])
+        if metric.get("calibrated") is not False:
+            raise ValueError("Defence reading must explicitly be uncalibrated")
+        if key == "per_model_resilience" and value > 1:
+            raise ValueError("Survival probability cannot exceed one")
+        bar = _raw_measurement_bar(value, display_max=axis)
+        result.append(f'{metric["label"]}: {value:.3f} {unit}')
+        result.append(f'  {bar}  ({caption})')
+    result.append(
+        f'  Benchmark F{defence["benchmark"]["fight"]} '
+        f'S{defence["benchmark"]["strength"]} '
+        f'D{defence["benchmark"]["defence"]}; '
+        f'{defence["engagements"]} engagements'
+    )
+    result.append('  Resurrection excluded; bars are not ratings')
+    return result
 
 
 def _capability_colour(
@@ -291,9 +334,8 @@ class CapabilityDisplay:
                 row,
                 text=capability,
                 bg=PANEL_BG,
-                fg=_capability_colour(
-                    line
-                ),
+                fg=(MUTED if "display axis" in line
+                    else _capability_colour(line)),
                 justify=LEFT,
                 anchor="w",
                 font=("Consolas", 10),
@@ -305,44 +347,43 @@ class CapabilityDisplay:
     configure = config
 
 
+def _visible_insight_assessments(view_model: dict, key: str) -> tuple:
+    """Hide legacy Defence in insights only when the replacement is present.
+
+    Never mutate the view-model: internal scenario scoring and persisted
+    assessment data remain unchanged. Older results retain their Defence label.
+    """
+    items = tuple(view_model[key])
+    if view_model.get("defence_presentation") is None:
+        return items
+    return tuple(
+        item for item in items
+        if str(item.get("metric", "")).strip().casefold() != "defence"
+    )
+
+
 def build_strengths_summary(
     view_model: dict,
 ) -> str:
-    lines = []
-
-    if view_model["strengths"]:
-        for strength in view_model["strengths"]:
-            lines.append(
-                (
-                    f'• {strength["metric"]}: '
-                    f'{strength["rating"]} '
-                    f'({strength["value"]:.2f})'
-                )
-            )
-    else:
-        lines.append("• None")
-
-    return "\n".join(lines)
+    visible = _visible_insight_assessments(view_model, "strengths")
+    if not visible:
+        return "• None"
+    return "\n".join(
+        f'• {item["metric"]}: {item["rating"]} ({item["value"]:.2f})'
+        for item in visible
+    )
 
 
 def build_weaknesses_summary(
     view_model: dict,
 ) -> str:
-    lines = []
-
-    if view_model["weaknesses"]:
-        for weakness in view_model["weaknesses"]:
-            lines.append(
-                (
-                    f'• {weakness["metric"]}: '
-                    f'{weakness["rating"]} '
-                    f'({weakness["value"]:.2f})'
-                )
-            )
-    else:
-        lines.append("• None")
-
-    return "\n".join(lines)
+    visible = _visible_insight_assessments(view_model, "weaknesses")
+    if not visible:
+        return "• None"
+    return "\n".join(
+        f'• {item["metric"]}: {item["rating"]} ({item["value"]:.2f})'
+        for item in visible
+    )
 
 
 def _scenario_demands_text(
