@@ -1,4 +1,5 @@
 from pathlib import Path
+import textwrap
 from tkinter import (
     BOTH,
     LEFT,
@@ -135,53 +136,71 @@ def _capability_bar(
     )
 
 
-def build_capability_analysis_summary(
-    view_model: dict,
-) -> str:
+def build_capability_analysis_summary(view_model: dict) -> str:
+    """Render provisional 0–1 bars when supplied by the desktop adapter.
+
+    Never use legacy metric ratings as provisional raw measurements. When the
+    provisional panel is not present, preserve the existing fallback summary.
+    P2-B2: PROVISIONAL DISPLAY ONLY
+    """
+    panel = view_model.get("provisional_capabilities")
+    if panel is not None:
+        if panel.get("display_only") is not True:
+            raise ValueError("Provisional capabilities must be presentation only")
+        if panel.get("production_scoring_changed") is not False:
+            raise ValueError("Provisional panel must not alter production scores")
+        if panel.get("defence_independent_composite_weighting_allowed") is not False:
+            raise ValueError("Independent Defence double-weighting is prohibited")
+        from provisional_desktop_view import build_provisional_summary
+        return build_provisional_summary(panel)
+
+    return _build_legacy_capability_analysis_summary(view_model)
+
+
+def _build_legacy_capability_analysis_summary(view_model: dict) -> str:
+    """Compatibility fallback only when provisional capability data is absent.
+
+    Retains the DEV-077S-I2-I-E1-C mechanical Defence contract. This output
+    is not used for the provisional calibrated capability panel.
+    """
     lines = []
     metrics = view_model["metrics"]
-    if view_model.get("defence_presentation") is not None:
-        metrics = tuple(m for m in metrics if m["metric"].strip().casefold() != "defence")
-
-    if not metrics:
-        lines.append(
-            "No capability metrics available."
-        )
-    else:
-        for metric in metrics:
-            bar = _capability_bar(
-                metric["rating"]
-            )
-
-            lines.append(
-                (
-                    f'{metric["metric"]:<14} '
-                    f'{bar}  '
-                    f'{metric["rating"]} '
-                    f'({metric["value"]:.2f})'
-                )
-            )
-
     defence = view_model.get("defence_presentation")
     if defence is not None:
-        # These are raw, *uncalibrated* mechanical outputs. Never give them
-        # legacy Strong/Weak ratings or combine their differently scaled bars.
-        lines.extend(_defence_measurement_rows(defence))
+        metrics = tuple(
+            metric for metric in metrics
+            if metric["metric"].strip().casefold() != "defence"
+        )
 
+    if not metrics:
+        lines.append("No capability metrics available.")
+    else:
+        for metric in metrics:
+            bar = _capability_bar(metric["rating"])
+            lines.append(
+                f'{metric["metric"]:<14} {bar}  '
+                f'{metric["rating"]} ({metric["value"]:.2f})'
+            )
+
+    if defence is not None:
+        lines.extend(_defence_measurement_rows(defence))
     return "\n".join(lines)
 
 
 def _raw_measurement_bar(value: float, *, display_max: float) -> str:
-    """Visual-only fixed axis; does not calibrate or cap the real value."""
+    """Legacy raw-measurement bar for the uncalibrated Defence fallback."""
     from math import isfinite
+
     if not isfinite(value) or value < 0:
         raise ValueError("Defence measurement must be finite and nonnegative")
+    if not isfinite(display_max) or display_max <= 0:
+        raise ValueError("Display axis must be finite and positive")
     count = min(20, round(20 * value / display_max))
     return "█" * count + "░" * (20 - count)
 
 
 def _defence_measurement_rows(defence: dict) -> list[str]:
-    """Different fixed display axes, explicit units; not a 0-1 rating."""
+    """Maintain E1-C's explicit uncalibrated mechanical Defence evidence."""
     descriptors = (
         ("army_survival_density", 5.0, "survivors/100pts", "0-5 display axis"),
         ("per_model_resilience", 1.0, "survival probability", "0-1 display axis"),
@@ -205,6 +224,7 @@ def _defence_measurement_rows(defence: dict) -> list[str]:
     )
     result.append('  Resurrection excluded; bars are not ratings')
     return result
+
 
 
 def _capability_colour(
@@ -334,8 +354,9 @@ class CapabilityDisplay:
                 row,
                 text=capability,
                 bg=PANEL_BG,
-                fg=(MUTED if "display axis" in line
-                    else _capability_colour(line)),
+                fg=_capability_colour(
+                    line
+                ),
                 justify=LEFT,
                 anchor="w",
                 font=("Consolas", 10),
@@ -347,43 +368,102 @@ class CapabilityDisplay:
     configure = config
 
 
-def _visible_insight_assessments(view_model: dict, key: str) -> tuple:
-    """Hide legacy Defence in insights only when the replacement is present.
+def _provisional_high_low(view_model: dict, *, high: bool) -> str | None:
+    """Presentation-only cohort comparisons; never use legacy strengths.
 
-    Never mutate the view-model: internal scenario scoring and persisted
-    assessment data remain unchanged. Older results retain their Defence label.
+    Provisional bars describe position against six frozen reference armies,
+    not universal army quality or scenario effectiveness.
     """
-    items = tuple(view_model[key])
-    if view_model.get("defence_presentation") is None:
-        return items
-    return tuple(
-        item for item in items
-        if str(item.get("metric", "")).strip().casefold() != "defence"
+    panel = view_model.get("provisional_capabilities")
+    if panel is None:
+        return None
+    if panel.get("display_only") is not True or panel.get("production_scoring_changed") is not False:
+        raise ValueError("Provisional panel must remain display-only")
+    if panel.get("defence_independent_composite_weighting_allowed") is not False:
+        raise ValueError("Defence measures cannot receive independent composite weights")
+    rows = []
+    for metric in panel["metrics"]:
+        if metric["status"] != "evaluated" or metric["rating"] is None:
+            continue
+        rating = float(metric["rating"])
+        if not 0 <= rating <= 1:
+            raise ValueError("Provisional score outside 0–1 bounds")
+        if (rating >= 0.75) if high else (rating <= 0.25):
+            rows.append((metric["label"], rating))
+    rows.sort(key=lambda r: (-r[1] if high else r[1], r[0]))
+    description = (
+        "At or above 0.75 in frozen cohort:" if high
+        else "At or below 0.25 in frozen cohort:"
     )
+    lines = [description]
+    if not rows:
+        lines.append("• None evaluated in this band")
+    else:
+        lines.extend(f"• {name}: {rating:.3f}" for name, rating in rows)
+    lines.append("Relative only; not scenario scoring")
+    return "\n".join(lines)
 
 
-def build_strengths_summary(
-    view_model: dict,
-) -> str:
-    visible = _visible_insight_assessments(view_model, "strengths")
-    if not visible:
-        return "• None"
-    return "\n".join(
-        f'• {item["metric"]}: {item["rating"]} ({item["value"]:.2f})'
-        for item in visible
-    )
+
+def _panel_safe_insight_text(summary: str, *, columns: int = 23) -> str:
+    """Wrap an existing insight summary for a narrow Tkinter sidebar.
+
+    Presentation only: never alters the source view-model or scoring.
+    Deliberately wrap on words and indent metric continuations.
+    """
+    if columns < 12:
+        raise ValueError("Insight panel must allow at least 12 columns")
+    lines = []
+    for original in summary.splitlines():
+        if not original.strip():
+            lines.append("")
+            continue
+        bullet = original.lstrip().startswith("•")
+        continuation = "  " if bullet else ""
+        lines.extend(textwrap.wrap(
+            original,
+            width=columns,
+            subsequent_indent=continuation,
+            break_long_words=False,
+            break_on_hyphens=False,
+        ) or [""])
+    return "\n".join(lines)
 
 
-def build_weaknesses_summary(
-    view_model: dict,
-) -> str:
-    visible = _visible_insight_assessments(view_model, "weaknesses")
-    if not visible:
-        return "• None"
-    return "\n".join(
-        f'• {item["metric"]}: {item["rating"]} ({item["value"]:.2f})'
-        for item in visible
-    )
+def build_strengths_summary(view_model: dict) -> str:
+    provisional = _provisional_high_low(view_model, high=True)
+    if provisional is not None:
+        return provisional
+    lines = []
+    has_defence_replacement = view_model.get("defence_presentation") is not None
+    for strength in view_model["strengths"]:
+        if has_defence_replacement and strength["metric"].strip().casefold() == "defence":
+            continue
+        lines.append(
+            f'• {strength["metric"]}: {strength["rating"]} '
+            f'({strength["value"]:.2f})'
+        )
+    if not lines:
+        lines.append("• None")
+    return "\n".join(lines)
+
+
+def build_weaknesses_summary(view_model: dict) -> str:
+    provisional = _provisional_high_low(view_model, high=False)
+    if provisional is not None:
+        return provisional
+    lines = []
+    has_defence_replacement = view_model.get("defence_presentation") is not None
+    for weakness in view_model["weaknesses"]:
+        if has_defence_replacement and weakness["metric"].strip().casefold() == "defence":
+            continue
+        lines.append(
+            f'• {weakness["metric"]}: {weakness["rating"]} '
+            f'({weakness["value"]:.2f})'
+        )
+    if not lines:
+        lines.append("• None")
+    return "\n".join(lines)
 
 
 def _scenario_demands_text(
@@ -900,15 +980,15 @@ def select_and_run_analysis(
     )
 
     strengths_label.config(
-        text=build_strengths_summary(
+        text=_panel_safe_insight_text(build_strengths_summary(
             result,
-        )
+        ))
     )
 
     weaknesses_label.config(
-        text=build_weaknesses_summary(
+        text=_panel_safe_insight_text(build_weaknesses_summary(
             result,
-        )
+        ))
     )
 
     scenario_label.config(
@@ -1371,7 +1451,7 @@ def launch_desktop_app() -> None:
 
     _section_title(
         strengths_panel,
-        "Key Strengths",
+        "Higher Provisional",
         bg=STRENGTH_HEADER_BG,
     )
 
@@ -1382,7 +1462,7 @@ def launch_desktop_app() -> None:
         fg=TEXT,
         justify=LEFT,
         anchor="nw",
-        wraplength=220,
+        wraplength=155,
     )
     strengths_label.pack(
         fill=X,
@@ -1406,7 +1486,7 @@ def launch_desktop_app() -> None:
 
     _section_title(
         weaknesses_panel,
-        "Key Weaknesses",
+        "Lower Provisional",
         bg=WEAKNESS_HEADER_BG,
     )
 
@@ -1417,7 +1497,7 @@ def launch_desktop_app() -> None:
         fg=TEXT,
         justify=LEFT,
         anchor="nw",
-        wraplength=220,
+        wraplength=155,
     )
     weaknesses_label.pack(
         fill=X,

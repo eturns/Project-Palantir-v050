@@ -1914,14 +1914,14 @@ def test_successful_analysis_displays_structured_core_analysis(
         for text in label_texts
     )
 
-    assert "Key Strengths" in label_texts
+    assert "Higher Provisional" in label_texts
 
     assert any(
         "Board Presence" in text
         for text in label_texts
     )
 
-    assert "Key Weaknesses" in label_texts
+    assert "Lower Provisional" in label_texts
 
     assert any(
         "Magic" in text

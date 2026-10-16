@@ -1,0 +1,147 @@
+{
+  "schema_version": "palantir-provisional-calibration-v1",
+  "reference_version": "I2-I-P2-C3B-six-army-2026-10-16-v2",
+  "source_git_commit": "a35a400563dae2b00e8144e3caa5b504b798db7f",
+  "display_only": true,
+  "production_approved": false,
+  "final_calibration_approved": false,
+  "reference_cohort_is_representative": false,
+  "scale_meaning": "0 = measured zero output; 1 = frozen six-army reference maximum. Values are proportional to the frozen maximum, not MESBG-wide limits. Values above reference maximum are capped visually with original raw value retained.",
+  "armies": [
+    "dol_guldur",
+    "azogs_hunters",
+    "pits_of_dol_guldur",
+    "rangers_of_mirkwood",
+    "five_armies",
+    "iron_hills"
+  ],
+  "metrics": {
+    "offence_density": {
+      "minimum": 0.6180555555555556,
+      "maximum": 1.2416280680219243,
+      "direction": "higher_is_better",
+      "unit": "mechanical output per army-point density (diagnostic)",
+      "benchmark_context": "D1 offence benchmark; opponent Fight/Defence sensitivity; candidate six-army dataset",
+      "reference_raw_values": {
+        "dol_guldur": 0.693104852537723,
+        "azogs_hunters": 0.8076923868039415,
+        "pits_of_dol_guldur": 1.2416280680219243,
+        "rangers_of_mirkwood": 0.6180555555555556,
+        "five_armies": 0.8340186354196854,
+        "iron_hills": 0.699451217175469
+      },
+      "evidence_source": "i2i_d3a_candidate_scales.json at Git a35a400 (raw_values; illustrative six-army cohort)",
+      "mapping_method": "zero_to_frozen_maximum",
+      "display_zero": 0.0
+    },
+    "army_survival_density": {
+      "minimum": 1.3210747869504007,
+      "maximum": 2.9270251837875314,
+      "direction": "higher_is_better",
+      "unit": "effective survival per 100 army points (diagnostic)",
+      "benchmark_context": "D1 Defence density; six-army dataset",
+      "reference_raw_values": {
+        "dol_guldur": 1.3210747869504007,
+        "azogs_hunters": 1.4953796465006644,
+        "pits_of_dol_guldur": 2.9270251837875314,
+        "rangers_of_mirkwood": 2.5510918339192576,
+        "five_armies": 2.691517742505685,
+        "iron_hills": 2.110144252998414
+      },
+      "evidence_source": "i2i_d3a_candidate_scales.json at Git a35a400 (raw_values; illustrative six-army cohort)",
+      "mapping_method": "zero_to_frozen_maximum",
+      "display_zero": 0.0
+    },
+    "per_model_resilience": {
+      "minimum": 0.43428317233790126,
+      "maximum": 0.8406839553320732,
+      "direction": "higher_is_better",
+      "unit": "effective survival per model (diagnostic)",
+      "benchmark_context": "D1 Defence resilience; linked algebraically to density",
+      "reference_raw_values": {
+        "dol_guldur": 0.8406839553320732,
+        "azogs_hunters": 0.43428317233790126,
+        "pits_of_dol_guldur": 0.5246129752480729,
+        "rangers_of_mirkwood": 0.5411406920434789,
+        "five_armies": 0.4950976057924931,
+        "iron_hills": 0.6137002869137053
+      },
+      "evidence_source": "i2i_d3a_candidate_scales.json at Git a35a400 (raw_values; illustrative six-army cohort)",
+      "mapping_method": "zero_to_frozen_maximum",
+      "display_zero": 0.0
+    },
+    "open_ground_mobility": {
+      "minimum": 5.0,
+      "maximum": 7.290698415095267,
+      "direction": "higher_is_better",
+      "unit": "inches per model-equivalent (diagnostic)",
+      "benchmark_context": "D1 open-ground movement; Woodland Creature context excluded",
+      "reference_raw_values": {
+        "dol_guldur": 6.488222129897588,
+        "azogs_hunters": 7.290698415095267,
+        "pits_of_dol_guldur": 6.417086167808229,
+        "rangers_of_mirkwood": 6.0,
+        "five_armies": 5.58500656501994,
+        "iron_hills": 5.0
+      },
+      "evidence_source": "i2i_d3a_candidate_scales.json at Git a35a400 (raw_values; illustrative six-army cohort)",
+      "mapping_method": "zero_to_frozen_maximum",
+      "display_zero": 0.0
+    },
+    "stationary_shooting": {
+      "minimum": 0.0,
+      "maximum": 0.5833333333333334,
+      "direction": "higher_is_better",
+      "unit": "mechanical shooting output density (diagnostic)",
+      "benchmark_context": "D1 stationary D6 baseline; moved fire, range and ITW excluded",
+      "reference_raw_values": {
+        "dol_guldur": 0.0,
+        "azogs_hunters": 0.13284446569955896,
+        "pits_of_dol_guldur": 0.05960896518836433,
+        "rangers_of_mirkwood": 0.5833333333333334,
+        "five_armies": 0.1430615164520744,
+        "iron_hills": 0.16714422158548234
+      },
+      "evidence_source": "i2i_d3a_candidate_scales.json at Git a35a400 (raw_values; illustrative six-army cohort)",
+      "mapping_method": "zero_to_frozen_maximum",
+      "display_zero": 0.0
+    },
+    "courage_reliability": {
+      "minimum": 0.4710648148148148,
+      "maximum": 0.8409090909090909,
+      "direction": "higher_is_better",
+      "unit": "test-pass probability (diagnostic)",
+      "benchmark_context": "D1 courage reliability; Harbinger/Terror contextual limitations",
+      "reference_raw_values": {
+        "dol_guldur": 0.7196969696969697,
+        "azogs_hunters": 0.4710648148148148,
+        "pits_of_dol_guldur": 0.5235042735042735,
+        "rangers_of_mirkwood": 0.8409090909090909,
+        "five_armies": 0.6681286549707602,
+        "iron_hills": 0.7372685185185185
+      },
+      "evidence_source": "i2i_d3a_candidate_scales.json at Git a35a400 (raw_values; illustrative six-army cohort)",
+      "mapping_method": "zero_to_frozen_maximum",
+      "display_zero": 0.0
+    }
+  },
+  "defence_dependency": {
+    "relationship": "army_survival_density = per_model_resilience * model_count * 100 / points",
+    "independent_composite_weighting_allowed": false
+  },
+  "unqualified_capabilities": [
+    "magic",
+    "hero_hunting",
+    "control",
+    "command",
+    "objective"
+  ],
+  "out_of_scope": [
+    "legacy scenario scoring",
+    "optimiser",
+    "army book data modification",
+    "production calibration",
+    "composite scoring"
+  ],
+  "mapping_method": "zero_to_frozen_maximum_v1"
+}
