@@ -1,0 +1,155 @@
+{
+  "development": "DEV-077S-I2-I-C3-D",
+  "source": "fresh_real_army_engine_run",
+  "analysis_commit": "b2d11329fc7bb8dca0fcbb0b667eefd07bc515ea",
+  "roster_file": "C:\\Users\\edward.turns\\OneDrive - Lee-Dickens Ltd\\Desktop\\LotR\\Project Palantir\\tests\\fixtures\\dol_guldur_700.json",
+  "roster_sha256": "b18f7f3453f45c41669ae19c00dee10d8da24c9494cecc7ea15fc031f9e79a5d",
+  "roster_revision": "current_roster",
+  "army_key": "dol_guldur_elite",
+  "army_name": "Eddie's choice",
+  "points_limit": 700,
+  "points": 700,
+  "models": 11,
+  "raw_shooting_benchmark": "build_shooting_benchmark_defender()",
+  "measurements": [
+    {
+      "metric": "offence",
+      "value": 0.6848422496570645,
+      "unit": "offensive combat output per 100 army points",
+      "population": "configured army versus DEFAULT_COMBAT_BENCHMARK; charge_probability=1.0",
+      "provenance": "analyse_imported_army.metric_assessments.offence -> calculate_army_offensive_output_density",
+      "availability": "available",
+      "assumptions": [],
+      "unresolved": []
+    },
+    {
+      "metric": "defence",
+      "value": 1.3328009326438277,
+      "unit": "defensive combat survival density per 100 army points",
+      "population": "configured army versus DEFAULT_COMBAT_BENCHMARK; engagements=3",
+      "provenance": "analyse_imported_army.mechanical_defence.combat_density",
+      "availability": "available",
+      "assumptions": [],
+      "unresolved": []
+    },
+    {
+      "metric": "mobility",
+      "value": 6.488222129897588,
+      "unit": "movement_accessibility_index",
+      "population": "fielded models; open terrain; base-size adjustment",
+      "provenance": "mobility_integration_contract.open_ground",
+      "availability": "available",
+      "assumptions": [
+        "configured model movement",
+        "base-size accessibility penalty",
+        "fielded model quantity weighted",
+        "open ground"
+      ],
+      "unresolved": []
+    },
+    {
+      "metric": "magic",
+      "value": 0.5185185185185185,
+      "unit": "probability_per_declared_single_attempt",
+      "population": "spellcaster-only, one-Will attempt conditional",
+      "provenance": "mechanical_magic_army_contract.one_will_probability_weighted_mean",
+      "availability": "partial",
+      "assumptions": [
+        "Starting profile Will, not current battle-state resources",
+        "One Will per hypothetical cast; no regeneration or other Will spending",
+        "Per-model resources stay separate; no transfers between casters",
+        "No turns or actual opportunities inferred from the ceiling",
+        "No army-rule conditional extra dice or additional casts assumed",
+        "Legacy ability tags denote potential effect categories only",
+        "A spell may have multiple tags; categories cannot be added as independent outcomes",
+        "No target, resistance, range, position, success effect, or damage modelled"
+      ],
+      "unresolved": [
+        "conditional_submeasure_not_full_capability"
+      ]
+    },
+    {
+      "metric": "shooting",
+      "value": 0.0,
+      "unit": "shooting output density before provisional dashboard normalisation",
+      "population": "configured army versus build_shooting_benchmark_defender()",
+      "provenance": "calculate_army_shooting_output_density (caller-supplied raw observation)",
+      "availability": "available",
+      "assumptions": [],
+      "unresolved": []
+    },
+    {
+      "metric": "courage",
+      "value": 0.7196969696969697,
+      "unit": "probability",
+      "population": "quantity-weighted hypothetical standard Courage test",
+      "provenance": "courage_integration_contract.friendly_reliability",
+      "availability": "available",
+      "assumptions": [
+        "one hypothetical standard Courage test per fielded model",
+        "no Stand Fast, positional support or resource spending assumed"
+      ],
+      "unresolved": []
+    },
+    {
+      "metric": "control",
+      "value": null,
+      "unit": "no_approved_scalar_unit",
+      "population": "requires explicit battle or scenario context",
+      "provenance": "C2 provider: control",
+      "availability": "unavailable",
+      "assumptions": [],
+      "unresolved": [
+        "declared_control_events_do_not_establish_army_control_output"
+      ]
+    },
+    {
+      "metric": "command",
+      "value": null,
+      "unit": "no_approved_scalar_unit",
+      "population": "requires explicit battle or scenario context",
+      "provenance": "C2 provider: command",
+      "availability": "unavailable",
+      "assumptions": [],
+      "unresolved": [
+        "heroic_action_authority_and_coverage_are_not_one_scalar"
+      ]
+    },
+    {
+      "metric": "objective",
+      "value": null,
+      "unit": "no_approved_scalar_unit",
+      "population": "requires explicit battle or scenario context",
+      "provenance": "C2 provider: objective",
+      "availability": "unavailable",
+      "assumptions": [],
+      "unresolved": [
+        "verified_scenario_rules_and_position_required_no_generic_scalar"
+      ]
+    },
+    {
+      "metric": "hero_hunting",
+      "value": null,
+      "unit": "no_approved_scalar_unit",
+      "population": "requires explicit battle or scenario context",
+      "provenance": "C2 provider: hero_hunting",
+      "availability": "unavailable",
+      "assumptions": [],
+      "unresolved": [
+        "target_specific_conditional_plan_no_joint_army_probability"
+      ]
+    }
+  ],
+  "available_count": 5,
+  "partial_count": 1,
+  "unresolved_metrics": [
+    "magic",
+    "control",
+    "command",
+    "objective",
+    "hero_hunting"
+  ],
+  "reference_anchors_approved": false,
+  "production_scoring_enabled": false,
+  "scenario_scoring_changed": false
+}

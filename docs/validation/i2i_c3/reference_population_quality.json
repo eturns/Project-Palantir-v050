@@ -1,0 +1,197 @@
+{
+  "development": "DEV-077S-I2-I-C3-D5",
+  "purpose": "reference_population_quality_diagnostic_only",
+  "research_policy": {
+    "target_points": 700,
+    "min_armies": 6,
+    "min_per_alignment": 3,
+    "min_archetypes": 4
+  },
+  "input_armies": 4,
+  "target_point_armies": 1,
+  "excluded_mixed_points": [
+    {
+      "army_key": "iron_hills",
+      "points": 823
+    },
+    {
+      "army_key": "garrison_of_dale",
+      "points": 177
+    },
+    {
+      "army_key": "five_armies",
+      "points": 346
+    }
+  ],
+  "alignments": {
+    "Evil": 1
+  },
+  "archetypes": [
+    "elite_magic"
+  ],
+  "analysis_commits": [
+    "b2d11329fc7bb8dca0fcbb0b667eefd07bc515ea"
+  ],
+  "population_blockers": [
+    "needs_6_target_point_armies",
+    "needs_3_good_target_point_armies",
+    "needs_3_evil_target_point_armies",
+    "needs_4_target_point_archetypes"
+  ],
+  "metrics": [
+    {
+      "metric": "offence",
+      "complete_target_point": 1,
+      "partial_target_point": 0,
+      "unavailable_target_point": 0,
+      "distinct_numeric_values": 1,
+      "nonzero_values": 1,
+      "definition_compatible": true,
+      "blockers": [
+        "insufficient_complete_target_point_observations",
+        "insufficient_numeric_variation",
+        "both_alignments_not_represented"
+      ],
+      "ready_for_anchor_review": false
+    },
+    {
+      "metric": "defence",
+      "complete_target_point": 1,
+      "partial_target_point": 0,
+      "unavailable_target_point": 0,
+      "distinct_numeric_values": 1,
+      "nonzero_values": 1,
+      "definition_compatible": true,
+      "blockers": [
+        "insufficient_complete_target_point_observations",
+        "insufficient_numeric_variation",
+        "both_alignments_not_represented"
+      ],
+      "ready_for_anchor_review": false
+    },
+    {
+      "metric": "mobility",
+      "complete_target_point": 1,
+      "partial_target_point": 0,
+      "unavailable_target_point": 0,
+      "distinct_numeric_values": 1,
+      "nonzero_values": 1,
+      "definition_compatible": true,
+      "blockers": [
+        "insufficient_complete_target_point_observations",
+        "insufficient_numeric_variation",
+        "both_alignments_not_represented"
+      ],
+      "ready_for_anchor_review": false
+    },
+    {
+      "metric": "magic",
+      "complete_target_point": 0,
+      "partial_target_point": 1,
+      "unavailable_target_point": 0,
+      "distinct_numeric_values": 0,
+      "nonzero_values": 0,
+      "definition_compatible": true,
+      "blockers": [
+        "insufficient_complete_target_point_observations",
+        "insufficient_numeric_variation",
+        "both_alignments_not_represented"
+      ],
+      "ready_for_anchor_review": false
+    },
+    {
+      "metric": "shooting",
+      "complete_target_point": 1,
+      "partial_target_point": 0,
+      "unavailable_target_point": 0,
+      "distinct_numeric_values": 1,
+      "nonzero_values": 0,
+      "definition_compatible": true,
+      "blockers": [
+        "insufficient_complete_target_point_observations",
+        "insufficient_numeric_variation",
+        "insufficient_nonzero_shooting_observations",
+        "both_alignments_not_represented"
+      ],
+      "ready_for_anchor_review": false
+    },
+    {
+      "metric": "courage",
+      "complete_target_point": 1,
+      "partial_target_point": 0,
+      "unavailable_target_point": 0,
+      "distinct_numeric_values": 1,
+      "nonzero_values": 1,
+      "definition_compatible": true,
+      "blockers": [
+        "insufficient_complete_target_point_observations",
+        "insufficient_numeric_variation",
+        "both_alignments_not_represented"
+      ],
+      "ready_for_anchor_review": false
+    },
+    {
+      "metric": "control",
+      "complete_target_point": 0,
+      "partial_target_point": 0,
+      "unavailable_target_point": 1,
+      "distinct_numeric_values": 0,
+      "nonzero_values": 0,
+      "definition_compatible": true,
+      "blockers": [
+        "insufficient_complete_target_point_observations",
+        "insufficient_numeric_variation",
+        "both_alignments_not_represented"
+      ],
+      "ready_for_anchor_review": false
+    },
+    {
+      "metric": "command",
+      "complete_target_point": 0,
+      "partial_target_point": 0,
+      "unavailable_target_point": 1,
+      "distinct_numeric_values": 0,
+      "nonzero_values": 0,
+      "definition_compatible": true,
+      "blockers": [
+        "insufficient_complete_target_point_observations",
+        "insufficient_numeric_variation",
+        "both_alignments_not_represented"
+      ],
+      "ready_for_anchor_review": false
+    },
+    {
+      "metric": "objective",
+      "complete_target_point": 0,
+      "partial_target_point": 0,
+      "unavailable_target_point": 1,
+      "distinct_numeric_values": 0,
+      "nonzero_values": 0,
+      "definition_compatible": true,
+      "blockers": [
+        "insufficient_complete_target_point_observations",
+        "insufficient_numeric_variation",
+        "both_alignments_not_represented"
+      ],
+      "ready_for_anchor_review": false
+    },
+    {
+      "metric": "hero_hunting",
+      "complete_target_point": 0,
+      "partial_target_point": 0,
+      "unavailable_target_point": 1,
+      "distinct_numeric_values": 0,
+      "nonzero_values": 0,
+      "definition_compatible": true,
+      "blockers": [
+        "insufficient_complete_target_point_observations",
+        "insufficient_numeric_variation",
+        "both_alignments_not_represented"
+      ],
+      "ready_for_anchor_review": false
+    }
+  ],
+  "anchors_approved": false,
+  "production_scoring_enabled": false,
+  "scenario_scoring_changed": false
+}

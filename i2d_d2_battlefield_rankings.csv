@@ -1,0 +1,190 @@
+terrain_share,benchmark,rank,army,source,unnormalised_average,linear_reference,scenario_style,note
+0.0,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,7.2274,1.0,0.54639612,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.0,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,7.2274,0.903425,0.47463126,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.0,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,7.2274,0.72274,0.41952935,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.0,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,6.60969,1.0,0.52417546,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.0,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,6.60969,0.82621125,0.45241822,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.0,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,6.60969,0.660969,0.3979418,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.0,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",6.0,1.0,0.5,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.0,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",6.0,0.75,0.42857143,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.0,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",6.0,0.6,0.375,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.05,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,7.059891,1.0,0.5405781,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.05,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,7.059891,0.88248638,0.46878766,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.05,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,7.059891,0.7059891,0.41382978,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.05,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,6.464348,1.0,0.51862705,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.05,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,6.464348,0.8080435,0.44691596,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.05,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,6.464348,0.6464348,0.39262703,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.05,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",5.85,0.975,0.49367089,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.05,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",5.85,0.73125,0.42238267,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.05,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",5.85,0.585,0.36908517,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.1,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,6.892382,1.0,0.53460889,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.1,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,6.892382,0.86154775,0.4628126,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.1,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,6.892382,0.6892382,0.40801718,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.1,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,6.319006,1.0,0.51294772,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.1,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,6.319006,0.78987575,0.441302,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.1,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,6.319006,0.6319006,0.38721758,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.1,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",5.7,0.95,0.48717949,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.1,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",5.7,0.7125,0.41605839,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.1,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",5.7,0.57,0.36305732,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.15,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,6.724873,1.0,0.52848252,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.15,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,6.724873,0.84060913,0.4567016,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.15,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,6.724873,0.6724873,0.40208814,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.15,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,6.173664,1.0,0.50713277,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.15,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,6.173664,0.771708,0.4355729,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.15,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,6.173664,0.6173664,0.38171091,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.15,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",5.55,0.925,0.48051948,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.15,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",5.55,0.69375,0.4095941,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.15,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",5.55,0.555,0.35691318,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.2,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,6.557364,1.0,0.52219271,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.2,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,6.557364,0.8196705,0.45044996,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.2,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,6.557364,0.6557364,0.39603913,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.2,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,6.028322,1.0,0.5011773,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.2,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,6.028322,0.75354025,0.42972509,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.2,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,6.028322,0.6028322,0.37610437,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.2,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",5.4,0.9,0.47368421,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.2,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",5.4,0.675,0.40298507,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.2,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",5.4,0.54,0.35064935,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.25,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,6.389855,1.0,0.51573283,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.25,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,6.389855,0.79873187,0.44405277,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.25,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,6.389855,0.6389855,0.38986648,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.25,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.88298,0.98049667,0.49507615,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.25,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.88298,0.7353725,0.42375484,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.25,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.88298,0.588298,0.37039523,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.25,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",5.25,0.875,0.46666667,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.25,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",5.25,0.65625,0.39622642,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.25,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",5.25,0.525,0.3442623,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.3,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,6.222346,1.0,0.50909588,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.3,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,6.222346,0.77779325,0.4375049,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.3,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,6.222346,0.6222346,0.38356635,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.3,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.737638,0.956273,0.4888239,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.3,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.737638,0.71720475,0.41765826,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.3,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.737638,0.5737638,0.36458063,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.3,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",5.1,0.85,0.45945946,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.3,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",5.1,0.6375,0.38931298,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.3,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",5.1,0.51,0.33774834,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.35,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,6.054837,1.0,0.50227448,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.35,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,6.054837,0.75685463,0.43080094,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.35,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,6.054837,0.6054837,0.37713475,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.35,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.592296,0.93204933,0.48241487,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.35,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.592296,0.699037,0.4114313,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.35,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.592296,0.5592296,0.35865763,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.35,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.95,0.825,0.45205479,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.35,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.95,0.61875,0.38223938,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.35,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.95,0.495,0.33110368,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.4,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,5.887328,0.98122133,0.49526084,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.4,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,5.887328,0.735916,0.42393526,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.4,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,5.887328,0.5887328,0.37056754,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.4,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.446954,0.90782567,0.47584309,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.4,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.446954,0.68086925,0.40506973,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.4,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.446954,0.5446954,0.35262318,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.4,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.8,0.8,0.44444444,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.4,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.8,0.6,0.375,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.4,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.8,0.48,0.32432432,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.45,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,5.719819,0.95330317,0.4880467,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.45,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,5.719819,0.71497738,0.41690193,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.45,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,5.719819,0.5719819,0.36386036,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.45,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.301612,0.883602,0.46910228,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.45,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.301612,0.6627015,0.39856914,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.45,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.301612,0.5301612,0.34647408,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.45,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.65,0.775,0.43661972,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.45,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.65,0.58125,0.36758893,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.45,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.65,0.465,0.31740614,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.5,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,5.55231,0.925385,0.48062336,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.5,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,5.55231,0.69403875,0.40969473,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.5,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,5.55231,0.555231,0.3570087,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.5,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.15627,0.85937833,0.46218584,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.5,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.15627,0.64453375,0.39192491,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.5,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.15627,0.515627,0.34020706,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.5,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.5,0.75,0.42857143,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.5,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.5,0.5625,0.36,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.5,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.5,0.45,0.31034483,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.55,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,5.384801,0.89746683,0.47298157,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.55,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,5.384801,0.67310012,0.40230714,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.55,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,5.384801,0.5384801,0.35000784,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.55,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.010928,0.83515467,0.4550868,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.55,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.010928,0.626366,0.38513225,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.55,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,5.010928,0.5010928,0.33381867,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.55,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.35,0.725,0.42028986,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.55,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.35,0.54375,0.35222672,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.55,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.35,0.435,0.30313589,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.6,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,5.217292,0.86954867,0.46511154,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.6,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,5.217292,0.6521615,0.39473229,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.6,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,5.217292,0.5217292,0.34285285,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.6,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,4.865586,0.810931,0.44779785,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.6,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,4.865586,0.60819825,0.37818612,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.6,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,4.865586,0.4865586,0.32730536,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.6,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.2,0.7,0.41176471,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.6,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.2,0.525,0.3442623,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.6,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.2,0.42,0.29577465,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.65,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,5.049783,0.8416305,0.45700291,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.65,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,5.049783,0.63122287,0.38696299,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.65,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,5.049783,0.5049783,0.33553859,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.65,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,4.720244,0.78670733,0.44031125,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.65,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,4.720244,0.5900305,0.37108125,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.65,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,4.720244,0.4720244,0.32066343,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.65,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.05,0.675,0.40298507,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.65,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.05,0.50625,0.33609959,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.65,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",4.05,0.405,0.28825623,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.7,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,4.882274,0.81371233,0.44864465,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.7,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,4.882274,0.61028425,0.37899163,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.7,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,4.882274,0.4882274,0.32805968,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.7,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,4.574902,0.76248367,0.43261886,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.7,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,4.574902,0.57186275,0.36381214,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.7,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,4.574902,0.4574902,0.31388904,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.7,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.9,0.65,0.39393939,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.7,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.9,0.4875,0.32773109,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.7,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.9,0.39,0.28057554,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.75,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,4.714765,0.78579417,0.44002505,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.75,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,4.714765,0.58934562,0.37081024,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.75,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,4.714765,0.4714765,0.32041049,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.75,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,4.42956,0.73826,0.42471207,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.75,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,4.42956,0.553695,0.35637303,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.75,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,4.42956,0.442956,0.30697818,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.75,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.75,0.625,0.38461538,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.75,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.75,0.46875,0.31914894,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.75,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.75,0.375,0.27272727,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.8,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,4.547256,0.757876,0.43113166,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.8,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,4.547256,0.568407,0.36241039,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.8,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,4.547256,0.4547256,0.31258514,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.8,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,4.284218,0.71403633,0.4165818,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.8,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,4.284218,0.53552725,0.34875789,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.8,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,4.284218,0.4284218,0.29992667,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.8,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.6,0.6,0.375,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.8,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.6,0.45,0.31034483,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.8,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.6,0.36,0.26470588,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.85,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,4.379747,0.72995783,0.42195123,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.85,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,4.379747,0.54746838,0.35378324,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.85,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,4.379747,0.4379747,0.30457747,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.85,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,4.138876,0.68981267,0.40821843,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.85,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,4.138876,0.5173595,0.3409604,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.85,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,4.138876,0.4138876,0.2927302,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.85,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.45,0.575,0.36507937,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.85,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.45,0.43125,0.30131004,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.85,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.45,0.345,0.25650558,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.9,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,4.212238,0.70203967,0.41246963,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.9,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,4.212238,0.52652975,0.34491942,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.9,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,4.212238,0.4212238,0.29638105,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.9,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,3.993534,0.665589,0.39961179,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.9,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,3.993534,0.49919175,0.33297392,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.9,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,3.993534,0.3993534,0.28538424,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.9,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.3,0.55,0.35483871,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.9,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.3,0.4125,0.2920354,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.9,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.3,0.33,0.2481203,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.95,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,4.044729,0.6741215,0.40267179,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.95,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,4.044729,0.50559113,0.33580905,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.95,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,4.044729,0.4044729,0.28798911,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.95,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,3.848192,0.64136533,0.39075111,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.95,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,3.848192,0.481024,0.3247915,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.95,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,3.848192,0.3848192,0.27788407,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.95,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.15,0.525,0.3442623,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.95,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.15,0.39375,0.28251121,NOT_PRODUCTION__REPOSITION_EXCLUDED
+0.95,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.15,0.315,0.23954373,NOT_PRODUCTION__REPOSITION_EXCLUDED
+1.0,6.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,3.87722,0.64620333,0.39254163,NOT_PRODUCTION__REPOSITION_EXCLUDED
+1.0,8.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,3.87722,0.4846525,0.32644171,NOT_PRODUCTION__REPOSITION_EXCLUDED
+1.0,10.0,1,Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,3.87722,0.387722,0.27939458,NOT_PRODUCTION__REPOSITION_EXCLUDED
+1.0,6.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,3.70285,0.61714167,0.38162499,NOT_PRODUCTION__REPOSITION_EXCLUDED
+1.0,8.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,3.70285,0.46285625,0.31640583,NOT_PRODUCTION__REPOSITION_EXCLUDED
+1.0,10.0,2,Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,3.70285,0.370285,0.27022481,NOT_PRODUCTION__REPOSITION_EXCLUDED
+1.0,6.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.0,0.5,0.33333333,NOT_PRODUCTION__REPOSITION_EXCLUDED
+1.0,8.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.0,0.375,0.27272727,NOT_PRODUCTION__REPOSITION_EXCLUDED
+1.0,10.0,3,Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",3.0,0.3,0.23076923,NOT_PRODUCTION__REPOSITION_EXCLUDED

@@ -1,0 +1,120 @@
+{
+ "metadata": {
+  "leader": "b382f419-aef7-44a2-8753-468d5cbd70d6",
+  "maxPoints": 700,
+  "tags": []
+ },
+ "warbands": [
+  {
+   "id": "b382f419-aef7-44a2-8753-468d5cbd70d6",
+   "hero": {
+    "model_id": "[the-battle-of-five-armies] dain-ironfoot-lord-of-the-iron-hills",
+    "MWFW": [
+     [
+      "",
+      "3:3:3:3"
+     ]
+    ],
+    "options": [
+     {
+      "id": "OPT0777",
+      "name": "War Boar",
+      "quantity": 1
+     }
+    ]
+   },
+   "units": [
+    {
+     "model_id": "[the-battle-of-five-armies] iron-hills-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0782",
+       "name": "Shield and spear",
+       "quantity": 1
+      }
+     ],
+     "quantity": 7
+    },
+    {
+     "model_id": "[the-battle-of-five-armies] iron-hills-goat-rider",
+     "MWFW": [],
+     "options": [],
+     "quantity": 5
+    },
+    {
+     "model_id": "[the-battle-of-five-armies] iron-hills-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0783",
+       "name": "Crossbow",
+       "quantity": 1
+      }
+     ],
+     "quantity": 6
+    }
+   ],
+   "meta": {
+    "num": 1,
+    "points": 441,
+    "units": 18,
+    "heroes": 1,
+    "bows": 6,
+    "throwingWeapons": 0,
+    "bowLimit": 18,
+    "throwLimit": 18,
+    "maxUnits": 18
+   }
+  },
+  {
+   "id": "ca35c221-beb9-4e92-80fe-4506321de000",
+   "hero": {
+    "model_id": "[the-battle-of-five-armies] bard-the-bowman",
+    "MWFW": [
+     [
+      "",
+      "3:3:3:3"
+     ]
+    ],
+    "options": [
+     {
+      "id": "OPT0795",
+      "name": "Exchange great bow for armour and horse",
+      "quantity": 1
+     }
+    ]
+   },
+   "units": [
+    {
+     "model_id": "[the-battle-of-five-armies] lake-town-militia",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0798",
+       "name": "Spear",
+       "quantity": 1
+      }
+     ],
+     "quantity": 18
+    }
+   ],
+   "meta": {
+    "num": 2,
+    "points": 258,
+    "units": 18,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 18,
+    "throwLimit": 18,
+    "maxUnits": 18
+   }
+  }
+ ],
+ "id": "the-battle-of-five-armies-1-gwmv6dtz",
+ "version": "1.42.19",
+ "name": "The Battle of Five Armies (1)",
+ "armyList": "The Battle of Five Armies",
+ "edition": "v2024"
+}

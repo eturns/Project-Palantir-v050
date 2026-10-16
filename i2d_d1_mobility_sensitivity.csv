@@ -1,0 +1,46 @@
+army,source,fixture_points,fixture_models,terrain_share_assumption,benchmark_assumption,open_average,difficult_average,blended_average,linear_reference_0_to_1,scenario_style_0_to_1,self_reposition_models_reported_only,potential_anchor_pairs_reported_only,scoring_status
+Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,1291,24,0.0,6.0,6.60969,3.70285,6.60969,1.0,0.524175,1,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,1291,24,0.0,8.0,6.60969,3.70285,6.60969,0.826211,0.452418,1,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,1291,24,0.0,10.0,6.60969,3.70285,6.60969,0.660969,0.397942,1,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,1291,24,0.25,6.0,6.60969,3.70285,5.88298,0.980497,0.495076,1,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,1291,24,0.25,8.0,6.60969,3.70285,5.88298,0.735372,0.423755,1,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,1291,24,0.25,10.0,6.60969,3.70285,5.88298,0.588298,0.370395,1,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,1291,24,0.5,6.0,6.60969,3.70285,5.15627,0.859378,0.462186,1,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,1291,24,0.5,8.0,6.60969,3.70285,5.15627,0.644534,0.391925,1,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,1291,24,0.5,10.0,6.60969,3.70285,5.15627,0.515627,0.340207,1,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,1291,24,0.75,6.0,6.60969,3.70285,4.42956,0.73826,0.424712,1,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,1291,24,0.75,8.0,6.60969,3.70285,4.42956,0.553695,0.356373,1,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,1291,24,0.75,10.0,6.60969,3.70285,4.42956,0.442956,0.306978,1,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,1291,24,1.0,6.0,6.60969,3.70285,3.70285,0.617142,0.381625,1,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,1291,24,1.0,8.0,6.60969,3.70285,3.70285,0.462856,0.316406,1,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,1291,24,1.0,10.0,6.60969,3.70285,3.70285,0.370285,0.270225,1,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,876,15,0.0,6.0,7.2274,3.87722,7.2274,1.0,0.546396,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,876,15,0.0,8.0,7.2274,3.87722,7.2274,0.903425,0.474631,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,876,15,0.0,10.0,7.2274,3.87722,7.2274,0.72274,0.419529,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,876,15,0.25,6.0,7.2274,3.87722,6.389855,1.0,0.515733,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,876,15,0.25,8.0,7.2274,3.87722,6.389855,0.798732,0.444053,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,876,15,0.25,10.0,7.2274,3.87722,6.389855,0.638986,0.389866,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,876,15,0.5,6.0,7.2274,3.87722,5.55231,0.925385,0.480623,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,876,15,0.5,8.0,7.2274,3.87722,5.55231,0.694039,0.409695,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,876,15,0.5,10.0,7.2274,3.87722,5.55231,0.555231,0.357009,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,876,15,0.75,6.0,7.2274,3.87722,4.714765,0.785794,0.440025,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,876,15,0.75,8.0,7.2274,3.87722,4.714765,0.589346,0.37081,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,876,15,0.75,10.0,7.2274,3.87722,4.714765,0.471476,0.32041,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,876,15,1.0,6.0,7.2274,3.87722,3.87722,0.646203,0.392542,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,876,15,1.0,8.0,7.2274,3.87722,3.87722,0.484652,0.326442,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,876,15,1.0,10.0,7.2274,3.87722,3.87722,0.387722,0.279395,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",96,12,0.0,6.0,6.0,3.0,6.0,1.0,0.5,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",96,12,0.0,8.0,6.0,3.0,6.0,0.75,0.428571,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",96,12,0.0,10.0,6.0,3.0,6.0,0.6,0.375,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",96,12,0.25,6.0,6.0,3.0,5.25,0.875,0.466667,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",96,12,0.25,8.0,6.0,3.0,5.25,0.65625,0.396226,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",96,12,0.25,10.0,6.0,3.0,5.25,0.525,0.344262,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",96,12,0.5,6.0,6.0,3.0,4.5,0.75,0.428571,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",96,12,0.5,8.0,6.0,3.0,4.5,0.5625,0.36,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",96,12,0.5,10.0,6.0,3.0,4.5,0.45,0.310345,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",96,12,0.75,6.0,6.0,3.0,3.75,0.625,0.384615,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",96,12,0.75,8.0,6.0,3.0,3.75,0.46875,0.319149,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",96,12,0.75,10.0,6.0,3.0,3.75,0.375,0.272727,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",96,12,1.0,6.0,6.0,3.0,3.0,0.5,0.333333,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",96,12,1.0,8.0,6.0,3.0,3.0,0.375,0.272727,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION
+Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",96,12,1.0,10.0,6.0,3.0,3.0,0.3,0.230769,0,0,SENSITIVITY_ONLY_NOT_PRODUCTION

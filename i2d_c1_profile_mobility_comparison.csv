@@ -1,0 +1,9 @@
+id,name,move_inches,base_mm,open_score,difficult_score,legacy_rule_bonus,illustrative_legacy,self_reposition,partner_reposition,rules,limitation
+DG_NEC,Sauron The Necromancer,6.0,40,4.7434,4.7434,1.5,6.2434,False,False,DOMINANT|DRAIN_SOUL|HARBINGER_OF_EVIL|HE_CANNOT_YET_TAKE_PHYSICAL_FORM|MASTER_OF_THE_NAZGUL|SPECTRAL_WALK|TERROR|WILL_OF_EVIL,Unconfigured base profile; pair and battlefield positions unmodelled
+DG_LS,The Lingering Shadow,6.0,25,6.0,3.0,1.5,7.5,True,False,DOMINANT|HARBINGER_OF_EVIL|TERROR|UNHOLY_RESURRECTION|UNNATURAL_SPEED,Unconfigured base profile; pair and battlefield positions unmodelled
+DG_AK,The Abyssal Knight,6.0,25,6.0,3.0,0,6.0,False,True,DOMINANT|HARBINGER_OF_EVIL|SPIRITUAL_DISPLACEMENT|TERROR|UNHOLY_RESURRECTION,Unconfigured base profile; pair and battlefield positions unmodelled
+DG_MGS,Mirkwood Giant Spider,10.0,60,6.455,6.455,1.25,7.705,False,False,POISONED_ATTACKS|SPIDER_WEBS|SWIFT_MOVEMENT|TERROR,Unconfigured base profile; pair and battlefield positions unmodelled
+DG_MHS,Mirkwood Hunting Spider,10.0,40,7.9057,7.9057,1.25,9.1557,False,False,POISONED_ATTACKS|SILENT_HUNTERS|STALK_UNSEEN|SWIFT_MOVEMENT|TERROR,Unconfigured base profile; pair and battlefield positions unmodelled
+DG_WK,The Witch-king of Angmar (Dol Guldur),6.0,25,6.0,3.0,0,6.0,False,False,DOMINANT|HARBINGER_OF_EVIL|TERROR|UNHOLY_RESURRECTION,Unconfigured base profile; pair and battlefield positions unmodelled
+DG_HOW,Hunter Orc Warrior,6.0,25,6.0,3.0,0,6.0,False,False,SAVAGE_HUNTERS,Unconfigured base profile; pair and battlefield positions unmodelled
+DG_FW,Fell Warg,10.0,25,10.0,5.0,0,10.0,False,False,FELL_SIGHT,Unconfigured base profile; pair and battlefield positions unmodelled

@@ -14,6 +14,8 @@ from morgul_blade_combat_values import (
 from morgul_blade_state import MorgulBladeState
 
 SAVAGE_HUNTERS_RULE_ID = "SAVAGE_HUNTERS"
+KNIFE_FIGHTER_RULE_ID = "KNIFE_FIGHTER"
+BLADE_MISTRESS_RULE_ID = "BLADE_MISTRESS"
 
 
 def _configured_profile_from_combatant(
@@ -34,11 +36,12 @@ def get_effective_attacks(
     selection: MeleeWeaponSelection | None = None,
     morgul_blade_state: MorgulBladeState | None = None,
 ) -> int:
-    """
-    Returns the number of Attacks used by this model
-    in the supplied combat context.
-    """
+    """Number of Attacks available for this combat only.
 
+    Knife Fighter / Blade Mistress require an explicit outnumbered flag
+    and count of enemy models engaged with this particular model.
+    Neither rule changes the underlying profile Attacks characteristic.
+    """
     configured_profile = (
         _configured_profile_from_combatant(
             combatant
@@ -69,5 +72,12 @@ def get_effective_attacks(
         context,
     ):
         attacks += 1
+
+    if context.outnumbered_in_combat is True:
+        extra_enemies = max(0, context.engaged_enemy_models - 1)
+        if KNIFE_FIGHTER_RULE_ID in special_rule_ids:
+            attacks += min(3, extra_enemies)
+        if BLADE_MISTRESS_RULE_ID in special_rule_ids:
+            attacks += extra_enemies
 
     return attacks

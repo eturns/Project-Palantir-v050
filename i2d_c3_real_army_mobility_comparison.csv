@@ -1,0 +1,4 @@
+army,source,points,models,legacy_average,open_average,difficult_average,terrain_retention,open_total,terrain_total,open_per_100_points,difficult_per_100_points,self_reposition_models,anchor_models,potential_anchor_pairs
+Rise of the Necromancer (fixture),tests\fixtures\rise_of_the_necromancer_all_options.json,1291,24,6.60969,6.60969,3.70285,0.56021,158.63255,88.86832,12.28757,6.88368,1,1,0
+Azog's Hunters (fixture),tests\fixtures\azogs_hunters_all_options.json,876,15,7.2274,7.2274,3.87722,0.53646,108.41093,58.15831,12.37568,6.63908,0,0,0
+Hunter Orc infantry control (synthetic),"12 x DG_HOW; synthetic, not a validated army roster",96,12,6.0,6.0,3.0,0.5,72.0,36.0,75.0,37.5,0,0,0

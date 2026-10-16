@@ -1,0 +1,172 @@
+{
+ "metadata": {
+  "leader": "b382f419-aef7-44a2-8753-468d5cbd70d6",
+  "leaderCompulsory": true,
+  "maxPoints": 700,
+  "tags": []
+ },
+ "warbands": [
+  {
+   "id": "b382f419-aef7-44a2-8753-468d5cbd70d6",
+   "hero": {
+    "model_id": "[pits-of-dol-guldur] azog-the-defiler",
+    "MWFW": [
+     [
+      "",
+      "3:3:1:3"
+     ]
+    ],
+    "options": [],
+    "compulsory": true
+   },
+   "units": [
+    {
+     "model_id": "[pits-of-dol-guldur] gundabad-orc-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0684",
+       "name": "Shield",
+       "quantity": 1
+      }
+     ],
+     "quantity": 9
+    },
+    {
+     "model_id": "[pits-of-dol-guldur] gundabad-orc-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0685",
+       "name": "Spear",
+       "quantity": 1
+      }
+     ],
+     "quantity": 9
+    }
+   ],
+   "meta": {
+    "num": 1,
+    "points": 355,
+    "units": 18,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 18,
+    "throwLimit": 18,
+    "maxUnits": 18
+   }
+  },
+  {
+   "id": "343c9d66-e223-404e-a58c-a6d5406b292d",
+   "hero": {
+    "model_id": "[pits-of-dol-guldur] the-keeper-of-the-dungeons",
+    "MWFW": [
+     [
+      "",
+      "3:3:0:2"
+     ]
+    ],
+    "options": []
+   },
+   "units": [
+    {
+     "model_id": "[pits-of-dol-guldur] fell-warg",
+     "MWFW": [],
+     "options": [],
+     "quantity": 3
+    },
+    {
+     "model_id": "[pits-of-dol-guldur] hunter-orc-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0687",
+       "name": "Two-handed weapon",
+       "quantity": 1
+      }
+     ],
+     "quantity": 5
+    },
+    {
+     "model_id": "[pits-of-dol-guldur] hunter-orc-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0686",
+       "name": "Orc bow",
+       "quantity": 1
+      }
+     ],
+     "quantity": 5
+    },
+    {
+     "model_id": "[pits-of-dol-guldur] mirkwood-hunting-spider",
+     "MWFW": [],
+     "options": [],
+     "quantity": 1
+    },
+    {
+     "model_id": "[pits-of-dol-guldur] mirkwood-giant-spider",
+     "MWFW": [],
+     "options": [],
+     "quantity": 1
+    }
+   ],
+   "meta": {
+    "num": 2,
+    "points": 234,
+    "units": 15,
+    "heroes": 1,
+    "bows": 5,
+    "throwingWeapons": 0,
+    "bowLimit": 15,
+    "throwLimit": 15,
+    "maxUnits": 15
+   }
+  },
+  {
+   "id": "b2c096a0-ecf3-4b6d-a2fd-41460ff93a5b",
+   "hero": {
+    "model_id": "[pits-of-dol-guldur] hunter-orc-captain",
+    "MWFW": [
+     [
+      "",
+      "2:1:1:2"
+     ]
+    ],
+    "options": [
+     {
+      "id": "OPT0679",
+      "name": "Fell Warg",
+      "quantity": 1
+     }
+    ]
+   },
+   "units": [
+    {
+     "model_id": "[pits-of-dol-guldur] hunter-orc-warg-rider",
+     "MWFW": [],
+     "options": [],
+     "quantity": 3
+    }
+   ],
+   "meta": {
+    "num": 3,
+    "points": 110,
+    "units": 3,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 3,
+    "throwLimit": 3,
+    "maxUnits": 12
+   }
+  }
+ ],
+ "id": "pits-of-dol-guldur-0osq27jb",
+ "version": "1.42.19",
+ "name": "Pits-of-Dol-Guldur",
+ "armyList": "Pits of Dol Guldur",
+ "edition": "v2024"
+}

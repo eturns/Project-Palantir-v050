@@ -1,0 +1,24 @@
+{
+  "development": "DEV-077S-I2-I-C3-D7-B3",
+  "army_key": "azogs_hunters_700",
+  "roster_faction": "Azog's Hunters",
+  "alignment": "Evil",
+  "alignment_basis": "explicit_faction_reference_mapping_Azogs_Hunters_Evil",
+  "reference_archetype": "mobile_mixed_assault",
+  "archetype_basis": "roster_mounted_options_warg_riders_and_fell_wargs_not_pure_cavalry",
+  "mount_option_heroes": 2,
+  "warg_riders": 6,
+  "fell_wargs": 7,
+  "export_points": 697,
+  "export_models": 24,
+  "evidence_identity_and_composition_verified": true,
+  "army_list_rules_legality_verified": false,
+  "calibration_eligible": false,
+  "anchors_approved": false,
+  "production_scoring_enabled": false,
+  "blockers": [],
+  "review_required": [
+    "army_list_rules_legality_review",
+    "cohort_population_quality_gate"
+  ]
+}

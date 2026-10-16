@@ -1,8 +1,7 @@
-"""Movement through terrain, using configured and runtime form-state mechanics.
+"""Terrain movement: existing mechanics plus scoped Woodland Creature.
 
-DEV-077S-I2-D-B4a. This is a complete replacement for src/terrain_movement.py.
-It preserves the old public API and the Hunt Master cavalry condition.
-It does not change manoeuvrability scoring or the base-size accessibility proxy.
+Woodland Creature exemption applies only when terrain is explicitly woodland.
+Spatial clearance/base-size logic remains outside this distance resolver.
 """
 from dataclasses import dataclass
 
@@ -13,11 +12,10 @@ from profile_classification import ModelType
 HUNT_MASTER_RULE_ID = "HUNT_MASTER"
 SPECTRAL_WALK_RULE_ID = "SPECTRAL_WALK"
 SWIFT_MOVEMENT_RULE_ID = "SWIFT_MOVEMENT"
+WOODLAND_CREATURE_RULE_ID = "WOODLAND_CREATURE"
 
 
-def _configured_profile_from_combatant(
-    combatant: ConfiguredProfile | FieldedModelFormState,
-) -> ConfiguredProfile:
+def _configured_profile_from_combatant(combatant: ConfiguredProfile | FieldedModelFormState) -> ConfiguredProfile:
     if isinstance(combatant, FieldedModelFormState):
         return combatant.active_configured_profile
     return combatant
@@ -30,11 +28,7 @@ def _has_rule(combatant: ConfiguredProfile | FieldedModelFormState, rule_id: str
 
 @dataclass(frozen=True)
 class TerrainTraversalCapabilities:
-    """Declarative travel properties; these do not assert a successful move.
-
-    Base size and available placement geometry must still be checked by future
-    spatial/pathfinding consumers, even when an obstacle test is bypassed.
-    """
+    """Existing broad movement exemptions; woodland is separately contextual."""
     ignore_non_water_difficult_terrain: bool
     ignore_water_difficult_terrain: bool
     automatic_climb_jump_leap_swim_six: bool
@@ -42,9 +36,7 @@ class TerrainTraversalCapabilities:
     vertical_distance_counts_toward_move: bool
 
 
-def terrain_traversal_capabilities(
-    combatant: ConfiguredProfile | FieldedModelFormState,
-) -> TerrainTraversalCapabilities:
+def terrain_traversal_capabilities(combatant: ConfiguredProfile | FieldedModelFormState) -> TerrainTraversalCapabilities:
     spectral = _has_rule(combatant, SPECTRAL_WALK_RULE_ID)
     swift = _has_rule(combatant, SWIFT_MOVEMENT_RULE_ID)
     hunt_master_cavalry = (
@@ -64,13 +56,18 @@ def ignores_difficult_terrain_movement_penalty(
     combatant: ConfiguredProfile | FieldedModelFormState,
     *,
     is_water_feature: bool = False,
+    is_woodland: bool = False,
 ) -> bool:
-    """Return whether the supplied terrain category is exempt from slowdown.
+    """Woodland Creature exempts woodland only, not unrelated rough terrain.
 
-    Hunt Master's pre-existing terrain exemption is retained as originally
-    modelled; no new water exception is inferred for that special rule.
+    Preserve historical exceptions for Spectral Walk, Swift Movement and
+    Hunt Master. Contradictory water+woodland tagging is rejected.
     """
+    if is_water_feature and is_woodland:
+        raise ValueError("Terrain cannot be both a water feature and woodland.")
     caps = terrain_traversal_capabilities(combatant)
+    if is_woodland and _has_rule(combatant, WOODLAND_CREATURE_RULE_ID):
+        return True
     return (
         caps.ignore_water_difficult_terrain
         if is_water_feature else caps.ignore_non_water_difficult_terrain
@@ -82,13 +79,16 @@ def get_effective_movement_in_terrain(
     *,
     in_difficult_terrain: bool = False,
     is_water_feature: bool = False,
+    is_woodland: bool = False,
 ) -> float:
-    """Return movement distance; vertical geometry remains a separate concern."""
+    """Movement inches for a declared terrain category; no terrain assumed."""
+    if is_water_feature and is_woodland:
+        raise ValueError("Terrain cannot be both a water feature and woodland.")
     movement = combatant.effective_movement
     if not in_difficult_terrain:
         return float(movement)
     if ignores_difficult_terrain_movement_penalty(
-        combatant, is_water_feature=is_water_feature
+        combatant, is_water_feature=is_water_feature, is_woodland=is_woodland
     ):
         return float(movement)
     return movement / 2

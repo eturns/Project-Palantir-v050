@@ -1,0 +1,116 @@
+{
+ "metadata": {
+  "leader": "b382f419-aef7-44a2-8753-468d5cbd70d6",
+  "leaderCompulsory": true,
+  "maxPoints": 700,
+  "tags": []
+ },
+ "warbands": [
+  {
+   "id": "b382f419-aef7-44a2-8753-468d5cbd70d6",
+   "hero": {
+    "model_id": "[the-iron-hills] dain-ironfoot-lord-of-the-iron-hills",
+    "MWFW": [
+     [
+      "",
+      "3:3:3:3"
+     ]
+    ],
+    "options": [],
+    "compulsory": true
+   },
+   "units": [
+    {
+     "model_id": "[the-iron-hills] iron-hills-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0724",
+       "name": "Crossbow",
+       "quantity": 1
+      }
+     ],
+     "quantity": 7
+    },
+    {
+     "model_id": "[the-iron-hills] iron-hills-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0723",
+       "name": "Shield and spear",
+       "quantity": 1
+      }
+     ],
+     "quantity": 11
+    }
+   ],
+   "meta": {
+    "num": 1,
+    "points": 376,
+    "units": 18,
+    "heroes": 1,
+    "bows": 7,
+    "throwingWeapons": 0,
+    "bowLimit": 18,
+    "throwLimit": 18,
+    "maxUnits": 18
+   }
+  },
+  {
+   "id": "1b584d04-76da-4dd9-abe3-784c96ceacfd",
+   "hero": {
+    "model_id": "[the-iron-hills] iron-hills-captain",
+    "MWFW": [
+     [
+      "",
+      "2:1:1:2"
+     ]
+    ],
+    "options": [
+     {
+      "id": "OPT0719",
+      "name": "Iron Hills Chariot",
+      "quantity": 1
+     }
+    ]
+   },
+   "units": [
+    {
+     "model_id": "[the-iron-hills] iron-hills-goat-rider",
+     "MWFW": [],
+     "options": [],
+     "quantity": 3
+    },
+    {
+     "model_id": "[the-iron-hills] iron-hills-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0723",
+       "name": "Shield and spear",
+       "quantity": 1
+      }
+     ],
+     "quantity": 1
+    }
+   ],
+   "meta": {
+    "num": 2,
+    "points": 322,
+    "units": 4,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 4,
+    "throwLimit": 4,
+    "maxUnits": 12
+   }
+  }
+ ],
+ "id": "iron-hills-cal-218t9gad",
+ "version": "1.42.19",
+ "name": "Iron-Hills-Cal",
+ "armyList": "The Iron Hills",
+ "edition": "v2024"
+}
