@@ -36,6 +36,8 @@ from torturer_state import TorturerState
 from torturer_wound_effect import (
     get_torturer_wound_reroll,
 )
+from gundabad_metal_gauntlets import has_metal_gauntlets
+from wound_attack_type import WoundAttackType
 from morgul_blade_combat_values import (
     get_morgul_blade_combat_strength,
 )
@@ -69,6 +71,13 @@ def calculate_configured_wound_probability(
             state=morgul_blade_state,
         )
     )
+
+    # Metal Gauntlets change melee Strikes, not base Strength or other hits.
+    if (
+        has_metal_gauntlets(attacker)
+        and (context is None or context.attack_type is WoundAttackType.STRIKE)
+    ):
+        attack_strength = 10
 
     target = get_wound_target(
         strength=attack_strength,

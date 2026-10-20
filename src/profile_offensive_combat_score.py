@@ -1,4 +1,6 @@
 from fractions import Fraction
+from gundabad_goblin_crew import GoblinCrewCombatContext
+from gundabad_goblin_crew_combat import combined_goblin_crew_kill_probability
 
 from combat_benchmark import CombatBenchmark
 from duel_probability import (
@@ -41,6 +43,7 @@ def calculate_profile_offensive_combat_score(
     benchmark: CombatBenchmark,
     *,
     charge_probability: float = 1.0,
+    goblin_crew_context: GoblinCrewCombatContext | None = None,
 ) -> float:
 
     post_prevention_effect = PostPreventionEffect.NONE
@@ -151,6 +154,20 @@ def calculate_profile_offensive_combat_score(
         ],
         Fraction(0, 1),
     )
+
+    if goblin_crew_context is not None:
+        if not isinstance(profile, ConfiguredProfile):
+            raise ValueError("Goblin Crew context requires a configured attacker.")
+        if post_prevention_effect is not PostPreventionEffect.NONE:
+            raise ValueError("Goblin Crew combined evidence cannot model post-prevention effects.")
+        probability_of_defeating_benchmark = combined_goblin_crew_kill_probability(
+            profile,
+            troll_wound_distribution=wound_distribution,
+            troll_wounds_per_success=wounds_per_successful_strike,
+            target_wounds=benchmark.wounds,
+            target_defence=benchmark.defence,
+            context=goblin_crew_context,
+        )
 
     return (
         duel_result.attacker_win_probability

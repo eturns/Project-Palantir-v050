@@ -1,0 +1,305 @@
+{
+ "metadata": {
+  "leader": "0c9f62ec-d2b0-43b5-bd45-2fe3513de15c",
+  "tags": []
+ },
+ "warbands": [
+  {
+   "id": "0c9f62ec-d2b0-43b5-bd45-2fe3513de15c",
+   "hero": {
+    "model_id": "[army-of-gundabad] azog-the-defiler",
+    "MWFW": [
+     [
+      "",
+      "3:3:1:3"
+     ]
+    ],
+    "options": [
+     {
+      "id": "OPT0668",
+      "name": "Stone flail",
+      "quantity": 1
+     },
+     {
+      "id": "OPT0669",
+      "name": "Heavy armour",
+      "quantity": 1
+     }
+    ]
+   },
+   "units": [
+    {
+     "model_id": "[army-of-gundabad] gundabad-catapult-troll",
+     "MWFW": [
+      [
+       "",
+       "0:0:0:5"
+      ]
+     ],
+     "options": [],
+     "quantity": 1
+    },
+    {
+     "model_id": "[army-of-gundabad] gundabad-ogre",
+     "MWFW": [],
+     "options": [],
+     "quantity": 1
+    },
+    {
+     "model_id": "[army-of-gundabad] gundabad-troll",
+     "MWFW": [],
+     "options": [],
+     "quantity": 1
+    },
+    {
+     "model_id": "[army-of-gundabad] gundabad-troll",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0677",
+       "name": "Exchange club for Scythe Gauntlets",
+       "quantity": 1
+      }
+     ],
+     "quantity": 1
+    },
+    {
+     "model_id": "[army-of-gundabad] war-bat",
+     "MWFW": [],
+     "options": [],
+     "quantity": 1
+    }
+   ],
+   "meta": {
+    "num": 1,
+    "points": 715,
+    "units": 5,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 4,
+    "throwLimit": 4,
+    "maxUnits": 18
+   }
+  },
+  {
+   "id": "e377e107-906d-4733-ab3a-717523b587f3",
+   "hero": {
+    "model_id": "[army-of-gundabad] bolg-spawn-of-azog",
+    "MWFW": [
+     [
+      "",
+      "3:3:1:3"
+     ]
+    ],
+    "options": [
+     {
+      "id": "OPT0670",
+      "name": "Fell Warg",
+      "quantity": 1
+     },
+     {
+      "id": "OPT0671",
+      "name": "Orc bow",
+      "quantity": 1
+     }
+    ]
+   },
+   "units": [],
+   "meta": {
+    "num": 2,
+    "points": 200,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 15
+   }
+  },
+  {
+   "id": "1b0b4111-407c-4b94-9f0a-5c284e5f7bf7",
+   "hero": {
+    "model_id": "[army-of-gundabad] gundabad-orc-captain",
+    "MWFW": [
+     [
+      "",
+      "2:1:1:2"
+     ]
+    ],
+    "options": []
+   },
+   "units": [
+    {
+     "model_id": "[army-of-gundabad] gundabad-berserker",
+     "MWFW": [],
+     "options": [],
+     "quantity": 1
+    },
+    {
+     "model_id": "[army-of-gundabad] gundabad-berserker",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0676",
+       "name": "Two-handed weapon",
+       "quantity": 1
+      }
+     ],
+     "quantity": 1
+    },
+    {
+     "model_id": "[army-of-gundabad] gundabad-orc-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0672",
+       "name": "Banner and shield",
+       "quantity": 1
+      }
+     ],
+     "quantity": 1
+    },
+    {
+     "model_id": "[army-of-gundabad] gundabad-orc-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0673",
+       "name": "Banner",
+       "quantity": 1
+      }
+     ],
+     "quantity": 1
+    },
+    {
+     "model_id": "[army-of-gundabad] gundabad-orc-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0674",
+       "name": "Shield",
+       "quantity": 1
+      }
+     ],
+     "quantity": 1
+    },
+    {
+     "model_id": "[army-of-gundabad] gundabad-orc-warrior",
+     "MWFW": [],
+     "options": [
+      {
+       "id": "OPT0675",
+       "name": "Spear",
+       "quantity": 1
+      }
+     ],
+     "quantity": 1
+    }
+   ],
+   "meta": {
+    "num": 3,
+    "points": 180,
+    "units": 6,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 6,
+    "throwLimit": 6,
+    "maxUnits": 12
+   }
+  },
+  {
+   "id": "96a4490d-07de-4317-9f64-8da104cd94bf",
+   "hero": {
+    "model_id": "[army-of-gundabad] goblin-mercenary-captain",
+    "MWFW": [
+     [
+      "",
+      "2:1:1:2"
+     ]
+    ],
+    "options": []
+   },
+   "units": [
+    {
+     "model_id": "[army-of-gundabad] goblin-mercenary",
+     "MWFW": [],
+     "options": [],
+     "quantity": 1
+    }
+   ],
+   "meta": {
+    "num": 4,
+    "points": 56,
+    "units": 1,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 1,
+    "throwLimit": 1,
+    "maxUnits": 12
+   }
+  },
+  {
+   "id": "111a7eb0-984a-4d3b-b64d-9a4e67fbe383",
+   "hero": {
+    "model_id": "[army-of-gundabad] gundabad-catapult-troll",
+    "MWFW": [
+     [
+      "",
+      "0:0:0:5"
+     ]
+    ],
+    "options": []
+   },
+   "units": [],
+   "meta": {
+    "num": 5,
+    "points": 180,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 0
+   }
+  },
+  {
+   "id": "550844c9-13bd-4285-8aea-4990716f5403",
+   "hero": {
+    "model_id": "[army-of-gundabad] troll-brute",
+    "MWFW": [
+     [
+      "Troll Brute",
+      "0:0:0:4"
+     ],
+     [
+      "Orc Commander",
+      "1:1:1:2"
+     ]
+    ],
+    "options": []
+   },
+   "units": [],
+   "meta": {
+    "num": 6,
+    "points": 120,
+    "units": 0,
+    "heroes": 2,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 0
+   }
+  }
+ ],
+ "id": "gundabadalloptions-td4xsupv",
+ "version": "1.42.19",
+ "name": "gundabad_all_options",
+ "armyList": "Army of Gundabad",
+ "edition": "v2024"
+}

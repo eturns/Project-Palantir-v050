@@ -98,3 +98,15 @@ def build_mobility_integration_contract(
         anchor_reposition_models=a.anchor_reposition_models,
         potential_anchor_pairs=a.eligible_anchor_pairs,
     )
+
+# DEV-077-GUN-C6-C4: optional War Beast Trample contact evidence
+from gundabad_trample_movement_evidence import build_trample_movement_evidence
+
+
+def build_troll_brute_trample_movement_evidence(
+    combatant, *, is_trampling: bool, contacts: tuple
+):
+    """Diagnostic-only bridge; never changes calibrated mobility measures."""
+    return build_trample_movement_evidence(
+        combatant, is_trampling=is_trampling, contacts=contacts,
+    )

@@ -80,11 +80,26 @@ def get_effective_movement_in_terrain(
     in_difficult_terrain: bool = False,
     is_water_feature: bool = False,
     is_woodland: bool = False,
+    flight_mode=None,
+    currently_in_woodland: bool = False,
 ) -> float:
-    """Movement inches for a declared terrain category; no terrain assumed."""
+    """Movement inches for terrain, optionally with an explicit Fly mode."""
     if is_water_feature and is_woodland:
         raise ValueError("Terrain cannot be both a water feature and woodland.")
-    movement = combatant.effective_movement
+    # Fly is an elected mode, not a permanent terrain exemption.
+    # The optional keyword preserves all existing call sites.
+    if flight_mode is not None:
+        from flying_movement import FlightMode, flight_movement
+        result = flight_movement(
+            combatant, flight_mode,
+            currently_in_woodland=currently_in_woodland,
+        )
+        if flight_mode is FlightMode.FLY:
+            return result.distance_inches
+        # Grounded Flyers have 4-inch movement and ordinary terrain rules.
+        movement = result.distance_inches
+    else:
+        movement = combatant.effective_movement
     if not in_difficult_terrain:
         return float(movement)
     if ignores_difficult_terrain_movement_penalty(

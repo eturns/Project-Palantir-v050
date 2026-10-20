@@ -1,5 +1,7 @@
 from fractions import Fraction
 
+from gundabad_catapult_army_evidence import calculate_catapult_army_shooting_evidence
+
 from configured_profile import ConfiguredProfile
 from ranged_weapon_profile import RangedWeaponProfile
 from shooting_wound_probability import (

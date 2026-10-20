@@ -322,6 +322,15 @@ class ConfiguredProfile:
         of the rider and Mount before situational modifiers.
         """
 
+        # DEV-077-GUN-C3-C: The Gundabad Troll's Scythe Gauntlets
+        # replace its Crushing Club and grant an Attacks value of 4.
+        # Evaluate configured equipment, never an army-wide bonus.
+        if self.profile.id == "GUNDABAD_TROLL" and any(
+            wargear.id == "WG_SCYTHE_GAUNTLETS"
+            for wargear in self.effective_wargear
+        ):
+            return 4
+
         if self.effective_mount is not None:
             return max(
                 self.profile.attacks,

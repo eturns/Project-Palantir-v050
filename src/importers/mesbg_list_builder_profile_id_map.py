@@ -46,8 +46,20 @@ EXTERNAL_PROFILE_IDS = {
     '[the-iron-hills] iron-hills-captain': 'IH_CAP',
     '[the-iron-hills] iron-hills-goat-rider': 'IH_GR',
     '[the-iron-hills] iron-hills-chariot': 'IH_CHARIOT',
-    # army-of-gundabad
+    # army-of-gundabad: only profiles already present in the canonical profile CSVs.
+    # Remaining Gundabad roster entries intentionally remain unmapped pending GUN-A2.
+    '[army-of-gundabad] azog-the-defiler': 'AZOG_THE_DEFILER',
+    '[army-of-gundabad] bolg-spawn-of-azog': 'BOLG_SPAWN_OF_AZOG',
+    '[army-of-gundabad] gundabad-orc-captain': 'GUNDABAD_ORC_CAPTAIN',
+    '[army-of-gundabad] gundabad-orc-warrior': 'GUNDABAD_ORC_WARRIOR',
     '[army-of-gundabad] gundabad-catapult-troll': 'GUNDABAD_CATAPULT_TROLL',
+    '[army-of-gundabad] gundabad-berserker': 'GUNDABAD_BERSERKER',
+    '[army-of-gundabad] gundabad-ogre': 'GUNDABAD_OGRE',
+    '[army-of-gundabad] gundabad-troll': 'GUNDABAD_TROLL',
+    '[army-of-gundabad] war-bat': 'WAR_BAT',
+    '[army-of-gundabad] goblin-mercenary-captain': 'GOBLIN_MERCENARY_CAPTAIN',
+    '[army-of-gundabad] goblin-mercenary': 'GOBLIN_MERCENARY',
+    '[army-of-gundabad] troll-brute': 'TROLL_BRUTE',
     # erebor-reclaimed
     '[erebor-reclaimed] bofur-the-dwarf': 'BOFUR_CHAMPION_OF_EREBOR',
     # garrison-of-dale
@@ -65,7 +77,7 @@ EXTERNAL_PROFILE_IDS = {
     '[the-battle-of-five-armies] iron-hills-warrior': 'IH_WR',
     '[the-battle-of-five-armies] bard-the-bowman': 'BARD',
     '[the-battle-of-five-armies] lake-town-militia': 'LAKE_TOWN_MILITIA',
-    '[the-battle-of-five-armies] iron-hills-goat-rider': "IH_GR",
+    '[the-battle-of-five-armies] iron-hills-goat-rider': 'IH_GR',
     # rangers-of-mirkwood
     '[rangers-of-mirkwood] legolas-greenleaf-prince-of-mirkwood': 'MW_LEGOLAS',
     '[rangers-of-mirkwood] mirkwood-ranger': 'MW_RANGER',
