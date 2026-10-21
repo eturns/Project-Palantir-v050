@@ -1,0 +1,7 @@
+id,name,points,movement,base_size_mm,fight,shooting,strength,defence,attacks,wounds,courage,intelligence,might,will,fate,max_in_army,heroic_status,model_types,races
+GT_KING,The Goblin King,150,"6""",40,6,5+,5,5,3,3,6+,6+,3,2,1,1,HERO,INFANTRY|MONSTER,GOBLIN
+GT_GRINNAH,"Grinnah, Goblin Jailer",50,"5""",25,3,5+,4,4,2,2,7+,7+,2,1,1,1,HERO,INFANTRY,GOBLIN
+GT_SCRIBE,The Goblin Scribe,50,"0""",60,1,6+,2,2,1,1,7+,7+,0,1,1,1,HERO,INFANTRY,GOBLIN
+GT_CAPTAIN,Goblin Captain,40,"5""",25,3,5+,4,4,2,2,7+,7+,2,1,1,0,HERO,INFANTRY,GOBLIN
+GT_GOLLUM,Gollum,40,"5""",25,4,4+,4,4,2,2,6+,5+,1,0,1,1,HERO,INFANTRY,HOBBIT
+GT_WARRIOR,Goblin Warrior,5,"5""",25,2,5+,3,3,1,1,8+,8+,0,0,0,0,WARRIOR,INFANTRY,GOBLIN

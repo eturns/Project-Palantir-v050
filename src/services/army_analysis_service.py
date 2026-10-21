@@ -1,7 +1,7 @@
 """Project Palantir army analysis service.
 
-DEV-077S-I2-F4-A1: append diagnostic-only Magic alongside established
-Defence, Mobility and Courage evidence; leave assessments unchanged.
+DEV-077-GT-C2D4: opt-in Goblin King mechanical evidence. Established
+capability metrics, projections and dashboard assessment remain unchanged.
 """
 from army_metric_densities import calculate_army_metric_densities
 from army_metric_assessment import assess_army_metrics
@@ -15,12 +15,22 @@ from mobility_integration_contract import build_mobility_integration_contract
 from courage_integration_contract import build_courage_integration_contract
 from mechanical_magic_army_contract import build_army_magic_contract
 from mechanical_magic_completeness import audit_army_magic_completeness
+from goblin_king_mechanical_evidence import build_goblin_king_mechanical_evidence
+from goblin_town_character_evidence import build_goblin_town_character_evidence
 from army import Army
 from configured_profile import ConfiguredProfile
 
 
-def analyse_imported_army(army, army_list, points_limit: int, metric_thresholds) -> dict:
-    """Run existing analysis and append uncalibrated mechanical diagnostics."""
+def analyse_imported_army(
+    army, army_list, points_limit: int, metric_thresholds, *,
+    goblin_king_defence_attack_contexts=None,
+    goblin_king_projectile_contexts_by_king_id=None,
+    goblin_king_charge_contexts_by_king_id=None,
+    grinnah_swap_contexts_by_model_id=None,
+    goblin_scribe_contexts_by_model_id=None,
+    gollum_contexts_by_model_id=None,
+) -> dict:
+    """Run standard analysis and append uncalibrated optional GT evidence."""
     validation_errors = army.validate(points_limit)
     metrics = army.analysis_metrics()
     metric_densities = calculate_army_metric_densities(army, army_list)
@@ -33,11 +43,11 @@ def analyse_imported_army(army, army_list, points_limit: int, metric_thresholds)
     # Diagnostics are NEVER inputs to the ratings/scenario pipelines.
     mechanical_defence = calculate_mechanical_defence_diagnostics(army)
     mechanical_mobility = build_mobility_integration_contract(army)
-    # Legacy doubles may not support mechanical contracts. Errors for genuine
-    # Army objects must propagate: unavailable evidence is not a zero score.
     mechanical_courage = None
     mechanical_magic = None
     mechanical_magic_completeness = None
+    mechanical_goblin_king = None
+    mechanical_goblin_town_characters = None
     if isinstance(army, Army):
         courage_benchmark = build_shooting_benchmark_defender()
         if isinstance(courage_benchmark, ConfiguredProfile):
@@ -47,21 +57,46 @@ def analyse_imported_army(army, army_list, points_limit: int, metric_thresholds)
         mechanical_magic_completeness = audit_army_magic_completeness(army)
         if mechanical_magic_completeness.is_complete:
             mechanical_magic = build_army_magic_contract(army)
+        mechanical_goblin_town_characters = build_goblin_town_character_evidence(
+            army, grinnah_contexts=grinnah_swap_contexts_by_model_id,
+            scribe_contexts=goblin_scribe_contexts_by_model_id,
+            gollum_contexts=gollum_contexts_by_model_id,
+        )
+        mechanical_goblin_king = build_goblin_king_mechanical_evidence(
+            army,
+            defence_attack_contexts=goblin_king_defence_attack_contexts,
+            projectile_contexts_by_king_id=goblin_king_projectile_contexts_by_king_id,
+            charge_contexts_by_king_id=goblin_king_charge_contexts_by_king_id,
+        )
+    elif any(x is not None for x in (
+        grinnah_swap_contexts_by_model_id,
+        goblin_scribe_contexts_by_model_id,
+        gollum_contexts_by_model_id,
+        goblin_king_defence_attack_contexts,
+        goblin_king_projectile_contexts_by_king_id,
+        goblin_king_charge_contexts_by_king_id,
+    )):
+        raise TypeError('Goblin King contexts require a real Army')
 
     metric_assessments = assess_army_metrics(
         metric_densities, metric_thresholds,
         offence_value=offence_score, shooting_value=shooting_score,
     )
     battlefield_assessments = assess_battlefield(metric_assessments)
-    return {
-        "validation_errors": validation_errors,
-        "metrics": metrics,
-        "metric_densities": metric_densities,
-        "metric_assessments": metric_assessments,
-        "battlefield_assessments": battlefield_assessments,
-        "mechanical_defence": mechanical_defence,
-        "mechanical_mobility": mechanical_mobility,
-        "mechanical_courage": mechanical_courage,
-        "mechanical_magic": mechanical_magic,
-        "mechanical_magic_completeness": mechanical_magic_completeness,
+    result = {
+        'validation_errors': validation_errors,
+        'metrics': metrics,
+        'metric_densities': metric_densities,
+        'metric_assessments': metric_assessments,
+        'battlefield_assessments': battlefield_assessments,
+        'mechanical_defence': mechanical_defence,
+        'mechanical_mobility': mechanical_mobility,
+        'mechanical_courage': mechanical_courage,
+        'mechanical_magic': mechanical_magic,
+        'mechanical_magic_completeness': mechanical_magic_completeness,
     }
+    if mechanical_goblin_king is not None:
+        result['mechanical_goblin_king'] = mechanical_goblin_king
+    if mechanical_goblin_town_characters is not None:
+        result['mechanical_goblin_town_characters'] = mechanical_goblin_town_characters
+    return result

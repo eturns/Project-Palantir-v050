@@ -1,0 +1,13 @@
+EXTERNAL_ARMY_LIST_IDS = {
+    'Rise of the Necromancer': 'DG_ROTN',
+    'The Iron Hills': 'IH_IRON_HILLS',
+    'Army of Lake-town': 'LAKE_TOWN',
+    'Army of Gundabad': 'GUNDABAD',
+    'Erebor Reclaimed': 'EREBOR_RECLAIMED',
+    'Garrison of Dale': 'GARRISON_OF_DALE',
+    'The Beornings': 'THE_BEORNINGS',
+    'The Battle of Five Armies': 'BATTLE_OF_FIVE_ARMIES',
+    'Pits of Dol Guldur': 'DG_PITS',
+    "Azog's Hunters": 'AZOGS_HUNTERS',
+    'Rangers of Mirkwood': 'RANGERS_OF_MIRKWOOD',
+}

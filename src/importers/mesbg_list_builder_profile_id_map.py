@@ -83,4 +83,11 @@ EXTERNAL_PROFILE_IDS = {
     '[rangers-of-mirkwood] mirkwood-ranger': 'MW_RANGER',
     '[rangers-of-mirkwood] tauriel-ranger-of-mirkwood': 'MW_TAURIEL',
     '[rangers-of-mirkwood] mirkwood-ranger-captain': 'MW_RANGER_CAPTAIN',
+    # DEV-077-GT-B Goblin-town
+    '[goblin-town] the-goblin-king': 'GT_KING',
+    '[goblin-town] grinnah-goblin-jailer': 'GT_GRINNAH',
+    '[goblin-town] the-goblin-scribe': 'GT_SCRIBE',
+    '[goblin-town] goblin-captain': 'GT_CAPTAIN',
+    '[goblin-town] gollum': 'GT_GOLLUM',
+    '[goblin-town] goblin-warrior': 'GT_WARRIOR',
 }

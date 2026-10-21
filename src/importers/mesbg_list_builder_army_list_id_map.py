@@ -10,4 +10,6 @@ EXTERNAL_ARMY_LIST_IDS = {
     'Pits of Dol Guldur': 'DG_PITS',
     "Azog's Hunters": 'AZOGS_HUNTERS',
     'Rangers of Mirkwood': 'RANGERS_OF_MIRKWOOD',
+    # DEV-077-GT-B Goblin-town
+    'Goblin-town': 'GOBLIN_TOWN',
 }

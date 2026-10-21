@@ -1,0 +1,598 @@
+"""
+Project Palantír
+================
+
+File:
+    configured_profile.py
+
+Purpose:
+    Represents a Profile with selected legal options.
+
+Version:
+    0.4.0-alpha
+
+Authors:
+    Edward Turns (Project Lead)
+    OpenAI ChatGPT (Technical Lead)
+
+Created:
+    DEV-043B – Profile Wargear and Option Foundation
+"""
+
+# ============================================================================
+# Imports
+# ============================================================================
+
+from dataclasses import dataclass
+from profile_classification import (
+    HeroicStatus,
+    ModelType,
+)
+from profile_option import ProfileOption
+from profiles import Profile
+from profile_option_wargear_assignment import (
+    WargearAssignmentAction,
+)
+from wargear import Wargear
+from mount import Mount
+from model_platform import Platform
+from profile_special_rule_assignment import (
+    ProfileSpecialRuleAssignment,
+)
+# ============================================================================
+# Classes
+# ============================================================================
+
+@dataclass(frozen=True)
+class ConfiguredProfile:
+    """
+    Represents one Profile with its selected options.
+
+    The underlying Profile remains canonical. Option points are added
+    only when evaluating this configured instance.
+    """
+
+    profile: Profile
+    selected_options: tuple[ProfileOption, ...] = ()
+
+    def __post_init__(self) -> None:
+        illegal_options = tuple(
+            option
+            for option in self.selected_options
+            if option not in self.profile.profile_options
+        )
+
+        if illegal_options:
+            raise ValueError(
+                "Configured Profile contains an option "
+                "that is not legal for its Profile."
+            )
+
+        selected_option_ids = tuple(
+            option.id
+            for option in self.selected_options
+        )
+
+        if len(selected_option_ids) != len(
+            set(selected_option_ids)
+        ):
+            raise ValueError(
+                "Configured Profile cannot select "
+                "the same option more than once."
+            )
+
+        selected_exclusive_groups = [
+            option.exclusive_group
+            for option in self.selected_options
+            if option.exclusive_group is not None
+        ]
+
+        if len(selected_exclusive_groups) != len(
+            set(selected_exclusive_groups)
+        ):
+            raise ValueError(
+                "Configured Profile cannot select "
+                "more than one option from the same "
+                "exclusive group."
+            )
+
+        profile_options = getattr(
+            self.profile,
+            "profile_options",
+            (),
+        )
+
+        required_groups = {
+            option.exclusive_group
+            for option in profile_options
+            if (
+                getattr(
+                    option,
+                    "required_group",
+                    False,
+                )
+                and option.exclusive_group is not None
+            )
+        }
+
+        selected_groups = {
+            option.exclusive_group
+            for option in self.selected_options
+            if option.exclusive_group is not None
+        }
+
+        missing_required_groups = (
+            required_groups - selected_groups
+        )
+
+        if missing_required_groups:
+            raise ValueError(
+                "Configured Profile must select "
+                "one option from each required option group."
+            )
+
+    @property
+    def points(self) -> int:
+        """
+        Returns the Profile's base points plus all selected option costs.
+        """
+
+        return self.profile.points + sum(
+            option.points
+            for option in self.selected_options
+        )
+
+    @property
+    def effective_wargear(self) -> tuple[Wargear, ...]:
+        """
+        Returns the Profile's final Wargear after applying
+        all selected option assignments.
+        """
+
+        wargear_by_id = {
+            wargear.id: wargear
+            for wargear in self.profile.default_wargear
+        }
+
+        for option in self.selected_options:
+            for assignment in option.wargear_assignments:
+                if (
+                    assignment.action
+                    == WargearAssignmentAction.REMOVE
+                ):
+                    wargear_by_id.pop(
+                        assignment.wargear.id,
+                        None,
+                    )
+
+                elif (
+                    assignment.action
+                    == WargearAssignmentAction.GRANT
+                ):
+                    wargear_by_id[
+                        assignment.wargear.id
+                    ] = assignment.wargear
+
+        return tuple(wargear_by_id.values())  
+
+    @property
+    def effective_mount(self) -> Mount | None:
+        """
+        Returns the Mount used by this configured Profile.
+        """
+
+        option_mounts = [
+            assignment.mount
+            for option in self.selected_options
+            for assignment in option.mount_assignments
+        ]
+
+        if len(option_mounts) > 1:
+            raise ValueError(
+                "Configured Profile cannot have more than "
+                "one Mount."
+            )
+
+        if option_mounts:
+            return option_mounts[0]
+
+        return self.profile.default_mount
+
+    @property
+    def effective_platform(self) -> Platform | None:
+        """
+        Returns the Platform used by this configured Profile.
+        """
+
+        option_platforms = [
+            assignment.platform
+            for option in self.selected_options
+            for assignment in option.platform_assignments
+        ]
+
+        if len(option_platforms) > 1:
+            raise ValueError(
+                "Configured Profile cannot have more than "
+                "one Platform."
+            )
+
+        if option_platforms:
+            return option_platforms[0]
+
+        return None
+
+    @property
+    def effective_movement(self) -> int:
+        """
+        Returns the Profile's effective Movement after applying
+        selected configured-state effects.
+        """
+
+        movement_overrides = [
+            effect.movement_override
+            for option in self.selected_options
+            for effect in option.configured_state_effects
+            if effect.movement_override is not None
+        ]
+
+        if len(movement_overrides) > 1:
+            raise ValueError(
+                "Configured Profile cannot have more than "
+                "one Movement override."
+            )
+
+        if movement_overrides:
+            return movement_overrides[0]
+
+        if self.effective_mount is not None:
+            return self.effective_mount.movement
+
+        return self.profile.movement
+
+    @property
+    def effective_base_size_mm(self) -> int:
+        """
+        Returns the effective base size after applying configured-state
+        overrides, Mount configuration, and the base Profile value.
+        """
+
+        base_size_overrides = [
+            effect.base_size_override_mm
+            for option in self.selected_options
+            for effect in option.configured_state_effects
+            if effect.base_size_override_mm is not None
+        ]
+
+        if len(base_size_overrides) > 1:
+            raise ValueError(
+                "Configured Profile cannot have more than "
+                "one base-size override."
+            )
+
+        if base_size_overrides:
+            return base_size_overrides[0]
+
+        if self.effective_mount is not None:
+            return self.effective_mount.base_size_mm
+
+        return self.profile.base_size_mm
+
+    @property
+    def effective_fight(self) -> int:
+        """
+        Returns the Fight Value used by this configured Profile.
+
+        Mounted Cavalry uses the higher Fight Value of the
+        rider and Mount.
+        """
+
+        if self.effective_mount is not None:
+            return max(
+                self.profile.fight,
+                self.effective_mount.fight,
+            )
+
+        return self.profile.fight
+
+
+    @property
+    def effective_strength(self) -> int:
+        """
+        Returns the Strength used by this configured Profile.
+
+        Mounted Cavalry uses the higher Strength of the
+        rider and Mount during Combat.
+        """
+
+        if self.effective_mount is not None:
+            return max(
+                self.profile.strength,
+                self.effective_mount.strength,
+            )
+
+        return self.profile.strength
+
+
+    @property
+    def effective_attacks(self) -> int:
+        """
+        Returns the base Attacks used by this configured Profile.
+
+        Mounted Cavalry uses the higher Attacks characteristic
+        of the rider and Mount before situational modifiers.
+        """
+
+        if self.effective_mount is not None:
+            return max(
+                self.profile.attacks,
+                self.effective_mount.attacks,
+            )
+
+        return self.profile.attacks
+
+    @property
+    def effective_defence(self) -> int:
+        """
+        Returns the Profile's effective Defence after applying
+        selected configured-state modifiers.
+        """
+
+        defence_modifier = sum(
+            effect.defence_modifier
+            for option in self.selected_options
+            for effect in option.configured_state_effects
+        )
+
+        return (
+            self.profile.defence
+            + defence_modifier
+        )
+
+    @property
+    def effective_model_types(self) -> set[ModelType]:
+        """
+        Returns the Profile's effective model types after applying
+        selected configured-state overrides.
+        """
+
+        model_type_overrides = [
+            effect.model_type_override
+            for option in self.selected_options
+            for effect in option.configured_state_effects
+            if effect.model_type_override is not None
+        ]
+
+        if len(model_type_overrides) > 1:
+            raise ValueError(
+                "Configured Profile cannot have more than "
+                "one model type override."
+            )
+
+        if model_type_overrides:
+            return {
+                model_type_overrides[0]
+            }
+
+        model_types = set(
+            self.profile.model_types
+        )
+
+        if self.effective_mount is not None:
+            model_types.discard(
+                ModelType.INFANTRY
+            )
+            model_types.add(
+                ModelType.CAVALRY
+            )
+
+        return model_types
+
+    @property
+    def effective_keywords(self) -> set[str]:
+        keywords = {
+            keyword.upper()
+            for keyword in self.profile.keywords
+        }
+
+        keywords.update(
+            race.upper()
+            for race in self.profile.races
+        )
+
+        keywords.update(
+            faction.upper()
+            for faction in self.profile.factions
+        )
+
+        keywords.update(
+            model_type.value.upper()
+            for model_type in self.effective_model_types
+        )
+
+        if self.effective_heroic_status is not None:
+            keywords.add(
+                self.effective_heroic_status.value.upper()
+            )
+
+        return keywords
+
+    @property
+    def effective_shooting(self) -> str:
+        """
+        Returns the Profile's effective shooting value after applying
+        selected configured-state overrides.
+        """
+
+        shooting_overrides = [
+            effect.shooting_override
+            for option in self.selected_options
+            for effect in option.configured_state_effects
+            if effect.shooting_override is not None
+        ]
+
+        if len(shooting_overrides) > 1:
+            raise ValueError(
+                "Configured Profile cannot have more than "
+                "one shooting override."
+            )
+
+        if shooting_overrides:
+            return shooting_overrides[0]
+
+        return self.profile.shooting
+
+    @property
+    def effective_special_rules(
+        self,
+    ) -> list[ProfileSpecialRuleAssignment]:
+        """
+        Returns the Profile's effective static Special Rules after
+        applying removals and grants from selected configured-state effects.
+        """
+
+        removed_rule_ids = {
+            rule_id
+            for option in self.selected_options
+            for effect in option.configured_state_effects
+            for rule_id in effect.removed_special_rule_ids
+        }
+
+        effective_rules = [
+            assignment
+            for assignment in self.profile.special_rules
+            if assignment.rule.id not in removed_rule_ids
+        ]
+
+        for option in self.selected_options:
+            for effect in option.configured_state_effects:
+                effective_rules.extend(
+                    effect.granted_special_rules
+                )
+
+        return effective_rules
+
+    @property
+    def effective_heroic_status(self) -> HeroicStatus:
+        heroic_status_overrides = [
+            effect.heroic_status_override
+            for option in self.selected_options
+            for effect in option.configured_state_effects
+            if effect.heroic_status_override is not None
+        ]
+
+        if len(heroic_status_overrides) > 1:
+            raise ValueError(
+                "Configured Profile cannot have more than "
+                "one Heroic Status override."
+            )
+
+        if heroic_status_overrides:
+            return heroic_status_overrides[0]
+
+        return self.profile.heroic_status
+
+
+    @property
+    def effective_might(self) -> int:
+        might_overrides = [
+            effect.might_override
+            for option in self.selected_options
+            for effect in option.configured_state_effects
+            if effect.might_override is not None
+        ]
+
+        if len(might_overrides) > 1:
+            raise ValueError(
+                "Configured Profile cannot have more than "
+                "one Might override."
+            )
+
+        if might_overrides:
+            return might_overrides[0]
+
+        return self.profile.might
+
+
+    @property
+    def effective_will(self) -> int:
+        will_overrides = [
+            effect.will_override
+            for option in self.selected_options
+            for effect in option.configured_state_effects
+            if effect.will_override is not None
+        ]
+
+        if len(will_overrides) > 1:
+            raise ValueError(
+                "Configured Profile cannot have more than "
+                "one Will override."
+            )
+
+        if will_overrides:
+            return will_overrides[0]
+
+        return self.profile.will
+
+
+    @property
+    def effective_fate(self) -> int:
+        fate_overrides = [
+            effect.fate_override
+            for option in self.selected_options
+            for effect in option.configured_state_effects
+            if effect.fate_override is not None
+        ]
+
+        if len(fate_overrides) > 1:
+            raise ValueError(
+                "Configured Profile cannot have more than "
+                "one Fate override."
+            )
+
+        if fate_overrides:
+            return fate_overrides[0]
+
+        return self.profile.fate
+
+    @property
+    def assigned_profile_ids(self) -> tuple[str, ...]:
+        return tuple(
+            assignment.profile_id
+            for option in self.selected_options
+            for assignment in option.profile_assignments
+        )
+
+def create_configured_profile_from_external_options(
+    profile: Profile,
+    external_option_ids: tuple[str, ...],
+    profile_options_by_external_id: dict[
+        str,
+        ProfileOption,
+    ],
+) -> ConfiguredProfile:
+    """
+    Creates a ConfiguredProfile from external option IDs.
+    """
+
+    selected_options: list[ProfileOption] = []
+
+    for external_option_id in external_option_ids:
+        if (
+            external_option_id
+            not in profile_options_by_external_id
+        ):
+            raise ValueError(
+                "Unknown external Profile Option ID: "
+                f"{external_option_id}"
+            )
+
+        selected_options.append(
+            profile_options_by_external_id[
+                external_option_id
+            ]
+        )
+
+    return ConfiguredProfile(
+        profile=profile,
+        selected_options=tuple(selected_options),
+    ) 

@@ -1,0 +1,175 @@
+{
+ "metadata": {
+  "leader": "cda37ea9-312b-4e01-ac05-9c7e09aa53d2",
+  "leaderCompulsory": true,
+  "tags": []
+ },
+ "warbands": [
+  {
+   "id": "cda37ea9-312b-4e01-ac05-9c7e09aa53d2",
+   "hero": {
+    "model_id": "[goblin-town] the-goblin-king",
+    "MWFW": [
+     [
+      "",
+      "3:2:1:3"
+     ]
+    ],
+    "options": [],
+    "compulsory": true
+   },
+   "units": [
+    {
+     "model_id": "[goblin-town] goblin-warrior",
+     "MWFW": [],
+     "options": [],
+     "quantity": 24
+    }
+   ],
+   "meta": {
+    "num": 1,
+    "points": 270,
+    "units": 24,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 24,
+    "throwLimit": 24,
+    "maxUnits": 24
+   }
+  },
+  {
+   "id": "2b48eab3-2596-4bea-9e6c-ec225eeb4fc9",
+   "hero": {
+    "model_id": "[goblin-town] grinnah-goblin-jailer",
+    "MWFW": [
+     [
+      "",
+      "2:1:1:2"
+     ]
+    ],
+    "options": []
+   },
+   "units": [
+    {
+     "model_id": "[goblin-town] goblin-warrior",
+     "MWFW": [],
+     "options": [],
+     "quantity": 15
+    }
+   ],
+   "meta": {
+    "num": 2,
+    "points": 125,
+    "units": 15,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 15,
+    "throwLimit": 15,
+    "maxUnits": 18
+   }
+  },
+  {
+   "id": "53942413-6896-4b91-8bb6-f3fda48cb9f4",
+   "hero": {
+    "model_id": "[goblin-town] the-goblin-scribe",
+    "MWFW": [
+     [
+      "",
+      "0:1:1:1"
+     ]
+    ],
+    "options": []
+   },
+   "units": [
+    {
+     "model_id": "[goblin-town] goblin-warrior",
+     "MWFW": [],
+     "options": [],
+     "quantity": 15
+    }
+   ],
+   "meta": {
+    "num": 3,
+    "points": 125,
+    "units": 15,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 15,
+    "throwLimit": 15,
+    "maxUnits": 18
+   }
+  },
+  {
+   "id": "9c5ecc0f-5ce5-48ed-a8ce-bd00b6c714ba",
+   "hero": {
+    "model_id": "[goblin-town] goblin-captain",
+    "MWFW": [
+     [
+      "",
+      "2:1:1:2"
+     ]
+    ],
+    "options": []
+   },
+   "units": [
+    {
+     "model_id": "[goblin-town] goblin-warrior",
+     "MWFW": [],
+     "options": [],
+     "quantity": 10
+    }
+   ],
+   "meta": {
+    "num": 4,
+    "points": 90,
+    "units": 10,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 10,
+    "throwLimit": 10,
+    "maxUnits": 18
+   }
+  },
+  {
+   "id": "a5ecfa8d-dd14-4185-9c24-f2cbd0dc5cee",
+   "hero": {
+    "model_id": "[goblin-town] goblin-captain",
+    "MWFW": [
+     [
+      "",
+      "2:1:1:2"
+     ]
+    ],
+    "options": []
+   },
+   "units": [
+    {
+     "model_id": "[goblin-town] goblin-warrior",
+     "MWFW": [],
+     "options": [],
+     "quantity": 10
+    }
+   ],
+   "meta": {
+    "num": 5,
+    "points": 90,
+    "units": 10,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 10,
+    "throwLimit": 10,
+    "maxUnits": 18
+   }
+  }
+ ],
+ "id": "goblintown-gzg7zn95",
+ "version": "1.42.19",
+ "name": "Goblin_town",
+ "armyList": "Goblin-town",
+ "edition": "v2024"
+}
