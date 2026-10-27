@@ -67,11 +67,11 @@ def build_army_command_evidence(
             counts[profile.id] = counts.get(profile.id, 0) + 1
             model_id = f"{profile.id}#{counts[profile.id]}"
             ids = tuple(sorted({action.id for action in profile.heroic_actions}))
-            actors.append(FieldedCommandActor(model_id, profile.id, ids, profile.might))
+            actors.append(FieldedCommandActor(model_id, profile.id, ids, entry.get_attribute("might")))
             budgets[model_id] = HeroResourceState(
-                remaining_might=profile.might,
-                remaining_will=profile.will,
-                remaining_fate=profile.fate,
+                remaining_might=entry.get_attribute("might"),
+                remaining_will=entry.get_attribute("will"),
+                remaining_fate=entry.get_attribute("fate"),
             )
     if len({d.event_id for d in declarations}) != len(declarations):
         raise ValueError("duplicate command event")

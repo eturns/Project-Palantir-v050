@@ -54,8 +54,34 @@ class CombatParticipant:
     duel_dice: int
     contributes_fight: bool = True
     can_make_strikes: bool = True
+    # Army-specific initial resource ceiling. None keeps the legacy profile behaviour.
+    effective_starting_might: int | None = None
+
+    @classmethod
+    def from_army_entry(cls, entry, *, duel_dice: int,
+                        contributes_fight: bool = True,
+                        can_make_strikes: bool = True):
+        """Bind a combat participant to the fielded entry's effective Might.
+
+        The legacy Profile is preserved for combat statistics; the optional
+        ceiling ensures purchased starting Might is honoured separately.
+        """
+        if not entry.counts_as_model or entry.configured_profile is None:
+            raise ValueError("combat participant requires a fielded model entry")
+        if entry.quantity != 1:
+            raise ValueError("select an individual fielded model from bulk entries")
+        return cls(
+            profile=entry.profile,
+            duel_dice=duel_dice,
+            contributes_fight=contributes_fight,
+            can_make_strikes=can_make_strikes,
+            effective_starting_might=entry.get_attribute("might"),
+        )
 
     def __post_init__(self) -> None:
+        value = self.effective_starting_might
+        if value is not None and (type(value) is not int or value < 0):
+            raise ValueError("effective starting Might must be non-negative integer")
         if self.duel_dice < 0:
             raise ValueError("Participant Duel dice cannot be negative.")
 

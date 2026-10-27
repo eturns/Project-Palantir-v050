@@ -77,6 +77,8 @@ def calculate_profile_defensive_combat_score(
     necromancer_remaining_will: int | None = None,
     distance_inches: float | None = None,
     will_points_available_to_spend: int = 0,
+    starting_fate: int | None = None,
+    starting_will: int | None = None,
 ) -> float:
     if (not isinstance(engagements, int)
             or isinstance(engagements, bool) or engagements < 1):
@@ -97,6 +99,9 @@ def calculate_profile_defensive_combat_score(
     else:
         resurrection_probability = Fraction(0, 1)
 
+    for name, value in (("starting_fate", starting_fate), ("starting_will", starting_will)):
+        if value is not None and (type(value) is not int or value < 0):
+            raise ValueError(f"{name} must be a non-negative integer")
     configured = isinstance(profile, ConfiguredProfile)
     if configured:
         base_profile = profile.profile
@@ -127,18 +132,24 @@ def calculate_profile_defensive_combat_score(
     fate_success = get_fate_success_probability()
     fate_failure = 1 - fate_success
     prevent = prevention_probability(profile)
+    # Configured defensive profiles can carry purchased per-profile Fate.
+    initial_fate = profile.effective_fate if configured else base_profile.fate
+    if starting_fate is not None:
+        initial_fate = starting_fate
     can_use_will_as_fate = False
     if configured:
         initial_resource_state = DefensiveState(
             remaining_wounds=base_profile.wounds,
-            remaining_fate=base_profile.fate,
-            remaining_will=profile.effective_will,
+            remaining_fate=initial_fate,
+            remaining_will=(starting_will if starting_will is not None else profile.effective_will),
         )
         can_use_will_as_fate = (
             get_available_fate_attempts(profile, initial_resource_state)
             > initial_resource_state.remaining_fate
         )
     initial_will = profile.effective_will if configured else base_profile.will
+    if starting_will is not None:
+        initial_will = starting_will
 
     @lru_cache(maxsize=None)
     def survive_engagements(engagements_left: int, wounds: int,
@@ -204,8 +215,21 @@ def calculate_profile_defensive_combat_score(
         return best
 
     combat_survival = survive_engagements(
-        engagements, base_profile.wounds, base_profile.fate, initial_will,
+        engagements, base_profile.wounds, initial_fate, initial_will,
     )
     if not include_resurrection or not _has_unholy_resurrection(profile):
         return float(combat_survival)
     return float(combat_survival + (1 - combat_survival) * resurrection_probability)
+
+
+def calculate_fielded_entry_defensive_combat_score(entry, benchmark: CombatBenchmark, **kwargs) -> float:
+    # Bridge purchased army-entry resources into the defensive engine.
+    if not entry.counts_as_model:
+        raise ValueError("Expected model army entry")
+    if "starting_fate" in kwargs or "starting_will" in kwargs:
+        raise ValueError("Fielded resource input is owned by the army entry")
+    return calculate_profile_defensive_combat_score(
+        entry.configured_profile, benchmark,
+        starting_fate=entry.get_attribute("fate"),
+        starting_will=entry.get_attribute("will"), **kwargs,
+    )

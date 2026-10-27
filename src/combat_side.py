@@ -85,7 +85,11 @@ class CombatSide:
 
         if (
             self.might_user is not None
-            and self.might_available > self.might_user.profile.might
+            and self.might_available > (
+                self.might_user.profile.might
+                if self.might_user.effective_starting_might is None
+                else self.might_user.effective_starting_might
+            )
         ):
             raise ValueError(
                 "Available side Might cannot exceed the user's Might."

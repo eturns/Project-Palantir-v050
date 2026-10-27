@@ -1,6 +1,7 @@
 from combat_benchmark import CombatBenchmark
 from profile_defensive_combat_score import (
     calculate_profile_defensive_combat_score,
+    calculate_fielded_entry_defensive_combat_score,
 )
 from profiles import Profile
 from wound_capacity import (
@@ -114,12 +115,28 @@ def calculate_army_staying_power(
         if not entry.counts_as_model:
             continue
 
-        profile_staying_power = (
-            calculate_staying_power_from_profile(
+        # Keep the established profile-level path (including its test/plugin
+        # extension point) when entry resources match the configured profile.
+        # Purchased overrides take the entry-aware mechanical defence path.
+        has_entry_resource_override = any(
+            entry.get_attribute(resource) != getattr(
+                entry.configured_profile, f"effective_{resource}"
+            )
+            for resource in ("fate", "will")
+        )
+        if has_entry_resource_override:
+            defensive_combat = calculate_fielded_entry_defensive_combat_score(
+                entry, benchmark,
+            )
+            profile_staying_power = calculate_staying_power(
+                defensive_combat=defensive_combat,
+                wound_capacity=calculate_wound_capacity(entry.profile.wounds),
+            )
+        else:
+            profile_staying_power = calculate_staying_power_from_profile(
                 profile=entry.configured_profile,
                 benchmark=benchmark,
             )
-        )
 
         weighted_total += (
             profile_staying_power

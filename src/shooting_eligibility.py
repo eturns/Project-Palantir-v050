@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from three_trolls_shooting import ModelObstruction
 from configured_profile import ConfiguredProfile
 from ranged_weapon_profile import RangedWeaponProfile
 from shooting_attack_count import ShootingMode
@@ -15,6 +16,9 @@ class ShootingContext:
     # Explicit target status is mandatory for Pinpoint mode.
     target_engaged_with_friendly: bool = False
     shooting_mode: ShootingMode = ShootingMode.NORMAL
+    model_obstructions: tuple[ModelObstruction, ...] | None = None
+    terrain_required_rolls: tuple[int, ...] = ()
+    shooting_into_combat_required_roll: int | None = None
 
     def __post_init__(self) -> None:
         if self.target_distance_inches is not None and self.target_distance_inches < 0:

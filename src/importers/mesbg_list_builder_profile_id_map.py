@@ -90,4 +90,8 @@ EXTERNAL_PROFILE_IDS = {
     '[goblin-town] goblin-captain': 'GT_CAPTAIN',
     '[goblin-town] gollum': 'GT_GOLLUM',
     '[goblin-town] goblin-warrior': 'GT_WARRIOR',
+    # DEV-077-TT-B Three Trolls
+    '[the-three-trolls] bill-the-troll': 'TT_BILL',
+    '[the-three-trolls] bert-the-troll': 'TT_BERT',
+    '[the-three-trolls] tom-the-troll': 'TT_TOM',
 }

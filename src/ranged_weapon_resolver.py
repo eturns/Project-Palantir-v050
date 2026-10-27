@@ -1,4 +1,5 @@
 from configured_profile import ConfiguredProfile
+from three_trolls_shooting import get_throw_stones_weapon
 from ranged_weapon_profile import (
     RANGED_WEAPON_PROFILES,
     RangedWeaponProfile,
@@ -24,4 +25,4 @@ def resolve_ranged_weapon(
         if ranged_weapon is not None:
             return ranged_weapon
 
-    return None
+    return get_throw_stones_weapon(profile)

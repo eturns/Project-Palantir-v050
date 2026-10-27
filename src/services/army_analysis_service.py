@@ -17,6 +17,7 @@ from mechanical_magic_army_contract import build_army_magic_contract
 from mechanical_magic_completeness import audit_army_magic_completeness
 from goblin_king_mechanical_evidence import build_goblin_king_mechanical_evidence
 from goblin_town_character_evidence import build_goblin_town_character_evidence
+from three_trolls_army_combat_evidence import build_three_trolls_army_combat_evidence
 from army import Army
 from configured_profile import ConfiguredProfile
 
@@ -29,6 +30,7 @@ def analyse_imported_army(
     grinnah_swap_contexts_by_model_id=None,
     goblin_scribe_contexts_by_model_id=None,
     gollum_contexts_by_model_id=None,
+    three_trolls_combat_requests=None,
 ) -> dict:
     """Run standard analysis and append uncalibrated optional GT evidence."""
     validation_errors = army.validate(points_limit)
@@ -46,6 +48,7 @@ def analyse_imported_army(
     mechanical_courage = None
     mechanical_magic = None
     mechanical_magic_completeness = None
+    mechanical_three_trolls_combat = None
     mechanical_goblin_king = None
     mechanical_goblin_town_characters = None
     if isinstance(army, Army):
@@ -57,6 +60,9 @@ def analyse_imported_army(
         mechanical_magic_completeness = audit_army_magic_completeness(army)
         if mechanical_magic_completeness.is_complete:
             mechanical_magic = build_army_magic_contract(army)
+        mechanical_three_trolls_combat = build_three_trolls_army_combat_evidence(
+            army, combat_requests=three_trolls_combat_requests
+        )
         mechanical_goblin_town_characters = build_goblin_town_character_evidence(
             army, grinnah_contexts=grinnah_swap_contexts_by_model_id,
             scribe_contexts=goblin_scribe_contexts_by_model_id,
@@ -75,6 +81,7 @@ def analyse_imported_army(
         goblin_king_defence_attack_contexts,
         goblin_king_projectile_contexts_by_king_id,
         goblin_king_charge_contexts_by_king_id,
+        three_trolls_combat_requests,
     )):
         raise TypeError('Goblin King contexts require a real Army')
 
@@ -95,6 +102,8 @@ def analyse_imported_army(
         'mechanical_magic': mechanical_magic,
         'mechanical_magic_completeness': mechanical_magic_completeness,
     }
+    if mechanical_three_trolls_combat is not None:
+        result['mechanical_three_trolls_combat'] = mechanical_three_trolls_combat
     if mechanical_goblin_king is not None:
         result['mechanical_goblin_king'] = mechanical_goblin_king
     if mechanical_goblin_town_characters is not None:

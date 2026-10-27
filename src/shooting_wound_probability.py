@@ -1,4 +1,5 @@
 from fractions import Fraction
+from three_trolls_shooting import ModelObstruction, large_target_in_the_way_rolls
 
 from configured_profile import ConfiguredProfile
 from ranged_weapon_profile import RangedWeaponProfile
@@ -39,6 +40,9 @@ def get_shooting_wound_probability(
     wound_reroll: WoundReroll = WoundReroll(),
     cavalry_part_in_the_way_required_roll: int | None = None,
     target_is_cavalry: bool = False,
+    model_obstructions: tuple[ModelObstruction, ...] | None = None,
+    terrain_required_rolls: tuple[int, ...] = (),
+    shooting_into_combat_required_roll: int | None = None,
 ) -> Fraction:
     if not weapon.is_mechanically_complete:
         raise ValueError(
@@ -51,6 +55,19 @@ def get_shooting_wound_probability(
         modifier=to_hit_modifier,
     )
 )
+
+    # Only structured contexts activate Large Target filtering.
+    if model_obstructions is not None:
+        if in_the_way_required_rolls:
+            raise ValueError("Cannot mix flat and structured obstruction rolls")
+        in_the_way_required_rolls = large_target_in_the_way_rolls(
+            defender=defender,
+            model_obstructions=model_obstructions,
+            terrain_required_rolls=terrain_required_rolls,
+            shooting_into_combat_required_roll=shooting_into_combat_required_roll,
+        )
+    elif terrain_required_rolls or shooting_into_combat_required_roll is not None:
+        raise ValueError("Structured terrain/combat rolls require model_obstructions")
 
     in_the_way_probability = Fraction(1, 1)
 
@@ -123,6 +140,9 @@ def get_expected_shooting_wounds(
     in_the_way_modifier: int = 0,
     to_hit_modifier: int = 0,
     wound_modifier: WoundModifier = WoundModifier(),
+    model_obstructions: tuple[ModelObstruction, ...] | None = None,
+    terrain_required_rolls: tuple[int, ...] = (),
+    shooting_into_combat_required_roll: int | None = None,
 ) -> Fraction:
     """
     Returns the expected number of wounds caused by all
@@ -145,6 +165,9 @@ def get_expected_shooting_wounds(
         in_the_way_modifier=in_the_way_modifier,
         to_hit_modifier=to_hit_modifier,
         wound_modifier=wound_modifier,
+        model_obstructions=model_obstructions,
+        terrain_required_rolls=terrain_required_rolls,
+        shooting_into_combat_required_roll=shooting_into_combat_required_roll,
     )
 
     number_of_shots = (

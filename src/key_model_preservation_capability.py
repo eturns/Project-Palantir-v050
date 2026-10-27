@@ -24,6 +24,9 @@ from resource_strategy_budget import calculate_resource_budget
 from army_list import ArmyList
 from fielded_model import FieldedModel
 from configured_profile import ConfiguredProfile
+from profile_defensive_combat_score import calculate_fielded_entry_defensive_combat_score
+from staying_power_capability import calculate_staying_power
+from wound_capacity import calculate_wound_capacity
 
 def calculate_key_model_preservation_capability(
     defensive_survivability: int | float,
@@ -213,12 +216,34 @@ def calculate_key_model_preservation_from_profile(
             "benchmark_fate must be greater than zero."
         )
 
-    defensive_survivability = (
-        calculate_staying_power_from_profile(
-            profile=profile,
-            benchmark=benchmark,
-        )
+    # For a bare profile or unpurchased entry, preserve existing
+    # profile-level semantics (and its established integration contract).
+    defensive_survivability = calculate_staying_power_from_profile(
+        profile=profile,
+        benchmark=benchmark,
     )
+
+    if army is not None:
+        base = profile.profile if isinstance(profile, ConfiguredProfile) else profile
+        matching_entry = next(
+            (entry for entry in army.entries
+             if entry.counts_as_model and entry.profile.id == base.id),
+            None,
+        )
+        if matching_entry is not None:
+            resource_overrides = getattr(
+                matching_entry, "starting_resource_overrides", None
+            ) or {}
+            if any(name in resource_overrides for name in ("fate", "will")):
+                mechanical_survival = calculate_fielded_entry_defensive_combat_score(
+                    matching_entry, benchmark,
+                )
+                defensive_survivability = calculate_staying_power(
+                    defensive_combat=mechanical_survival,
+                    wound_capacity=calculate_wound_capacity(
+                        wounds=matching_entry.profile.wounds,
+                    ),
+                )
 
     if isinstance(
         profile,

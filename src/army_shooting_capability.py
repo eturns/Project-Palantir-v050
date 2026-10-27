@@ -74,6 +74,9 @@ def get_army_expected_shooting_wounds(
             defender=defender,
             weapon=weapon,
             to_hit_modifier=movement_modifier,
+            model_obstructions=context.model_obstructions,
+            terrain_required_rolls=context.terrain_required_rolls,
+            shooting_into_combat_required_roll=context.shooting_into_combat_required_roll,
         )
 
         model_outputs.append(expected_wounds)

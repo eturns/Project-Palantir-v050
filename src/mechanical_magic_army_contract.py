@@ -76,7 +76,9 @@ def build_army_magic_contract(army: Army) -> ArmyMagicContract:
     for entry in army.entries:
         if not entry.counts_as_model:
             continue
-        evidence = build_profile_magic_casting_evidence(entry.configured_profile)
+        evidence = build_profile_magic_casting_evidence(
+            entry.configured_profile, remaining_will=entry.get_attribute("will")
+        )
         if not evidence.spell_options:
             continue
         qty = entry.quantity

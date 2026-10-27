@@ -44,9 +44,9 @@ def _starting_resources(army) -> dict[str, HeroResourceState]:
             numbering[profile.id] = n
             model_id = f"{profile.id}#{n}"
             result[model_id] = HeroResourceState(
-                remaining_might=profile.might,
-                remaining_will=profile.will,
-                remaining_fate=profile.fate,
+                remaining_might=entry.get_attribute("might"),
+                remaining_will=entry.get_attribute("will"),
+                remaining_fate=entry.get_attribute("fate"),
             )
     return result
 

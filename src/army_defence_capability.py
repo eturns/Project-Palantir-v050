@@ -20,6 +20,7 @@ from combat_benchmark import (
 )
 from profile_defensive_combat_score import (
     calculate_profile_defensive_combat_score,
+    calculate_fielded_entry_defensive_combat_score,
 )
 
 
@@ -46,8 +47,8 @@ def _calculate_total_defensive_output(
             continue
 
         profile_score = (
-            calculate_profile_defensive_combat_score(
-                entry.configured_profile,
+            calculate_fielded_entry_defensive_combat_score(
+                entry,
                 benchmark,
                 engagements=engagements,
                 include_resurrection=include_resurrection,

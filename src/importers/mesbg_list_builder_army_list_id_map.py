@@ -12,4 +12,6 @@ EXTERNAL_ARMY_LIST_IDS = {
     'Rangers of Mirkwood': 'RANGERS_OF_MIRKWOOD',
     # DEV-077-GT-B Goblin-town
     'Goblin-town': 'GOBLIN_TOWN',
+    # DEV-077-TT-B Three Trolls
+    'The Three Trolls': 'THREE_TROLLS',
 }

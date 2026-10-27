@@ -66,7 +66,9 @@ def build_army_magic_evidence(army: Army) -> ArmyMagicEvidence:
         quantity = entry.quantity
         model_count += quantity
         configured = entry.configured_profile
-        profile_evidence = build_profile_magic_casting_evidence(configured)
+        profile_evidence = build_profile_magic_casting_evidence(
+            configured, remaining_will=entry.get_attribute("will")
+        )
         # F2 baseline returns one option per spell with no army rules.
         available = tuple(profile_evidence.spell_options)
         if not available:

@@ -1,0 +1,77 @@
+{
+ "metadata": {
+  "leader": "cda37ea9-312b-4e01-ac05-9c7e09aa53d2",
+  "leaderCompulsory": true,
+  "tttSpecialUpgrades": [
+   "Full Bellies",
+   "Stone Troll Endurance",
+   "Nothing like a warm fire",
+   "Rumbling Momentum",
+   "Bowl them over",
+   "Dominant presence",
+   "Savvy Fighters",
+   "Tasty Livestock",
+   "Cover of Darkness",
+   "Troll Cunning",
+   "Kitchen Utensils",
+   "\"That's Mine That Is!\""
+  ],
+  "tags": []
+ },
+ "warbands": [
+  {
+   "id": "cda37ea9-312b-4e01-ac05-9c7e09aa53d2",
+   "hero": {
+    "model_id": "[the-three-trolls] bill-the-troll",
+    "MWFW": [
+     [
+      "Bill the Troll",
+      "3:3:3:3"
+     ]
+    ],
+    "options": [],
+    "compulsory": true
+   },
+   "units": [
+    {
+     "model_id": "[the-three-trolls] bert-the-troll",
+     "MWFW": [
+      [
+       "Bert the Troll",
+       "3:3:3:3"
+      ]
+     ],
+     "options": [],
+     "quantity": 1
+    },
+    {
+     "model_id": "[the-three-trolls] tom-the-troll",
+     "MWFW": [
+      [
+       "Tom the Troll",
+       "3:3:3:3"
+      ]
+     ],
+     "options": [],
+     "quantity": 1
+    }
+   ],
+   "meta": {
+    "num": 1,
+    "points": 400,
+    "units": 2,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 15
+   }
+  }
+ ],
+ "id": "the-three-trolls-wm00x5yu",
+ "version": "1.42.19",
+ "name": "The Three Trolls",
+ "armyList": "The Three Trolls",
+ "edition": "v2024"
+}

@@ -275,4 +275,23 @@ def build_army_from_definition(
                 warband_id=entry_definition.warband_id,
             )
 
+    # DEV-077-TT-E4A: validate the paid Hoard ledger and set starting
+    # resources on the three runtime entries, never canonical Profiles.
+    if definition.army_list_id == "THREE_TROLLS":
+        from three_trolls_hoard import build_hoard_evidence
+        hoard = build_hoard_evidence(definition)
+        if hoard.has("Full Bellies"):
+            matched = set()
+            for entry in army.entries:
+                if not entry.counts_as_model:
+                    continue
+                if entry.profile.id not in ("TT_BILL", "TT_BERT", "TT_TOM"):
+                    continue
+                if entry.profile.id in matched or entry.quantity != 1:
+                    raise ValueError("Full Bellies requires one of each named Troll")
+                matched.add(entry.profile.id)
+                entry.starting_resource_overrides = {"might": 3, "will": 3, "fate": 3}
+            if matched != {"TT_BILL", "TT_BERT", "TT_TOM"}:
+                raise ValueError("Full Bellies requires Bill, Bert and Tom")
+
     return army, army_list

@@ -10,6 +10,7 @@ PROFILE_FILES = (
     "data/profiles/lake_town_profiles.csv",
     "data/profiles/gundabad_profiles.csv",
     "data/profiles/goblin_town_profiles.csv",
+    "data/profiles/three_trolls_profiles.csv",
     "data/profiles/erebor_profiles.csv",
     "data/profiles/dale_profiles.csv",
     "data/profiles/beornings_profiles.csv",

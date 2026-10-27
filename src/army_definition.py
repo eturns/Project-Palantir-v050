@@ -42,3 +42,6 @@ class ArmyDefinition:
     purchases: list[ArmyPurchaseDefinition] = field(
         default_factory=list,
     )
+
+    # DEV-077-TT-C: ordered army-level choices, separate from model options.
+    army_upgrade_names: tuple[str, ...] = ()

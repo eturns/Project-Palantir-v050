@@ -38,6 +38,10 @@ from imported_profile_package_expander import (
 from army_purchase_definition import (
     ArmyPurchaseDefinition,
 )
+from three_trolls_upgrades import (
+    read_three_trolls_upgrades,
+    three_trolls_upgrade_purchases,
+)
 
 def load_mesbg_list_builder_json(
     file_path: str,
@@ -573,6 +577,11 @@ def build_army_definition_from_data(
         )
     )
 
+    # Army-level upgrades are purchases, not profile options.
+    army_list_id = get_palantir_army_list_id(data)
+    army_upgrade_names = read_three_trolls_upgrades(data, army_list_id)
+    purchases.extend(three_trolls_upgrade_purchases(army_upgrade_names))
+
     return ArmyDefinition(
         id=get_imported_army_id(
             data,
@@ -604,6 +613,7 @@ def build_army_definition_from_data(
         ),
         entries=entries,
         purchases=purchases,
+        army_upgrade_names=army_upgrade_names,
             )
 
 def import_army_definition_from_json(

@@ -1,3 +1,4 @@
+from three_trolls_d4e_analysis import build_three_trolls_upgrade_analysis
 from optimiser_candidate import OptimiserCandidate
 from scenario_analysis_builder import (
     build_scenario_analysis_results_from_candidate,
@@ -186,6 +187,10 @@ def analyse_mesbg_list_builder_file(
         definition.points_limit,
         metric_thresholds,
     )
+
+    upgrade_diagnostic = build_three_trolls_upgrade_analysis(definition, army)
+    if upgrade_diagnostic is not None:
+        analysis_result["mechanical_three_trolls_upgrades"] = upgrade_diagnostic
 
     scenario_analysis_results = None
 

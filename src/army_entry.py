@@ -158,6 +158,12 @@ class ArmyEntry:
             "base_size_mm": "effective_base_size_mm",
         }
 
+        # DEV-077-TT-E4A: effective purchased starting resources.
+        if attribute in ("might", "will", "fate"):
+            overrides = getattr(self, "starting_resource_overrides", None)
+            if overrides is not None and attribute in overrides:
+                return overrides[attribute]
+
         configured_attribute = (
             configured_attributes.get(attribute)
         )

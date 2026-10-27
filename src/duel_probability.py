@@ -24,6 +24,7 @@ Created:
 # ============================================================================
 
 from itertools import product
+from collections import Counter
 
 from duel_probability_result import DuelProbabilityResult
 from profiles import Profile
@@ -72,25 +73,31 @@ def calculate_raw_duel_probability(
     defender_wins = 0
     draws = 0
 
-    for attacker_rolls in attacker_outcomes:
-        for defender_rolls in defender_outcomes:
+    # DEV-077-TT-E4D-P2: resolve Might once per unique highest-roll pair.
+    # The legacy resolver only observes max(rolls), so grouping is exact,
+    # including standard rerolls, duel modifiers and Might strategies.
+    attacker_frequencies = Counter(map(max, attacker_outcomes))
+    defender_frequencies = Counter(map(max, defender_outcomes))
+
+    for attacker_roll, attacker_count in attacker_frequencies.items():
+        for defender_roll, defender_count in defender_frequencies.items():
             attacker_highest, defender_highest = (
                 resolve_duel_rolls_with_might(
-                    attacker_rolls=attacker_rolls,
-                    defender_rolls=defender_rolls,
+                    attacker_rolls=(attacker_roll,),
+                    defender_rolls=(defender_roll,),
                     attacker_might_available=attacker_might_available,
                     defender_might_available=defender_might_available,
                     attacker_might_strategy=attacker_might_strategy,
                     defender_might_strategy=defender_might_strategy,
                 )
             )
-
+            weight = attacker_count * defender_count
             if attacker_highest > defender_highest:
-                attacker_wins += 1
+                attacker_wins += weight
             elif defender_highest > attacker_highest:
-                defender_wins += 1
+                defender_wins += weight
             else:
-                draws += 1
+                draws += weight
 
     total_outcomes = len(attacker_outcomes) * len(defender_outcomes)
 

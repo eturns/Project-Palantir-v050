@@ -13,17 +13,17 @@ def calculate_army_resource_totals(
         if not entry.counts_as_model:
             continue
         might += (
-            entry.profile.might
+            entry.get_attribute("might")
             * entry.quantity
         )
 
         will += (
-            entry.profile.will
+            entry.get_attribute("will")
             * entry.quantity
         )
 
         fate += (
-            entry.profile.fate
+            entry.get_attribute("fate")
             * entry.quantity
         )
 
