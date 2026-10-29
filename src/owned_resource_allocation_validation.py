@@ -93,13 +93,17 @@ def validate_owned_resource_allocations(
 
             continue
 
-        if (
-            resource_type == ResourceType.WILL
-            and amount > state.remaining_will
-        ):
-            raise ValueError(
-                "Owned resource allocations exceed remaining Will."
+        if resource_type == ResourceType.WILL:
+            temporary_will = calculate_temporary_resource_total(
+                grants=temporary_grants,
+                owner=owner,
+                resource_type=ResourceType.WILL,
             )
+            if amount > state.remaining_will + temporary_will:
+                raise ValueError(
+                    "Owned resource allocations exceed remaining Will."
+                )
+            continue
 
         if (
             resource_type == ResourceType.FATE

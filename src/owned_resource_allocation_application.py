@@ -113,10 +113,17 @@ def apply_owned_resource_allocations(
                 )
 
         if will_spend:
-            resources = spend_will(
-                resources,
-                amount=will_spend,
+            temporary_will = calculate_temporary_resource_total(
+                grants=temporary_grants,
+                owner=state.owner,
+                resource_type=ResourceType.WILL,
             )
+            persistent_will_spend = max(will_spend - temporary_will, 0)
+            if persistent_will_spend:
+                resources = spend_will(
+                    resources,
+                    amount=persistent_will_spend,
+                )
 
         if fate_spend:
             resources = spend_fate(

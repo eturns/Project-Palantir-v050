@@ -1,0 +1,41 @@
+{
+ "metadata": {
+  "leader": "7e184e3b-429c-4032-9c99-407feb5947cd",
+  "leaderCompulsory": true,
+  "maxPoints": 700,
+  "tags": []
+ },
+ "warbands": [
+  {
+   "id": "7e184e3b-429c-4032-9c99-407feb5947cd",
+   "hero": {
+    "model_id": "[desolator-of-the-north] smaug",
+    "MWFW": [
+     [
+      "",
+      "3:6:0:20"
+     ]
+    ],
+    "options": [],
+    "compulsory": true
+   },
+   "units": [],
+   "meta": {
+    "num": 1,
+    "points": 700,
+    "units": 0,
+    "heroes": 1,
+    "bows": 0,
+    "throwingWeapons": 0,
+    "bowLimit": 0,
+    "throwLimit": 0,
+    "maxUnits": 18
+   }
+  }
+ ],
+ "id": "smaug-irj9sa29",
+ "version": "1.42.19",
+ "name": "Smaug",
+ "armyList": "Desolator of the North",
+ "edition": "v2024"
+}

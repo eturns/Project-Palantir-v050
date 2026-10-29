@@ -94,4 +94,5 @@ EXTERNAL_PROFILE_IDS = {
     '[the-three-trolls] bill-the-troll': 'TT_BILL',
     '[the-three-trolls] bert-the-troll': 'TT_BERT',
     '[the-three-trolls] tom-the-troll': 'TT_TOM',
+    '[desolator-of-the-north] smaug': 'SMAUG',
 }

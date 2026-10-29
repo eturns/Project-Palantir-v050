@@ -14,4 +14,5 @@ EXTERNAL_ARMY_LIST_IDS = {
     'Goblin-town': 'GOBLIN_TOWN',
     # DEV-077-TT-B Three Trolls
     'The Three Trolls': 'THREE_TROLLS',
+    'Desolator of the North': 'DESOLATOR_OF_THE_NORTH',
 }

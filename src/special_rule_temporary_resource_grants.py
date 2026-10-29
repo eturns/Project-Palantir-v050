@@ -6,6 +6,7 @@ from temporary_resource_grant import (
 
 
 MIGHTY_HERO_RULE_ID = "MIGHTY_HERO"
+DESOLATOR_OF_THE_NORTH_RULE_ID = "DESOLATOR_OF_THE_NORTH"
 
 
 def get_special_rule_temporary_resource_grants(
@@ -21,6 +22,15 @@ def get_special_rule_temporary_resource_grants(
             TemporaryResourceGrant(
                 owner=owner,
                 resource_type=ResourceType.MIGHT,
+                amount=1,
+            )
+        )
+
+    if DESOLATOR_OF_THE_NORTH_RULE_ID in rule_ids:
+        grants.append(
+            TemporaryResourceGrant(
+                owner=owner,
+                resource_type=ResourceType.WILL,
                 amount=1,
             )
         )

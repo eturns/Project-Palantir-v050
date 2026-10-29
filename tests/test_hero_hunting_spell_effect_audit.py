@@ -8,17 +8,21 @@ from hero_hunting_spell_effect_audit import (
 )
 
 
-def test_all_nine_canonical_spells_are_inventoried():
+def test_all_canonical_spells_are_inventoried_once():
     rows = audit_canonical_spell_effects()
-    assert len(rows) == 9
-    assert len({r.spell_id for r in rows}) == 9
+    with open("data/rules/spells.csv", newline="", encoding="utf-8") as handle:
+        catalogue_ids = [row["id"] for row in csv.DictReader(handle)]
+    assert len(catalogue_ids) == len(set(catalogue_ids))
+    assert {r.spell_id for r in rows} == set(catalogue_ids)
+    assert len(rows) == len(catalogue_ids)
 
 
 def test_necromancer_assignments_retain_cast_values():
     rows = audit_canonical_spell_effects()
     actual = {r.spell_id: r.assigned_profiles for r in rows}
     assert actual["CHILL_SOUL"] == (("DG_NEC", 5),)
-    assert actual["TRANSFIX"] == (("DG_NEC", 3),)
+    assert ("DG_NEC", 3) in actual["TRANSFIX"]
+    assert ("SMAUG", 4) in actual["TRANSFIX"]
 
 
 def test_offence_category_does_not_prove_direct_damage():

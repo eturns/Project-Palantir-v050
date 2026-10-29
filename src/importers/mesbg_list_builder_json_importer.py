@@ -577,6 +577,9 @@ def build_army_definition_from_data(
         )
     )
 
+    if get_palantir_army_list_id(data) == "DESOLATOR_OF_THE_NORTH":
+        validate_desolator_of_the_north(data, entries)
+
     # Army-level upgrades are purchases, not profile options.
     army_list_id = get_palantir_army_list_id(data)
     army_upgrade_names = read_three_trolls_upgrades(data, army_list_id)
@@ -669,3 +672,26 @@ def get_imported_points_limit(
         )
 
     return points_limit
+
+def validate_desolator_of_the_north(data: dict, entries: list[ArmyEntryDefinition]) -> None:
+    """Reject roster structures not permitted by the 2024 army list."""
+    warbands = data.get("warbands")
+    metadata = data.get("metadata", {})
+    if not isinstance(warbands, list) or len(warbands) != 1:
+        raise ValueError("Desolator of the North requires exactly one Smaug warband")
+    band = warbands[0]
+    hero = band.get("hero")
+    if not isinstance(hero, dict) or hero.get("model_id") != "[desolator-of-the-north] smaug":
+        raise ValueError("Desolator of the North requires Smaug as its only hero")
+    if band.get("units") or hero.get("options"):
+        raise ValueError("Desolator of the North cannot include units or Smaug options")
+    if not hero.get("compulsory") or metadata.get("leaderCompulsory") is not True:
+        raise ValueError("Smaug must be the compulsory army leader")
+    if metadata.get("leader") != band.get("id"):
+        raise ValueError("Smaug's warband must be designated as the leader")
+    if len(entries) != 1 or entries[0].profile_id != "SMAUG" or entries[0].quantity != 1:
+        raise ValueError("Desolator of the North must contain exactly one Smaug")
+    if entries[0].external_option_ids:
+        raise ValueError("Smaug has no purchased profile options")
+    if metadata.get("maxPoints") is not None and metadata["maxPoints"] < 700:
+        raise ValueError("Smaug's 700-point cost exceeds the points limit")
