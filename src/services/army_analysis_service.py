@@ -1,7 +1,8 @@
 """Project Palantir army analysis service.
 
-DEV-077-GT-C2D4: opt-in Goblin King mechanical evidence. Established
-capability metrics, projections and dashboard assessment remain unchanged.
+DEV-078-ROTN-D2: expose registered army-wide Resistant to Magic entitlement
+on the standard imported-army analysis path. Never alter scores or calibration.
+Author: Edward Turns (Project Lead)
 """
 from army_metric_densities import calculate_army_metric_densities
 from army_metric_assessment import assess_army_metrics
@@ -27,6 +28,9 @@ from smaug_scenario_service import build_smaug_scenario_service_evidence
 from smaug_lust_for_gold_analysis import build_smaug_lust_for_gold_evidence
 from smaug_objective_analysis import build_smaug_objective_evidence
 from configured_profile import ConfiguredProfile
+from rotn_army_magic_service_adapter import build_army_magic_resistance_inventory
+from rotn_army_cast_service import build_army_necromancer_cast_evidence
+from rotn_army_resistance_outcomes_service import build_army_resistance_outcomes
 
 
 def analyse_imported_army(
@@ -42,8 +46,11 @@ def analyse_imported_army(
     three_trolls_combat_requests=None,
     smaug_scenario_context=None,
     smaug_fire_requests=None,
+    rotn_cast_requests_by_model_id=None,
+    rotn_funded_cast_requests_by_model_id=None,
+    rotn_resistance_requests_by_model_id=None,
 ) -> dict:
-    """Run standard analysis and append uncalibrated optional GT evidence."""
+    """Run standard analysis with additional uncalibrated mechanical evidence."""
     if smaug_scenario_context is not None and not isinstance(army, Army):
         raise TypeError('Smaug scenario context requires a real Army')
     validation_errors = army.validate(points_limit)
@@ -68,6 +75,9 @@ def analyse_imported_army(
     mechanical_smaug_fire = None
     mechanical_goblin_king = None
     mechanical_goblin_town_characters = None
+    mechanical_army_resistance_outcomes = None
+    mechanical_army_magic_resistance = None
+    mechanical_necromancer_cast_sequence = None
     if isinstance(army, Army):
         courage_benchmark = build_shooting_benchmark_defender()
         if isinstance(courage_benchmark, ConfiguredProfile):
@@ -101,6 +111,39 @@ def analyse_imported_army(
             projectile_contexts_by_king_id=goblin_king_projectile_contexts_by_king_id,
             charge_contexts_by_king_id=goblin_king_charge_contexts_by_king_id,
         )
+        # DEV-078-ROTN-E: preserve legacy service callers using stub army lists.
+        # Only canonical, registered army lists can activate these new contracts.
+        # The dedicated resolvers remain strict when invoked directly.
+        list_id = getattr(army_list, "id", None)
+        list_rules = getattr(army_list, "army_rules", None)
+        valid_rule_ids = (
+            isinstance(list_rules, (list, tuple))
+            and all(
+                isinstance(getattr(rule, "id", None), str)
+                and bool(rule.id.strip())
+                for rule in list_rules
+            )
+        )
+        if (
+            isinstance(list_id, str)
+            and bool(list_id.strip())
+            and valid_rule_ids
+        ):
+            mechanical_necromancer_cast_sequence = build_army_necromancer_cast_evidence(
+                army, army_list, requests_by_model_id=rotn_cast_requests_by_model_id,
+                funded_requests_by_model_id=rotn_funded_cast_requests_by_model_id,
+            )
+            inventory = build_army_magic_resistance_inventory(army, army_list)
+            if inventory.source_rule_id is not None:
+                mechanical_army_magic_resistance = inventory
+            if rotn_resistance_requests_by_model_id is not None:
+                mechanical_army_resistance_outcomes = build_army_resistance_outcomes(
+                    army, army_list, requests_by_model_id=rotn_resistance_requests_by_model_id
+                )
+        elif (rotn_cast_requests_by_model_id is not None
+              or rotn_funded_cast_requests_by_model_id is not None
+              or rotn_resistance_requests_by_model_id is not None):
+            raise ValueError("Necromancer cast requests require a registered army list")
     elif any(x is not None for x in (
         grinnah_swap_contexts_by_model_id,
         goblin_scribe_contexts_by_model_id,
@@ -112,6 +155,9 @@ def analyse_imported_army(
         smaug_missing_scale_request,
         three_trolls_combat_requests,
         smaug_fire_requests,
+        rotn_cast_requests_by_model_id,
+        rotn_funded_cast_requests_by_model_id,
+        rotn_resistance_requests_by_model_id,
     )):
         raise TypeError('Goblin King contexts require a real Army')
 
@@ -146,6 +192,12 @@ def analyse_imported_army(
         result['mechanical_goblin_king'] = mechanical_goblin_king
     if mechanical_goblin_town_characters is not None:
         result['mechanical_goblin_town_characters'] = mechanical_goblin_town_characters
+    if mechanical_necromancer_cast_sequence is not None:
+        result['mechanical_necromancer_cast_sequence'] = mechanical_necromancer_cast_sequence
+    if mechanical_army_magic_resistance is not None:
+        result['mechanical_army_magic_resistance'] = mechanical_army_magic_resistance
+    if mechanical_army_resistance_outcomes is not None:
+        result['mechanical_army_resistance_outcomes'] = mechanical_army_resistance_outcomes
     smaug_objective = build_smaug_objective_evidence(army) if isinstance(army, Army) else None
     if smaug_objective is not None:
         result['mechanical_smaug_objective'] = smaug_objective
