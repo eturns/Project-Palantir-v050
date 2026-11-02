@@ -31,6 +31,9 @@ from configured_profile import ConfiguredProfile
 from rotn_army_magic_service_adapter import build_army_magic_resistance_inventory
 from rotn_army_cast_service import build_army_necromancer_cast_evidence
 from rotn_army_resistance_outcomes_service import build_army_resistance_outcomes
+from pits_surprise_attack_service import build_pits_surprise_attack_evidence
+from pits_thrain_imprisonment_service import build_pits_thrain_imprisonment_evidence
+from pits_wizard_hunters_service import build_pits_wizard_hunters_evidence
 
 
 def analyse_imported_army(
@@ -49,6 +52,9 @@ def analyse_imported_army(
     rotn_cast_requests_by_model_id=None,
     rotn_funded_cast_requests_by_model_id=None,
     rotn_resistance_requests_by_model_id=None,
+    pits_surprise_attack_request=None,
+    pits_thrain_test_request=None,
+    pits_wizard_hunters_request=None,
 ) -> dict:
     """Run standard analysis with additional uncalibrated mechanical evidence."""
     if smaug_scenario_context is not None and not isinstance(army, Army):
@@ -78,6 +84,9 @@ def analyse_imported_army(
     mechanical_army_resistance_outcomes = None
     mechanical_army_magic_resistance = None
     mechanical_necromancer_cast_sequence = None
+    mechanical_pits_surprise_attack = None
+    mechanical_pits_thrain_imprisonment = None
+    mechanical_pits_wizard_hunters = None
     if isinstance(army, Army):
         courage_benchmark = build_shooting_benchmark_defender()
         if isinstance(courage_benchmark, ConfiguredProfile):
@@ -140,9 +149,24 @@ def analyse_imported_army(
                 mechanical_army_resistance_outcomes = build_army_resistance_outcomes(
                     army, army_list, requests_by_model_id=rotn_resistance_requests_by_model_id
                 )
+            if pits_surprise_attack_request is not None:
+                mechanical_pits_surprise_attack = build_pits_surprise_attack_evidence(
+                    army, army_list, request=pits_surprise_attack_request
+                )
+            if pits_thrain_test_request is not None:
+                mechanical_pits_thrain_imprisonment = build_pits_thrain_imprisonment_evidence(
+                    army, army_list, request=pits_thrain_test_request
+                )
+            if pits_wizard_hunters_request is not None:
+                mechanical_pits_wizard_hunters = build_pits_wizard_hunters_evidence(
+                    army, army_list, request=pits_wizard_hunters_request
+                )
         elif (rotn_cast_requests_by_model_id is not None
               or rotn_funded_cast_requests_by_model_id is not None
-              or rotn_resistance_requests_by_model_id is not None):
+              or rotn_resistance_requests_by_model_id is not None
+              or pits_surprise_attack_request is not None
+              or pits_thrain_test_request is not None
+              or pits_wizard_hunters_request is not None):
             raise ValueError("Necromancer cast requests require a registered army list")
     elif any(x is not None for x in (
         grinnah_swap_contexts_by_model_id,
@@ -158,6 +182,9 @@ def analyse_imported_army(
         rotn_cast_requests_by_model_id,
         rotn_funded_cast_requests_by_model_id,
         rotn_resistance_requests_by_model_id,
+        pits_surprise_attack_request,
+        pits_thrain_test_request,
+        pits_wizard_hunters_request,
     )):
         raise TypeError('Goblin King contexts require a real Army')
 
@@ -198,6 +225,12 @@ def analyse_imported_army(
         result['mechanical_army_magic_resistance'] = mechanical_army_magic_resistance
     if mechanical_army_resistance_outcomes is not None:
         result['mechanical_army_resistance_outcomes'] = mechanical_army_resistance_outcomes
+    if mechanical_pits_surprise_attack is not None:
+        result['mechanical_pits_surprise_attack'] = mechanical_pits_surprise_attack
+    if mechanical_pits_thrain_imprisonment is not None:
+        result['mechanical_pits_thrain_imprisonment'] = mechanical_pits_thrain_imprisonment
+    if mechanical_pits_wizard_hunters is not None:
+        result['mechanical_pits_wizard_hunters'] = mechanical_pits_wizard_hunters
     smaug_objective = build_smaug_objective_evidence(army) if isinstance(army, Army) else None
     if smaug_objective is not None:
         result['mechanical_smaug_objective'] = smaug_objective
