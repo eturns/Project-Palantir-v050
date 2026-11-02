@@ -34,6 +34,9 @@ from rotn_army_resistance_outcomes_service import build_army_resistance_outcomes
 from pits_surprise_attack_service import build_pits_surprise_attack_evidence
 from pits_thrain_imprisonment_service import build_pits_thrain_imprisonment_evidence
 from pits_wizard_hunters_service import build_pits_wizard_hunters_evidence
+from relentless_hunters_service import build_relentless_hunters_inventory
+from pale_orcs_demands_service import build_pale_orcs_demands_evidence
+from morgul_arrows_service import build_morgul_arrows_army_evidence
 
 
 def analyse_imported_army(
@@ -55,6 +58,8 @@ def analyse_imported_army(
     pits_surprise_attack_request=None,
     pits_thrain_test_request=None,
     pits_wizard_hunters_request=None,
+    pale_orcs_demands_request=None,
+    morgul_arrows_request=None,
 ) -> dict:
     """Run standard analysis with additional uncalibrated mechanical evidence."""
     if smaug_scenario_context is not None and not isinstance(army, Army):
@@ -87,6 +92,9 @@ def analyse_imported_army(
     mechanical_pits_surprise_attack = None
     mechanical_pits_thrain_imprisonment = None
     mechanical_pits_wizard_hunters = None
+    mechanical_relentless_hunters = None
+    mechanical_pale_orcs_demands = None
+    mechanical_morgul_arrows = None
     if isinstance(army, Army):
         courage_benchmark = build_shooting_benchmark_defender()
         if isinstance(courage_benchmark, ConfiguredProfile):
@@ -142,6 +150,9 @@ def analyse_imported_army(
                 army, army_list, requests_by_model_id=rotn_cast_requests_by_model_id,
                 funded_requests_by_model_id=rotn_funded_cast_requests_by_model_id,
             )
+            terrain_inventory = build_relentless_hunters_inventory(army, army_list)
+            if terrain_inventory.source_rule_id is not None:
+                mechanical_relentless_hunters = terrain_inventory
             inventory = build_army_magic_resistance_inventory(army, army_list)
             if inventory.source_rule_id is not None:
                 mechanical_army_magic_resistance = inventory
@@ -161,12 +172,22 @@ def analyse_imported_army(
                 mechanical_pits_wizard_hunters = build_pits_wizard_hunters_evidence(
                     army, army_list, request=pits_wizard_hunters_request
                 )
+            if pale_orcs_demands_request is not None:
+                mechanical_pale_orcs_demands = build_pale_orcs_demands_evidence(
+                    army, army_list, request=pale_orcs_demands_request
+                )
+            if morgul_arrows_request is not None:
+                mechanical_morgul_arrows = build_morgul_arrows_army_evidence(
+                    army, army_list, request=morgul_arrows_request
+                )
         elif (rotn_cast_requests_by_model_id is not None
               or rotn_funded_cast_requests_by_model_id is not None
               or rotn_resistance_requests_by_model_id is not None
               or pits_surprise_attack_request is not None
               or pits_thrain_test_request is not None
-              or pits_wizard_hunters_request is not None):
+              or pits_wizard_hunters_request is not None
+              or pale_orcs_demands_request is not None
+              or morgul_arrows_request is not None):
             raise ValueError("Necromancer cast requests require a registered army list")
     elif any(x is not None for x in (
         grinnah_swap_contexts_by_model_id,
@@ -185,6 +206,8 @@ def analyse_imported_army(
         pits_surprise_attack_request,
         pits_thrain_test_request,
         pits_wizard_hunters_request,
+        pale_orcs_demands_request,
+        morgul_arrows_request,
     )):
         raise TypeError('Goblin King contexts require a real Army')
 
@@ -231,6 +254,12 @@ def analyse_imported_army(
         result['mechanical_pits_thrain_imprisonment'] = mechanical_pits_thrain_imprisonment
     if mechanical_pits_wizard_hunters is not None:
         result['mechanical_pits_wizard_hunters'] = mechanical_pits_wizard_hunters
+    if mechanical_relentless_hunters is not None:
+        result['mechanical_relentless_hunters'] = mechanical_relentless_hunters
+    if mechanical_pale_orcs_demands is not None:
+        result['mechanical_pale_orcs_demands'] = mechanical_pale_orcs_demands
+    if mechanical_morgul_arrows is not None:
+        result['mechanical_morgul_arrows'] = mechanical_morgul_arrows
     smaug_objective = build_smaug_objective_evidence(army) if isinstance(army, Army) else None
     if smaug_objective is not None:
         result['mechanical_smaug_objective'] = smaug_objective
