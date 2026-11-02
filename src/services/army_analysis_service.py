@@ -37,6 +37,13 @@ from pits_wizard_hunters_service import build_pits_wizard_hunters_evidence
 from relentless_hunters_service import build_relentless_hunters_inventory
 from pale_orcs_demands_service import build_pale_orcs_demands_evidence
 from morgul_arrows_service import build_morgul_arrows_army_evidence
+from gundabad_commander_of_legions_service import build_commander_of_legions_army_evidence
+from gundabad_horn_of_gorgoroth_service import build_horn_of_gorgoroth_army_evidence
+from gundabad_raise_the_banners_service import build_raise_the_banners_army_evidence
+from gundabad_filthy_bloodline_service import (
+    build_filthy_bloodline_army_evidence,
+    build_profile_filthy_bloodline_army_evidence,
+)
 
 
 def analyse_imported_army(
@@ -60,6 +67,11 @@ def analyse_imported_army(
     pits_wizard_hunters_request=None,
     pale_orcs_demands_request=None,
     morgul_arrows_request=None,
+    gundabad_army_definition=None,
+    gundabad_filthy_bloodline_request=None,
+    gundabad_filthy_bloodline_profile_request=None,
+    gundabad_horn_request=None,
+    gundabad_banner_request=None,
 ) -> dict:
     """Run standard analysis with additional uncalibrated mechanical evidence."""
     if smaug_scenario_context is not None and not isinstance(army, Army):
@@ -95,6 +107,13 @@ def analyse_imported_army(
     mechanical_relentless_hunters = None
     mechanical_pale_orcs_demands = None
     mechanical_morgul_arrows = None
+    mechanical_commander_of_legions = None
+    mechanical_filthy_bloodline = None
+    mechanical_horn_of_gorgoroth = None
+    mechanical_raise_the_banners = None
+    if (gundabad_filthy_bloodline_request is not None
+            and gundabad_filthy_bloodline_profile_request is not None):
+        raise ValueError('Specify only one Filthy Bloodline request path')
     if isinstance(army, Army):
         courage_benchmark = build_shooting_benchmark_defender()
         if isinstance(courage_benchmark, ConfiguredProfile):
@@ -180,6 +199,32 @@ def analyse_imported_army(
                 mechanical_morgul_arrows = build_morgul_arrows_army_evidence(
                     army, army_list, request=morgul_arrows_request
                 )
+            if gundabad_army_definition is not None:
+                mechanical_commander_of_legions = build_commander_of_legions_army_evidence(
+                    army, army_list, army_definition=gundabad_army_definition
+                )
+            if gundabad_filthy_bloodline_request is not None:
+                mechanical_filthy_bloodline = build_filthy_bloodline_army_evidence(
+                    army, army_list, request=gundabad_filthy_bloodline_request
+                )
+            if gundabad_filthy_bloodline_profile_request is not None:
+                mechanical_filthy_bloodline = build_profile_filthy_bloodline_army_evidence(
+                    army, army_list, request=gundabad_filthy_bloodline_profile_request
+                )
+            if gundabad_horn_request is not None:
+                if gundabad_army_definition is None:
+                    raise ValueError('Horn request requires imported Gundabad definition')
+                mechanical_horn_of_gorgoroth = build_horn_of_gorgoroth_army_evidence(
+                    army, army_list, army_definition=gundabad_army_definition,
+                    request=gundabad_horn_request
+                )
+            if gundabad_banner_request is not None:
+                if gundabad_army_definition is None:
+                    raise ValueError('Banner request requires imported Gundabad definition')
+                mechanical_raise_the_banners = build_raise_the_banners_army_evidence(
+                    army, army_list, army_definition=gundabad_army_definition,
+                    request=gundabad_banner_request,
+                )
         elif (rotn_cast_requests_by_model_id is not None
               or rotn_funded_cast_requests_by_model_id is not None
               or rotn_resistance_requests_by_model_id is not None
@@ -187,7 +232,12 @@ def analyse_imported_army(
               or pits_thrain_test_request is not None
               or pits_wizard_hunters_request is not None
               or pale_orcs_demands_request is not None
-              or morgul_arrows_request is not None):
+              or morgul_arrows_request is not None
+              or gundabad_army_definition is not None
+              or gundabad_filthy_bloodline_request is not None
+              or gundabad_filthy_bloodline_profile_request is not None
+              or gundabad_horn_request is not None
+              or gundabad_banner_request is not None):
             raise ValueError("Necromancer cast requests require a registered army list")
     elif any(x is not None for x in (
         grinnah_swap_contexts_by_model_id,
@@ -208,6 +258,11 @@ def analyse_imported_army(
         pits_wizard_hunters_request,
         pale_orcs_demands_request,
         morgul_arrows_request,
+        gundabad_army_definition,
+        gundabad_filthy_bloodline_request,
+        gundabad_filthy_bloodline_profile_request,
+        gundabad_horn_request,
+        gundabad_banner_request,
     )):
         raise TypeError('Goblin King contexts require a real Army')
 
@@ -260,6 +315,14 @@ def analyse_imported_army(
         result['mechanical_pale_orcs_demands'] = mechanical_pale_orcs_demands
     if mechanical_morgul_arrows is not None:
         result['mechanical_morgul_arrows'] = mechanical_morgul_arrows
+    if mechanical_commander_of_legions is not None:
+        result['mechanical_commander_of_legions'] = mechanical_commander_of_legions
+    if mechanical_filthy_bloodline is not None:
+        result['mechanical_filthy_bloodline'] = mechanical_filthy_bloodline
+    if mechanical_horn_of_gorgoroth is not None:
+        result['mechanical_horn_of_gorgoroth'] = mechanical_horn_of_gorgoroth
+    if mechanical_raise_the_banners is not None:
+        result['mechanical_raise_the_banners'] = mechanical_raise_the_banners
     smaug_objective = build_smaug_objective_evidence(army) if isinstance(army, Army) else None
     if smaug_objective is not None:
         result['mechanical_smaug_objective'] = smaug_objective
