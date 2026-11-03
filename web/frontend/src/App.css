@@ -1,0 +1,308 @@
+
+:root {
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  color: #e8edf5;
+  background: #0c1422;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+.palantir {
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 36px 24px;
+}
+
+.header {
+  padding: 20px 0 38px;
+  border-bottom: 1px solid #29374d;
+  margin-bottom: 36px;
+}
+
+.brand {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  color: #d9b66f;
+}
+
+.header p,
+.subtitle {
+  color: #9aaac0;
+}
+
+.panel {
+  background: #152237;
+  border: 1px solid #293b55;
+  border-radius: 14px;
+  padding: 30px;
+  margin-bottom: 24px;
+}
+
+h1 {
+  margin-top: 0;
+  font-size: 32px;
+}
+
+h2 {
+  margin: 0;
+  color: #d9b66f;
+}
+
+.panel > p {
+  line-height: 1.6;
+}
+
+.upload-button {
+  display: inline-block;
+  background: #d9b66f;
+  color: #101827;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 13px 22px;
+  cursor: pointer;
+  margin-top: 16px;
+}
+
+.upload-button:hover {
+  background: #edce8d;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.stat {
+  background: #0e1a2c;
+  border: 1px solid #293b55;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.stat span {
+  display: block;
+  color: #9aaac0;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+
+.stat strong {
+  font-size: 24px;
+}
+
+.error {
+  color: #ff9999;
+}
+
+footer {
+  color: #71829c;
+  text-align: center;
+  padding: 30px;
+  font-size: 13px;
+}
+
+@media (max-width: 600px) {
+  .palantir {
+    padding: 16px;
+  }
+
+  .brand {
+    font-size: 21px;
+  }
+
+  .panel {
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 26px;
+  }
+}
+
+/* DEV-079-A4-4A — Capability dashboard */
+
+.palantir h1,
+.palantir h2 {
+  color: #e8edf5;
+}
+
+.palantir h2 {
+  color: #d9b66f;
+}
+
+.capability-list {
+  display: grid;
+  gap: 22px;
+  margin-top: 30px;
+}
+
+.capability-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 9px;
+  font-size: 14px;
+}
+
+.capability-heading span {
+  color: #d9b66f;
+  text-align: right;
+}
+
+.capability-track {
+  height: 13px;
+  background: #0b1728;
+  border: 1px solid #344661;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.capability-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #547ca3, #d9b66f);
+  border-radius: 8px;
+}
+
+.capability-detail {
+  color: #91a4be;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.capability-note {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid #344661;
+  color: #a8b7cd;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+@media (max-width: 600px) {
+  .capability-heading {
+    font-size: 12px;
+  }
+}
+
+/* DEV-079-A4-4B — Scenario rankings */
+
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 28px;
+}
+
+.scenario-group {
+  min-width: 0;
+  background: #0e1a2c;
+  border: 1px solid #293b55;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.scenario-group h3 {
+  font-size: 17px;
+  margin: 0 0 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #293b55;
+}
+
+.scenario-best {
+  color: #78d6a1;
+}
+
+.scenario-worst {
+  color: #f49b9b;
+}
+
+.scenario-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid #23334a;
+}
+
+.scenario-row:last-child {
+  border-bottom: none;
+}
+
+.scenario-position {
+  color: #91a4be;
+  font-size: 12px;
+  min-width: 18px;
+}
+
+.scenario-info {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.scenario-info strong {
+  color: #e8edf5;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.scenario-info small {
+  color: #91a4be;
+  font-size: 11px;
+  text-transform: capitalize;
+}
+
+.scenario-score {
+  font-size: 16px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.best-score {
+  color: #78d6a1;
+}
+
+.worst-score {
+  color: #f49b9b;
+}
+
+/* Consistent typography throughout Palantír */
+
+#root {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+.palantir,
+.palantir * {
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+}
+
+.palantir h1 {
+  color: #e8edf5;
+}
+
+@media (max-width: 750px) {
+  .scenario-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .scenario-group {
+    padding: 16px;
+  }
+}
