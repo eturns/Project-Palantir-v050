@@ -24,6 +24,9 @@ from rotn_army_cast_service import (
 from magic_casting_effectiveness import (
     assess_caster_effectiveness,
 )
+from magic_caster_endurance import (
+    assess_caster_endurance,
+)
 
 
 @dataclass(frozen=True)
@@ -38,6 +41,7 @@ class ArmyMagicCapabilityAssessment:
     enhanced_casting_model_ids: tuple[str, ...]
     enhanced_attempts_per_activation: int | None
     caster_effectiveness: tuple
+    caster_endurance: tuple
 
     evidence_status: str = "roster_potential_not_calibrated"
     dashboard_score: None = None
@@ -72,6 +76,7 @@ def assess_army_magic_capability(
     )
 
     caster_effectiveness = []
+    caster_endurance = []
 
     entries_by_model = (
         entry
@@ -111,6 +116,19 @@ def assess_army_magic_capability(
             assessment,
         ))
 
+        endurance = assess_caster_endurance(
+            configured,
+            army=army,
+            army_list=army_list,
+            remaining_will=effective_will,
+            hypothetical_opportunities=6,
+        )
+
+        caster_endurance.append((
+            model.id,
+            endurance,
+        ))
+
     enhanced_ids = ()
     enhanced_attempts = None
 
@@ -138,4 +156,5 @@ def assess_army_magic_capability(
         enhanced_casting_model_ids=enhanced_ids,
         enhanced_attempts_per_activation=enhanced_attempts,
         caster_effectiveness=tuple(caster_effectiveness),
+        caster_endurance=tuple(caster_endurance),
     )
