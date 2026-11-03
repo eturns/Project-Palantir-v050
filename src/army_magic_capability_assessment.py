@@ -27,7 +27,9 @@ from magic_casting_effectiveness import (
 from magic_caster_endurance import (
     assess_caster_endurance,
 )
-
+from magic_caster_capacity import (
+    assess_caster_capacity,
+)
 
 @dataclass(frozen=True)
 class ArmyMagicCapabilityAssessment:
@@ -42,6 +44,7 @@ class ArmyMagicCapabilityAssessment:
     enhanced_attempts_per_activation: int | None
     caster_effectiveness: tuple
     caster_endurance: tuple
+    caster_capacity: tuple
 
     evidence_status: str = "roster_potential_not_calibrated"
     dashboard_score: None = None
@@ -77,6 +80,7 @@ def assess_army_magic_capability(
 
     caster_effectiveness = []
     caster_endurance = []
+    caster_capacity = []
 
     entries_by_model = (
         entry
@@ -129,6 +133,20 @@ def assess_army_magic_capability(
             endurance,
         ))
 
+        capacity = assess_caster_capacity(
+            configured,
+            army=army,
+            army_list=army_list,
+            remaining_will=effective_will,
+            hypothetical_activations=6,
+        )
+
+        caster_capacity.append((
+            model.id,
+            capacity,
+        ))
+
+
     enhanced_ids = ()
     enhanced_attempts = None
 
@@ -157,4 +175,5 @@ def assess_army_magic_capability(
         enhanced_attempts_per_activation=enhanced_attempts,
         caster_effectiveness=tuple(caster_effectiveness),
         caster_endurance=tuple(caster_endurance),
+        caster_capacity=tuple(caster_capacity),
     )
