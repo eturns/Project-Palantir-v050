@@ -35,6 +35,7 @@ def build_web_analysis_result(view: dict) -> dict:
         "defence_presentation",
         "provisional_capabilities",
         "provisional_evidence_reasons",
+        "provisional_magic",
     )
 
     required = (

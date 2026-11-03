@@ -25,6 +25,29 @@ type Scenario = {
   score: number
 }
 
+type ProvisionalMagic = {
+  title: string
+  status: string
+  reference_activations: number
+  reference_attempts: number
+  lower_score: number | null
+  upper_score: number | null
+  caster_count: number
+  distinct_spell_count: number
+  modelled_attempts: number
+  funded_attempts: number
+  expected_successes_lower: number
+  expected_successes_upper: number
+  temporary_will_spent: number
+  permanent_will_spent: number
+  permanent_will_remaining: number
+  spell_ids: string[]
+  verified_effect_spell_ids: string[]
+  unverified_effect_spell_ids: string[]
+  overall_magic_score: number | null
+  display_only: boolean
+}
+
 type ArmyAnalysis = {
   army_name: string
   total_points: number
@@ -38,6 +61,7 @@ type ArmyAnalysis = {
     display_only: boolean
     metrics: Capability[]
   }
+  provisional_magic?: ProvisionalMagic
   strengths: Assessment[]
   weaknesses: Assessment[]
   scenarios: Scenario[]
@@ -46,6 +70,97 @@ type ArmyAnalysis = {
 type AnalysisResponse = {
   schema_version: string
   analysis: ArmyAnalysis
+}
+
+const magicTileStyle = {
+  background: '#0e1a2c',
+  border: '1px solid #293b55',
+  borderRadius: '10px',
+  padding: '16px',
+  minWidth: 0,
+} as const
+
+function ProvisionalMagicDetails({ magic }: { magic: ProvisionalMagic }) {
+  return (
+    <details
+      className="magic-details"
+      style={{ marginTop: '14px' }}
+    >
+      <summary
+        style={{ cursor: 'pointer', color: '#e8edf5', fontWeight: 600 }}
+      >
+        View Magic analysis
+      </summary>
+
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(215px, 1fr))',
+          gap: '12px',
+          marginTop: '16px',
+        }}
+      >
+        <div style={magicTileStyle}>
+          <strong>Casting Effectiveness</strong>
+          <p className="capability-detail">
+            Conditional expected successful casts:{' '}
+            {magic.expected_successes_lower.toFixed(3)} –{' '}
+            {magic.expected_successes_upper.toFixed(3)}.
+            Spell selection and resistance affect the actual result.
+          </p>
+        </div>
+
+        <div style={magicTileStyle}>
+          <strong>Magical Endurance</strong>
+          <p className="capability-detail">
+            Permanent Will spent: {magic.permanent_will_spent}
+            <br />
+            Temporary Will spent: {magic.temporary_will_spent}
+            <br />
+            Permanent Will remaining: {magic.permanent_will_remaining}
+          </p>
+        </div>
+
+        <div style={magicTileStyle}>
+          <strong>Casting Capacity</strong>
+          <p className="capability-detail">
+            {magic.caster_count} spellcaster(s) ·{' '}
+            {magic.modelled_attempts} modelled attempts ·{' '}
+            {magic.funded_attempts} funded attempts across{' '}
+            {magic.reference_activations} hypothetical activations.
+          </p>
+        </div>
+
+        <div style={magicTileStyle}>
+          <strong>Spell Impact &amp; Versatility</strong>
+          <p className="capability-detail">
+            {magic.distinct_spell_count} distinct spell(s) ·{' '}
+            {magic.verified_effect_spell_ids.length} verified effect
+            function(s). Tactical impact is not yet calibrated.
+          </p>
+        </div>
+      </div>
+
+      <p className="capability-detail" style={{ marginTop: '14px' }}>
+        <strong>Available spells:</strong>{' '}
+        {magic.spell_ids.join(', ') || 'None'}
+      </p>
+
+      {magic.unverified_effect_spell_ids.length > 0 && (
+        <p className="capability-detail">
+          <strong>Effects requiring further verification:</strong>{' '}
+          {magic.unverified_effect_spell_ids.join(', ')}
+        </p>
+      )}
+
+      <p className="capability-detail">
+        Reference ceiling: {magic.reference_attempts} attempts. The
+        calculations assume hypothetical casting opportunities, not
+        guaranteed targets or battlefield outcomes. The overall Magic
+        capability remains unrated.
+      </p>
+    </details>
+  )
 }
 
 function App() {
@@ -104,8 +219,7 @@ function App() {
     }
   }
 
-  // Rankings are presentation only.
-  // No scenario calculations or adjustments are performed.
+  // Rankings are presentation only: no scenario calculations change.
   const rankedScenarios = army
     ? [...army.scenarios].sort(
         (a, b) =>
@@ -115,10 +229,7 @@ function App() {
     : []
 
   const topScenarios = rankedScenarios.slice(0, 5)
-
-  const bottomScenarios = [...rankedScenarios]
-    .reverse()
-    .slice(0, 5)
+  const bottomScenarios = [...rankedScenarios].reverse().slice(0, 5)
 
   return (
     <main className="palantir">
@@ -187,16 +298,36 @@ function App() {
                   ? Math.max(0, Math.min(1, capability.rating!))
                   : null
 
+                // Magic's overall rating stays unqualified. Display its
+                // independently benchmarked Casting Delivery range inline.
+                const magic = capability.metric_id === 'magic'
+                  ? army.provisional_magic
+                  : undefined
+
+                const lower = magic?.lower_score
+                const upper = magic?.upper_score
+                const hasDelivery =
+                  magic !== undefined &&
+                  magic.display_only === true &&
+                  typeof lower === 'number' &&
+                  Number.isFinite(lower) &&
+                  lower >= 0 && lower <= 1 &&
+                  typeof upper === 'number' &&
+                  Number.isFinite(upper) &&
+                  upper >= lower && upper <= 1
+
                 return (
                   <div className="capability" key={capability.metric_id}>
                     <div className="capability-heading">
                       <strong>{capability.label}</strong>
                       <span>
-                        {score !== null
-                          ? score.toFixed(3)
-                          : capability.status === 'conditional'
-                            ? 'Conditional — Not evaluated'
-                            : 'Not evaluated'}
+                        {hasDelivery
+                          ? `${lower!.toFixed(3)} – ${upper!.toFixed(3)} (provisional)`
+                          : score !== null
+                            ? score.toFixed(3)
+                            : capability.status === 'conditional'
+                              ? 'Conditional — Not evaluated'
+                              : 'Not evaluated'}
                       </span>
                     </div>
 
@@ -208,38 +339,54 @@ function App() {
                       aria-valuemax={score === null ? undefined : 1}
                       aria-valuenow={score ?? undefined}
                     >
-                      {score !== null && (
+                      {hasDelivery ? (
+                        <div
+                          style={{
+                            marginLeft: `${lower! * 100}%`,
+                            width: `${(upper! - lower!) * 100}%`,
+                            height: '100%',
+                            background: 'linear-gradient(90deg, #547ca3, #d9b66f)',
+                            borderRadius: '8px',
+                          }}
+                        />
+                      ) : score !== null ? (
                         <div
                           className="capability-fill"
                           style={{ width: `${score * 100}%` }}
                         />
-                      )}
+                      ) : null}
                     </div>
 
                     <div className="capability-detail">
-                      {evaluated && capability.raw_value !== null
-                        ? `Raw: ${capability.raw_value.toFixed(3)} ${capability.unit ?? ''}`
-                        : 'No qualified numerical measurement'}
+                      {hasDelivery
+                        ? 'Provisional Casting Delivery range — not the overall Magic rating'
+                        : evaluated && capability.raw_value !== null
+                          ? `Raw: ${capability.raw_value.toFixed(3)} ${capability.unit ?? ''}`
+                          : 'No qualified numerical measurement'}
 
                       {capability.clipped && ' • Clipped to reference range'}
                     </div>
+
+                    {magic && <ProvisionalMagicDetails magic={magic} />}
                   </div>
                 )
               })}
             </div>
 
             <p className="capability-note">
-              These provisional ratings compare armies against the
-              frozen six-army reference, not against the full range
-              of possible MESBG armies. Unavailable measurements are
-              never treated as zero. Scenario scores are unchanged.
+              The six qualified capability ratings use the frozen
+              six-army reference, not the full range of MESBG armies.
+              Magic's Casting Delivery range uses a separate provisional
+              twelve-attempt reference. It is not an overall Magic score.
+              Unavailable measurements are never treated as zero.
+              Scenario scores are unchanged.
             </p>
           </section>
 
           <section className="panel">
             <h2>Strengths &amp; Weaknesses</h2>
             <p className="subtitle">
-              Existing battlefield assessments ? Legacy scoring
+              Existing battlefield assessments • Legacy scoring
             </p>
 
             <div className="scenario-grid">
@@ -302,15 +449,9 @@ function App() {
               <div className="scenario-grid">
                 <div className="scenario-group">
                   <h3 className="scenario-best">Top 5 Scenarios</h3>
-
                   {topScenarios.map((scenario, index) => (
-                    <div
-                      className="scenario-row"
-                      key={scenario.scenario_id}
-                    >
-                      <div className="scenario-position">
-                        {index + 1}
-                      </div>
+                    <div className="scenario-row" key={scenario.scenario_id}>
+                      <div className="scenario-position">{index + 1}</div>
                       <div className="scenario-info">
                         <strong>{scenario.name}</strong>
                         <small>{scenario.pool.replaceAll('_', ' ')}</small>
@@ -324,15 +465,9 @@ function App() {
 
                 <div className="scenario-group">
                   <h3 className="scenario-worst">Bottom 5 Scenarios</h3>
-
                   {bottomScenarios.map((scenario, index) => (
-                    <div
-                      className="scenario-row"
-                      key={scenario.scenario_id}
-                    >
-                      <div className="scenario-position">
-                        {index + 1}
-                      </div>
+                    <div className="scenario-row" key={scenario.scenario_id}>
+                      <div className="scenario-position">{index + 1}</div>
                       <div className="scenario-info">
                         <strong>{scenario.name}</strong>
                         <small>{scenario.pool.replaceAll('_', ' ')}</small>
@@ -355,9 +490,7 @@ function App() {
         </>
       )}
 
-      <footer>
-        Project Palantír • DEV-079 Web Prototype
-      </footer>
+      <footer>Project Palantír • DEV-080 Web Prototype</footer>
     </main>
   )
 }
