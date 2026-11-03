@@ -30,6 +30,13 @@ from magic_caster_endurance import (
 from magic_caster_capacity import (
     assess_caster_capacity,
 )
+from magic_spell_versatility import (
+    assess_magic_spell_versatility,
+)
+from magic_spell_impact_coverage import (
+    assess_spell_impact_coverage,
+)
+
 
 @dataclass(frozen=True)
 class ArmyMagicCapabilityAssessment:
@@ -45,6 +52,8 @@ class ArmyMagicCapabilityAssessment:
     caster_effectiveness: tuple
     caster_endurance: tuple
     caster_capacity: tuple
+    spell_versatility: object
+    spell_impact_coverage: object
 
     evidence_status: str = "roster_potential_not_calibrated"
     dashboard_score: None = None
@@ -72,6 +81,14 @@ def assess_army_magic_capability(
         )
 
     contract = build_army_magic_contract(army)
+
+    versatility = assess_magic_spell_versatility(
+        army
+    )
+
+    impact_coverage = assess_spell_impact_coverage(
+        versatility.distinct_spell_ids
+    )
 
     necromancer = build_army_necromancer_cast_evidence(
         army,
@@ -176,4 +193,6 @@ def assess_army_magic_capability(
         caster_effectiveness=tuple(caster_effectiveness),
         caster_endurance=tuple(caster_endurance),
         caster_capacity=tuple(caster_capacity),
+        spell_versatility=versatility,
+        spell_impact_coverage=impact_coverage,
     )
