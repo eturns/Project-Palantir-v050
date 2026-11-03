@@ -306,3 +306,56 @@ footer {
     padding: 16px;
   }
 }
+
+/* DEV-079-A5-2 — Mobile usability improvements */
+
+@media (max-width: 600px) {
+  .stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .stat {
+    padding: 14px;
+    min-width: 0;
+  }
+
+  .stat span {
+    font-size: 12px;
+  }
+
+  .stat strong {
+    font-size: 20px;
+  }
+
+  .capability-list {
+    gap: 17px;
+  }
+
+  .capability-heading {
+    gap: 8px;
+    font-size: 13px;
+  }
+
+  .capability-detail {
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+  }
+
+  .scenario-row {
+    gap: 8px;
+  }
+
+  .scenario-info strong {
+    font-size: 13px;
+  }
+
+  .scenario-score {
+    font-size: 14px;
+  }
+
+  .brand {
+    letter-spacing: 2px;
+  }
+}
