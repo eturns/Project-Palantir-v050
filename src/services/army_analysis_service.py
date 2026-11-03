@@ -40,6 +40,9 @@ from morgul_arrows_service import build_morgul_arrows_army_evidence
 from gundabad_commander_of_legions_service import build_commander_of_legions_army_evidence
 from gundabad_horn_of_gorgoroth_service import build_horn_of_gorgoroth_army_evidence
 from gundabad_raise_the_banners_service import build_raise_the_banners_army_evidence
+from goblin_town_songs_service import build_goblin_town_song_army_evidence
+from goblin_town_strength_in_numbers_service import build_strength_in_numbers_army_evidence
+from goblin_town_prisoner_service import build_goblin_town_prisoner_army_evidence
 from gundabad_filthy_bloodline_service import (
     build_filthy_bloodline_army_evidence,
     build_profile_filthy_bloodline_army_evidence,
@@ -72,6 +75,10 @@ def analyse_imported_army(
     gundabad_filthy_bloodline_profile_request=None,
     gundabad_horn_request=None,
     gundabad_banner_request=None,
+    goblin_town_army_definition=None,
+    goblin_town_song_request=None,
+    goblin_town_strength_request=None,
+    goblin_town_prisoner_request=None,
 ) -> dict:
     """Run standard analysis with additional uncalibrated mechanical evidence."""
     if smaug_scenario_context is not None and not isinstance(army, Army):
@@ -111,6 +118,9 @@ def analyse_imported_army(
     mechanical_filthy_bloodline = None
     mechanical_horn_of_gorgoroth = None
     mechanical_raise_the_banners = None
+    mechanical_goblin_town_songs = None
+    mechanical_strength_in_numbers = None
+    mechanical_goblin_town_prisoners = None
     if (gundabad_filthy_bloodline_request is not None
             and gundabad_filthy_bloodline_profile_request is not None):
         raise ValueError('Specify only one Filthy Bloodline request path')
@@ -218,6 +228,21 @@ def analyse_imported_army(
                     army, army_list, army_definition=gundabad_army_definition,
                     request=gundabad_horn_request
                 )
+            if goblin_town_prisoner_request is not None:
+                mechanical_goblin_town_prisoners = build_goblin_town_prisoner_army_evidence(
+                    army, army_list, request=goblin_town_prisoner_request,
+                )
+            if goblin_town_strength_request is not None:
+                mechanical_strength_in_numbers = build_strength_in_numbers_army_evidence(
+                    army, army_list, request=goblin_town_strength_request,
+                )
+            if goblin_town_song_request is not None:
+                if goblin_town_army_definition is None:
+                    raise ValueError('Song request requires imported Goblin-town definition')
+                mechanical_goblin_town_songs = build_goblin_town_song_army_evidence(
+                    army, army_list, army_definition=goblin_town_army_definition,
+                    request=goblin_town_song_request,
+                )
             if gundabad_banner_request is not None:
                 if gundabad_army_definition is None:
                     raise ValueError('Banner request requires imported Gundabad definition')
@@ -237,7 +262,11 @@ def analyse_imported_army(
               or gundabad_filthy_bloodline_request is not None
               or gundabad_filthy_bloodline_profile_request is not None
               or gundabad_horn_request is not None
-              or gundabad_banner_request is not None):
+              or gundabad_banner_request is not None
+              or goblin_town_song_request is not None
+              or goblin_town_army_definition is not None
+              or goblin_town_strength_request is not None
+              or goblin_town_prisoner_request is not None):
             raise ValueError("Necromancer cast requests require a registered army list")
     elif any(x is not None for x in (
         grinnah_swap_contexts_by_model_id,
@@ -263,6 +292,10 @@ def analyse_imported_army(
         gundabad_filthy_bloodline_profile_request,
         gundabad_horn_request,
         gundabad_banner_request,
+        goblin_town_song_request,
+        goblin_town_army_definition,
+        goblin_town_strength_request,
+        goblin_town_prisoner_request,
     )):
         raise TypeError('Goblin King contexts require a real Army')
 
@@ -321,6 +354,12 @@ def analyse_imported_army(
         result['mechanical_filthy_bloodline'] = mechanical_filthy_bloodline
     if mechanical_horn_of_gorgoroth is not None:
         result['mechanical_horn_of_gorgoroth'] = mechanical_horn_of_gorgoroth
+    if mechanical_goblin_town_prisoners is not None:
+        result['mechanical_goblin_town_prisoners'] = mechanical_goblin_town_prisoners
+    if mechanical_strength_in_numbers is not None:
+        result['mechanical_strength_in_numbers'] = mechanical_strength_in_numbers
+    if mechanical_goblin_town_songs is not None:
+        result['mechanical_goblin_town_songs'] = mechanical_goblin_town_songs
     if mechanical_raise_the_banners is not None:
         result['mechanical_raise_the_banners'] = mechanical_raise_the_banners
     smaug_objective = build_smaug_objective_evidence(army) if isinstance(army, Army) else None
