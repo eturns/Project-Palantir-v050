@@ -11,7 +11,10 @@ from pathlib import Path
 from fastapi import FastAPI, File, HTTPException, UploadFile
 
 from web.backend.engine_adapter import analyse_army_for_web
-
+from web.backend.rate_limit import (
+    AnalysisRateLimitMiddleware,
+    SlidingWindowRateLimiter,
+)
 
 MAX_UPLOAD_BYTES = 1024 * 1024
 
@@ -20,7 +23,15 @@ app = FastAPI(
     description="MESBG army analysis powered by the Palantír Python engine.",
     version="0.1.0",
 )
+analysis_rate_limiter = SlidingWindowRateLimiter(
+    limit=10,
+    window_seconds=60,
+)
 
+app.add_middleware(
+    AnalysisRateLimitMiddleware,
+    limiter=analysis_rate_limiter,
+)
 
 @app.get("/health", tags=["System"])
 def health() -> dict[str, str]:
