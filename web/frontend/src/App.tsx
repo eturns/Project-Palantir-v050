@@ -1,5 +1,6 @@
 import { useState, type ChangeEvent } from 'react'
 import './App.css'
+import { OffenceAnalysis, OffenceHeadlineBar, offenceHeadline, type ProvisionalOffence } from './OffenceAnalysis'
 
 type Capability = {
   metric_id: string
@@ -62,6 +63,7 @@ type ArmyAnalysis = {
     metrics: Capability[]
   }
   provisional_magic?: ProvisionalMagic
+  provisional_offence?: ProvisionalOffence | null
   strengths: Assessment[]
   weaknesses: Assessment[]
   scenarios: Scenario[]
@@ -289,6 +291,7 @@ function App() {
 
             <div className="capability-list">
               {army.provisional_capabilities.metrics.map((capability) => {
+                const isOffence = capability.metric_id === 'offence_density'
                 const evaluated =
                   capability.status === 'evaluated' &&
                   capability.rating !== null &&
@@ -319,10 +322,12 @@ function App() {
                 return (
                   <div className="capability" key={capability.metric_id}>
                     <div className="capability-heading">
-                      <strong>{capability.label}</strong>
+                      <strong>{isOffence ? 'Offence' : capability.label}</strong>
                       <span>
-                        {hasDelivery
-                          ? `${lower!.toFixed(3)} – ${upper!.toFixed(3)} (provisional)`
+                        {isOffence
+                          ? offenceHeadline(army.provisional_offence)
+                          : hasDelivery
+                            ? `${lower!.toFixed(3)} – ${upper!.toFixed(3)} (casting reference)`
                           : score !== null
                             ? score.toFixed(3)
                             : capability.status === 'conditional'
@@ -331,6 +336,8 @@ function App() {
                       </span>
                     </div>
 
+                    {isOffence && <OffenceHeadlineBar offence={army.provisional_offence} />}
+                    {!isOffence && (
                     <div
                       className="capability-track"
                       role={score === null ? undefined : 'progressbar'}
@@ -356,9 +363,12 @@ function App() {
                         />
                       ) : null}
                     </div>
+                    )}
 
                     <div className="capability-detail">
-                      {hasDelivery
+                      {isOffence
+                        ? 'Neutral direct-melee reference · see breakdown below'
+                        : hasDelivery
                         ? 'Provisional Casting Delivery range — not the overall Magic rating'
                         : evaluated && capability.raw_value !== null
                           ? `Raw: ${capability.raw_value.toFixed(3)} ${capability.unit ?? ''}`
@@ -368,16 +378,17 @@ function App() {
                     </div>
 
                     {magic && <ProvisionalMagicDetails magic={magic} />}
+                    {isOffence && <OffenceAnalysis offence={army.provisional_offence} />}
                   </div>
                 )
               })}
             </div>
 
             <p className="capability-note">
-              The six qualified capability ratings use the frozen
-              six-army reference, not the full range of MESBG armies.
-              Magic's Casting Delivery range uses a separate provisional
-              twelve-attempt reference. It is not an overall Magic score.
+              Existing calibrated capability ratings use the frozen six-army
+              reference. Offence shows a neutral mechanical melee benchmark,
+              not a calibrated overall rating. Magic's Casting Delivery
+              uses a separate twelve-attempt reference, not an overall rating.
               Unavailable measurements are never treated as zero.
               Scenario scores are unchanged.
             </p>

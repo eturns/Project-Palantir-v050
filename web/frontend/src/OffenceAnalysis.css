@@ -1,0 +1,34 @@
+/* Project Palantír — DEV-082-A3-2J-4C; Edward Turns (Project Lead). */
+/* Integrated into the existing capability row; no standalone Offence panel. */
+.offence-details { margin-top: 14px; color: #e8edf5; min-width: 0; }
+.offence-details summary { cursor: pointer; color: #e8edf5; font-weight: 600; }
+.offence-details summary:focus-visible { outline: 2px solid #d9b66f; outline-offset: 4px; }
+.offence-content { padding-top: 6px; }
+.offence-figure { margin-top: 14px; padding: 18px; border-radius: 10px; background: #0e1a2c; border: 1px solid #293b55; display: flex; flex-direction: column; gap: 9px; min-width: 0; }
+.offence-eyebrow { font-size: 13px; color: #9aaac0; }
+.offence-number { color: #e8edf5; font-size: clamp(25px, 4vw, 33px); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; line-height: 1.2; }
+.offence-unit { color: #d9b66f; font-size: 13px; line-height: 1.5; }
+.offence-note { color: #a8b7cd; font-size: 13px; line-height: 1.5; margin: 0; }
+.offence-grid { margin-top: 13px; display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; }
+.offence-tile { border-radius: 9px; border: 1px solid #293b55; background: #0e1a2c; padding: 16px; min-width: 0; }
+.offence-tile h3 { color: #d9b66f; font-size: 15px; margin: 0 0 12px; }
+.offence-tile p { font-size: 13px; line-height: 1.55; color: #e8edf5; margin: 0 0 9px; }
+.offence-tile small { font-size: 12px; line-height: 1.5; color: #a8b7cd; }
+.offence-unavailable { margin-top: 14px; background: #0e1a2c; border: 1px solid #293b55; border-radius: 9px; padding: 16px; color: #e8edf5; }
+.offence-unavailable p { color: #a8b7cd; font-size: 13px; margin: 9px 0 0; line-height: 1.5; }
+.offence-disclosure { margin-top: 14px; line-height: 1.6; }
+@media (max-width: 650px) { .offence-grid { grid-template-columns: 1fr; } .offence-figure { padding: 15px; } }
+
+/* J-4C: match Magic's inline bar and four-across detail cards. */
+.offence-bar-group { margin-top: 8px; min-width: 0; }
+.offence-track { position: relative; height: 13px; background: #0b1728; border: 1px solid #344661; border-radius: 8px; overflow: hidden; }
+.offence-fill { height: 100%; background: linear-gradient(90deg, #547ca3, #d9b66f); border-radius: 8px; }
+.offence-interval { position: absolute; top: 0; bottom: 0; background: #f5d98a; border-left: 2px solid #fff1c6; border-right: 2px solid #fff1c6; min-width: 2px; }
+.offence-track-unavailable { opacity: 0.65; }
+.offence-reference-caption { color: #91a4be; font-size: 12px; margin-top: 6px; line-height: 1.5; }
+.offence-context { margin: 12px 0 4px; font-size: 12px; line-height: 1.55; color: #a8b7cd; }
+.offence-grid { align-items: stretch; }
+.offence-tile { overflow-wrap: anywhere; }
+@media (max-width: 1050px) and (min-width: 651px) {
+  .offence-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
